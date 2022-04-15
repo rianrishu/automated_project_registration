@@ -19,9 +19,15 @@ SECTION_CHOICES=(
 
 # Create your models here.
 class Student(models.Model):
-    student_leader=models.CharField(max_length=20)
-    student_1=models.CharField(max_length=20)
-    student_2=models.CharField(max_length=20)
+    student_leader=models.CharField(max_length=20, null=False)
+    student_1=models.CharField(max_length=20, null=False)
+    student_2=models.CharField(max_length=20, null=False)
     section=models.CharField(max_length=3, choices=SECTION_CHOICES)
-    password=models.CharField(max_length=15)
+    password=models.CharField(max_length=15, null=False)
+    registered_at = models.DateTimeField(auto_now_add=True)
+
+class StudentLogin(models.Model):
+    batch=models.CharField(max_length=3, null=False)
+    password=models.CharField(max_length=15, null=False)
+    login_at=models.DateTimeField(auto_now_add=True)
     

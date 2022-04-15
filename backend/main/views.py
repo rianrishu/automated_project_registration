@@ -1,14 +1,17 @@
 from genericpath import exists
 from time import process_time_ns
+from urllib import response
+from django.http import JsonResponse
 from django.shortcuts import render
 from cgitb import reset
+from django.contrib.auth.hashers import make_password,check_password
 from telnetlib import STATUS
 from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentSerializer
-from .models import Student
+from .serializers import StudentLoginSerializer, StudentSerializer
+from .models import Student, StudentLogin
 import pyrebase
 import firebase_admin
 from firebase_admin import credentials
@@ -46,7 +49,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
             section=serializer.data['section']
-            password=serializer.data['password']
+            password=make_password(serializer.data['password'])
             data={
             "student_leader":studnet_leader,
              "student_1":student_1, 
@@ -57,4 +60,32 @@ class StudentViewSet(viewsets.ModelViewSet):
             batch=generate_batch(section)
             # database.child("users").set(data) 
             db.collection("students").document(batch).set(data)
-            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED) 
+            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
+
+
+class StudentLoginViewSet(viewsets.ModelViewSet):
+    queryset=StudentLogin.objects.all()
+    serilazier_class=StudentLoginSerializer
+    def create(self, request):
+        serializer = StudentLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            batch_response=serializer.data['batch']
+            password_response=serializer.data['password']
+            batches=db.collection('students').get()
+            temp=[]
+            flag=-1
+            for batch in batches:
+                temp.append(batch.id)
+            for batch_temp in temp:
+                if batch_temp == batch_response:
+                    flag=1
+                    password_db=db.collection('students').document(batch_response).get()
+                    data=password_db.to_dict()['password']
+                    print(data)
+                    if(check_password(password_response, data)):
+                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    else:
+                        return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+            if flag==-1:
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)                
+             

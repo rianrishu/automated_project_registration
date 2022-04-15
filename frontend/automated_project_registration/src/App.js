@@ -6,7 +6,7 @@ function App() {
     const handlesubmit=async (e)=>{
        e.preventDefault()
        console.log(credentials)
-        const response = await fetch("http://localhost:8000/student/", {
+        const response = await fetch("http://localhost:8000/student/signin/", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
