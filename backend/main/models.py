@@ -30,4 +30,9 @@ class StudentLogin(models.Model):
     batch=models.CharField(max_length=3, null=False)
     password=models.CharField(max_length=15, null=False)
     login_at=models.DateTimeField(auto_now_add=True)
+
+class Topics(models.Model):
+    name=models.CharField(max_length=30, null=False)
+    description=models.CharField(max_length=300, null=False)
+    selected_by=models.CharField(max_length=3, null=True)    
     

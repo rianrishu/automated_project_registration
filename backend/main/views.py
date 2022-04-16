@@ -10,8 +10,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer
-from .models import Student, StudentLogin
+from .serializers import StudentLoginSerializer, StudentSerializer, TopicsSerializer
+from .models import Student, StudentLogin, Topics
 import pyrebase
 import firebase_admin
 from firebase_admin import credentials
@@ -81,11 +81,21 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     flag=1
                     password_db=db.collection('students').document(batch_response).get()
                     data=password_db.to_dict()['password']
-                    print(data)
                     if(check_password(password_response, data)):
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
-                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)                
-             
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)           
+
+
+class GetTopics(viewsets.ModelViewSet):
+    queryset=Topics.objects.all()
+    serializer_class = TopicsSerializer
+    def create(self, request):
+        topic_list=db.collection('topics').document('vhcia4pO83a1tZW0yIDM').get()
+        data = topic_list.to_dict()
+        # print(data)
+        if len(data) > 0:
+            return Response({'msg' : data}, status=status.HTTP_200_OK)                     
+        return Response({'msg': 'No Topic Found'}, status=status.HTTP_404_NOT_FOUND)     
