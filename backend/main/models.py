@@ -34,5 +34,5 @@ class StudentLogin(models.Model):
 class Topics(models.Model):
     name=models.CharField(max_length=30, null=False)
     description=models.CharField(max_length=300, null=False)
-    selected_by=models.CharField(max_length=3, null=True)    
+    selected_by=models.CharField(max_length=4, null=False, default="none")
     

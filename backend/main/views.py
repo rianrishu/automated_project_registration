@@ -1,7 +1,8 @@
 from genericpath import exists
 from time import process_time_ns
+from unicodedata import name
 from urllib import response
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
@@ -17,6 +18,7 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
+import json
 
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
@@ -91,11 +93,32 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
 
 class GetTopics(viewsets.ModelViewSet):
     queryset=Topics.objects.all()
-    serializer_class = TopicsSerializer
-    def create(self, request):
-        topic_list=db.collection('topics').document('vhcia4pO83a1tZW0yIDM').get()
-        data = topic_list.to_dict()
-        # print(data)
-        if len(data) > 0:
-            return Response({'msg' : data}, status=status.HTTP_200_OK)                     
-        return Response({'msg': 'No Topic Found'}, status=status.HTTP_404_NOT_FOUND)     
+    serilazier_class=TopicsSerializer
+    def create(self, request, formant=None):
+        serializer = TopicsSerializer(data=request.data)
+        if serializer.is_valid():
+            name_response = serializer.data['name']
+            description_response = serializer.data['description']
+            selected_by_response = serializer.data['selected_by']
+            
+            data={
+            "name":name_response,
+             "description":description_response, 
+             "selected_by":selected_by_response}
+            db.collection("topics").add(data)
+            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
+        else:
+            print("not a valid data")
+            return Response("", status=status.HTTP_404_NOT_FOUND)   
+    def list(self, format=None):
+        topic_list= db.collection('topics').where('selected_by', '==', 'none').get()
+        topic_list_local=[]
+        for topic in topic_list:
+            # print(topic.to_dict())
+            # print("here in loop")
+            topic_list_local.append(topic.to_dict())
+        if len(topic_list_local) > 0:
+            return Response( topic_list_local, status=status.HTTP_200_OK)
+        return Response({'msg': 'No Topic Found'}, status=status.HTTP_404_NOT_FOUND)
+
+
