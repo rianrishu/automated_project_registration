@@ -110,7 +110,7 @@ class GetTopics(viewsets.ModelViewSet):
         else:
             print("not a valid data")
             return Response("", status=status.HTTP_404_NOT_FOUND)   
-    def list(self, format=None):
+    def list(self, request, format=None):
         topic_list= db.collection('topics').where('selected_by', '==', 'none').get()
         topic_list_local=[]
         for topic in topic_list:
