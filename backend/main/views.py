@@ -1,7 +1,6 @@
-from genericpath import exists
-from time import process_time_ns
 from urllib import response
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+import json
 from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
@@ -10,9 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer
-from .models import Student, StudentLogin
-import pyrebase
+from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
+from .models import Student, StudentLogin, GetTopics, SelectedTopics
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -80,8 +78,8 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                 if batch_temp == batch_response:
                     flag=1
                     password_db=db.collection('students').document(batch_response).get()
+                    print(password_db)
                     data=password_db.to_dict()['password']
-                    print(data)
                     if(check_password(password_response, data)):
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
@@ -89,3 +87,40 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
             if flag==-1:
                 return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)                
              
+class StudentTopics(viewsets.ModelViewSet):
+       queryset=GetTopics.objects.all()
+       queryset1=SelectedTopics.objects.all()
+       serilazier_class=StudentTopicSerializer
+       serilazier_class=StudentSelectedTopicSerializer
+       def create(self, request):
+           data=request.data
+           res = not bool(data)
+           if res:
+             ans=[]
+             index=0
+             docs = db.collection('topics').stream()
+             for doc in docs:
+                 name=doc.to_dict()['name']
+                 description=doc.to_dict()['description']
+                 selectedby=doc.to_dict()['selected_by']
+                 id=doc.id
+                 if (len(selectedby)!=0):
+                  continue
+                 obj={
+                   "name":name,
+                   "description":description,
+                   "selected_by":selectedby,
+                   "id":id
+                  }
+                 ans.append(obj)   
+             return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+           else:
+                serializer = StudentSelectedTopicSerializer(data=request.data)
+                if serializer.is_valid():
+                   batchid=serializer.data['batchid']
+                   topic=serializer.data['name']
+                   db.collection("topics").document(topic).update({"selected_by":batchid})
+                   return Response({'msg':'Success'}, status=status.HTTP_200_OK)
+                else:
+                   return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
