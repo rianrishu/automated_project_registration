@@ -1,8 +1,6 @@
-from genericpath import exists
-from time import process_time_ns
-from unicodedata import name
 from urllib import response
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
+import json
 from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
@@ -11,9 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer, TopicsSerializer
-from .models import Student, StudentLogin, Topics
-import pyrebase
+from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
+from .models import Student, StudentLogin, GetTopics, SelectedTopics
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -82,43 +79,49 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                 if batch_temp == batch_response:
                     flag=1
                     password_db=db.collection('students').document(batch_response).get()
+                    print(password_db)
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
-                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)           
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)                
+             
+class StudentTopics(viewsets.ModelViewSet):
+       queryset=GetTopics.objects.all()
+       queryset1=SelectedTopics.objects.all()
+       serilazier_class=StudentTopicSerializer
+       serilazier_class=StudentSelectedTopicSerializer
+       def create(self, request):
+           data=request.data
+           res = not bool(data)
+           if res:
+             ans=[]
+             index=0
+             docs = db.collection('topics').stream()
+             for doc in docs:
+                 name=doc.to_dict()['name']
+                 description=doc.to_dict()['description']
+                 selectedby=doc.to_dict()['selected_by']
+                 id=doc.id
+                 if (len(selectedby)!=0):
+                  continue
+                 obj={
+                   "name":name,
+                   "description":description,
+                   "selected_by":selectedby,
+                   "id":id
+                  }
+                 ans.append(obj)   
+             return Response({'msg':ans}, status=status.HTTP_200_OK) 
 
-
-class GetTopics(viewsets.ModelViewSet):
-    queryset=Topics.objects.all()
-    serilazier_class=TopicsSerializer
-    def create(self, request, formant=None):
-        serializer = TopicsSerializer(data=request.data)
-        if serializer.is_valid():
-            name_response = serializer.data['name']
-            description_response = serializer.data['description']
-            selected_by_response = serializer.data['selected_by']
-            
-            data={
-            "name":name_response,
-             "description":description_response, 
-             "selected_by":selected_by_response}
-            db.collection("topics").add(data)
-            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
-        else:
-            print("not a valid data")
-            return Response("", status=status.HTTP_404_NOT_FOUND)   
-    def list(self, request, format=None):
-        topic_list= db.collection('topics').where('selected_by', '==', 'none').get()
-        topic_list_local=[]
-        for topic in topic_list:
-            # print(topic.to_dict())
-            # print("here in loop")
-            topic_list_local.append(topic.to_dict())
-        if len(topic_list_local) > 0:
-            return Response( topic_list_local, status=status.HTTP_200_OK)
-        return Response({'msg': 'No Topic Found'}, status=status.HTTP_404_NOT_FOUND)
-
-
+           else:
+                serializer = StudentSelectedTopicSerializer(data=request.data)
+                if serializer.is_valid():
+                   batchid=serializer.data['batchid']
+                   topic=serializer.data['name']
+                   db.collection("topics").document(topic).update({"selected_by":batchid})
+                   return Response({'msg':'Success'}, status=status.HTTP_200_OK)
+                else:
+                   return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
