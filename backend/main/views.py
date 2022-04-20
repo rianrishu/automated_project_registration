@@ -82,7 +82,7 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     print(password_db)
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                        return Response({'msg': 'success'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
