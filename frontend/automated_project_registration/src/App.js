@@ -1,49 +1,30 @@
 import './App.css';
-<<<<<<< HEAD
-import {useState} from 'react'
-function App() {
-  const [credentials, setcred] = useState({ "Leader": "", "Student1": " ", "Student2": "", "class": "" ,"password":""})
-    const handlesubmit=async (e)=>{
-       e.preventDefault()
-       console.log(credentials)
-        const response = await fetch("http://localhost:8000/student/login/", {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ "batch":credentials.Leader,"password":credentials.password })
-          })
-          // const json = await response.json();
-    }
-    const onchange = (e) => {
-        setcred({ ...credentials, [e.target.name]: e.target.value })
-    }
-  return (
-    <form onSubmit={handlesubmit}>
-   Team Leader:<input type="text" name="Leader" onChange={onchange} required/>
-   {/* Student1:<input type="text" name="Student1" onChange={onchange} required/>
-   Student2:<input type="text" name="Student2"  onChange={onchange} required/>
-   Class:<input type="text" name="class" onChange={onchange}/> */}
-   Password:<input type="password" name="password" onChange={onchange}/>
-   <br/><button type="submit">Submit</button>
-    </form>
-  )
-=======
 import AdminLogin from './Components/Login/AdminLogin';
 import UserLogin from './Components/Login/UserLogin';
 import FacultyLogin from './Components/Login/FacultyLogin';
 import Home from './Components/Home';
-import AdminSignup from './Components/Signup/AdminSignup'
-import FacultySignup from './Components/Signup/FacultySignup'
 import UserSignup from './Components/Signup/UserSignup'
+import UserHome from './Components/User/UserHome'
+import UserNewTopic from './Components/User/UserNewTopic';
+import MiniState from './Context/MiniState';
 import {
   BrowserRouter,
  Switch,
   Route
 } from "react-router-dom";
+import { useLocation, useHistory,Link } from 'react-router-dom'
+import { useEffect, useState } from 'react';
 const App=()=> {
+  let location = useLocation();
+  const [batch,setbatch]=useState()
+  useEffect(()=>{
+  console.log(location.state)
+    setbatch(location.state)
+  },[])
+  
   return (
     <div>
+      <MiniState>
     <BrowserRouter> 
      <div className='container'>
        <Switch> 
@@ -54,7 +35,7 @@ const App=()=> {
           <FacultyLogin/>
           </Route>
           <Route exact path="/user/login">
-          <UserLogin/>
+          <UserLogin />
           </Route>
           <Route exact path="/admin/login">
           <AdminLogin/>
@@ -65,15 +46,22 @@ const App=()=> {
           <Route exact path="/user/signup">
           <UserSignup/>
           </Route>
+          <Route exact path="/user/newtopic">
+          <UserNewTopic/>
+          </Route>
+          <Route exact path="/user/homepage">
+          <UserHome batch={batch}/>
+          </Route>
           {/* <Route exact path="/admin/signup">
           <AdminSignup/>
           </Route> */}
         </Switch> 
         </div>
         </BrowserRouter> 
+
+        </MiniState>
         </div>
   );
->>>>>>> 449edab31681628d40ff443f9df892d54243a0d4
 }
 
 export default App;
