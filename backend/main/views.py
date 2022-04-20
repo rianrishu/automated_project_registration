@@ -40,17 +40,19 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset=Student.objects.all()
     serializer_class=StudentSerializer
     def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             # serializer.save()
             
-            studnet_leader=serializer.data['student_leader']
+            student_leader=serializer.data['student_leader']
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
             section=serializer.data['section']
             password=make_password(serializer.data['password'])
             data={
-            "student_leader":studnet_leader,
+            "student_leader":student_leader,
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
@@ -58,6 +60,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             # data = {"name": name, "email":email}
             batch=generate_batch(section)
             # database.child("users").set(data) 
+            self.request.session['batch_code'] = batch
             db.collection("students").document(batch).set(data)
             return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
 
@@ -66,6 +69,8 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
     queryset=StudentLogin.objects.all()
     serilazier_class=StudentLoginSerializer
     def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
         serializer = StudentLoginSerializer(data=request.data)
         if serializer.is_valid():
             batch_response=serializer.data['batch']
@@ -79,14 +84,21 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                 if batch_temp == batch_response:
                     flag=1
                     password_db=db.collection('students').document(batch_response).get()
-                    print(password_db)
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
-                        return Response({'msg': 'success'}, status=status.HTTP_202_ACCEPTED)
+                        self.request.session['batch_code'] = batch_response
+                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
-                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)                
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)   
+
+
+class LeaveHomePage(viewsets.ModelViewSet):
+    def create(self, requst, format=None):
+        if 'batch_code' in self.request.session:
+            self.request.session.pop('batch_code')        
+        return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
              
 class StudentTopics(viewsets.ModelViewSet):
        queryset=GetTopics.objects.all()
