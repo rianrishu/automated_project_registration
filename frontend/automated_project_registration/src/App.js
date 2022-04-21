@@ -10,7 +10,8 @@ import MiniState from './Context/MiniState';
 import {
   BrowserRouter,
  Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import { useLocation, useHistory,Link } from 'react-router-dom'
 import { useEffect, useState } from 'react';
@@ -20,16 +21,36 @@ import { useEffect, useState } from 'react';
   let history=useHistory();
   const [batch,setbatch]=useState()
   useEffect(()=>{
-    console.log(location.state)
-    setbatch(location.state)
+    // console.log(location.state)
+    // setbatch(location.state)
   },[])
   
   const [room,setroom]=useState(null)
-  
+  function setRoomCode(){
+    setroom(1)
+  }
   function clearRoomCode(){
     setroom(null)
   }
 
+  function goToHome(){
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+        <Home/>
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  }
+
+  useEffect(async ()=>{
+    fetch('/student/user-in-homepage/')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.code)
+      setroom(data.code);
+    })
+  },[])
 
   return (
     <div>
@@ -37,14 +58,17 @@ import { useEffect, useState } from 'react';
     <BrowserRouter> 
      <div className='container'>
        <Switch> 
-       <Route exact path="/">
+       {/* <Route exact path="/">
           <Home/>
+          </Route> */}
+          <Route exact path="/" > 
+            {room ? <UserHome/> :<Home/> }
           </Route>
           <Route exact path="/faculty/login">
           <FacultyLogin/>
           </Route>
           <Route exact path="/user/login">
-          <UserLogin />
+          <UserLogin/>
           </Route>
           <Route exact path="/admin/login">
           <AdminLogin/>
@@ -62,10 +86,9 @@ import { useEffect, useState } from 'react';
           <UserHome batch={batch}/>
           </Route> */}
           <Route path="/user/homepage" >
-          {/* // render={(props) => { */}
-          {/* //   return <UserHome {...props} leaveRoomCallback={clearRoomCode} batch={batch}/> */}
-
-          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode} batch={batch}/>:history.push('/')}
+          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
+            <Home/>
+          }
         </Route>
           {/* <Route exact path="/admin/signup">
           <AdminSignup/>

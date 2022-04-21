@@ -8,21 +8,30 @@ import Navbar from './Navbar';
 function UserHome(props) {
   let history = useHistory()
   const [topics,setopic]=useState([]);
-
+console.log("abc")
   const leaveButtonPressed=async()=> {
   
-    const requestOptions = {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    };
-    fetch("student/leave-homepage", requestOptions).then((_response) => {
+    // const response = await fetch("http://localhost:8000/student/leave-homepage/", {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   }
+    // })
+    // props.leaveRoomCallback();
       props.leaveRoomCallback();
-      history.push("/");
-    });
+    history.push("/");
+    // const requestOptions = {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    // };
+    // fetch("student/leave-homepage", requestOptions).then((_response) => {
+    //   props.leaveRoomCallback();
+    //   history.push("/");
+    // });
   }
 
   useEffect(async()=>{
-    console.log(props.batch)
+    // console.log(props.batch)
 
     // setbatch(props.batch.batch)
     const response = await fetch("http://localhost:8000/student/gettopics/", {
@@ -45,7 +54,7 @@ function UserHome(props) {
     })} 
  
  <Link to="/user/newtopic">Add New Topic</Link>
- <Link className="btn btn-outline-success" onClick={leaveButtonPressed}>SignOut</Link>
+ <Link className="btn btn-outline-success" to="#" onClick={leaveButtonPressed}>SignOut</Link>
  </>
   )
 }

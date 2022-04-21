@@ -1,7 +1,7 @@
 import React,{useState,useContext} from 'react'
 import { useLocation, useHistory,Link } from 'react-router-dom'
 import MiniContext from '../../Context/MiniContext';
-function UserLogin({useCallbackUpdate}) {
+function UserLogin() {
   const history=useHistory();
   const context=useContext(MiniContext);
   const {batch,setbatch}=context;
@@ -18,6 +18,7 @@ function UserLogin({useCallbackUpdate}) {
         const json = await response.json();
         if(response.status==202){
          setbatch(credentials.batch)
+  
      history.push({
       pathname: '/user/homepage',
       search: '?query=abc',
