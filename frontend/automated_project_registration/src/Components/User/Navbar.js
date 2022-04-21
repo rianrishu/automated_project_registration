@@ -19,7 +19,7 @@ function Navbar() {
        
       </ul>
       <form className="d-flex">
-        <Link className="btn btn-outline-success" >SignOut</Link>
+        <Link className="btn btn-outline-success" to="/" >SignOut</Link>
       </form>
     </div>
   </div>

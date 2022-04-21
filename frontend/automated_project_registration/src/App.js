@@ -20,16 +20,27 @@ import { useEffect, useState } from 'react';
   let history=useHistory();
   const [batch,setbatch]=useState()
   useEffect(()=>{
-    console.log(location.state)
-    setbatch(location.state)
+    // console.log(location.state)
+    // setbatch(location.state)
   },[])
   
   const [room,setroom]=useState(null)
-  
+  function setRoomCode(){
+    setroom(1)
+  }
   function clearRoomCode(){
     setroom(null)
   }
 
+  function goToHome(){
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+        <Home/>
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  }
 
   return (
     <div>
@@ -44,7 +55,7 @@ import { useEffect, useState } from 'react';
           <FacultyLogin/>
           </Route>
           <Route exact path="/user/login">
-          <UserLogin />
+          <UserLogin setsession={setRoomCode}/>
           </Route>
           <Route exact path="/admin/login">
           <AdminLogin/>
@@ -62,10 +73,11 @@ import { useEffect, useState } from 'react';
           <UserHome batch={batch}/>
           </Route> */}
           <Route path="/user/homepage" >
-          {/* // render={(props) => { */}
-          {/* //   return <UserHome {...props} leaveRoomCallback={clearRoomCode} batch={batch}/> */}
-
-          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode} batch={batch}/>:history.push('/')}
+          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
+            // <Route exact path="/">
+            <Home/>
+            // </Route>
+          }
         </Route>
           {/* <Route exact path="/admin/signup">
           <AdminSignup/>
