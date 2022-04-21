@@ -10,7 +10,8 @@ import MiniState from './Context/MiniState';
 import {
   BrowserRouter,
  Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import { useLocation, useHistory,Link } from 'react-router-dom'
 import { useEffect, useState } from 'react';
@@ -42,20 +43,32 @@ import { useEffect, useState } from 'react';
     </BrowserRouter>
   }
 
+  useEffect(async ()=>{
+    fetch('/student/user-in-homepage/')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.code)
+      setroom(data.code);
+    })
+  },[])
+
   return (
     <div>
       <MiniState>
     <BrowserRouter> 
      <div className='container'>
        <Switch> 
-       <Route exact path="/">
+       {/* <Route exact path="/">
           <Home/>
+          </Route> */}
+          <Route exact path="/" > 
+            {room ? <UserHome/> :<Home/> }
           </Route>
           <Route exact path="/faculty/login">
           <FacultyLogin/>
           </Route>
           <Route exact path="/user/login">
-          <UserLogin setsession={setRoomCode}/>
+          <UserLogin/>
           </Route>
           <Route exact path="/admin/login">
           <AdminLogin/>
@@ -74,9 +87,7 @@ import { useEffect, useState } from 'react';
           </Route> */}
           <Route path="/user/homepage" >
           {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
-            // <Route exact path="/">
             <Home/>
-            // </Route>
           }
         </Route>
           {/* <Route exact path="/admin/signup">

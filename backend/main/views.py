@@ -100,6 +100,15 @@ class LeaveHomePage(viewsets.ModelViewSet):
         if 'batch_code' in self.request.session:
             self.request.session.pop('batch_code')        
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
+
+class UserInHomepage(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        data={
+            'code': self.request.session.get('batch_code')
+        }        
+        return JsonResponse(data, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
        queryset=GetTopics.objects.all()
