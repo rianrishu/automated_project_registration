@@ -50,6 +50,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
             section=serializer.data['section']
+            batch_session = self.request.session.session_key
             password=make_password(serializer.data['password'])
             data={
             "student_leader":student_leader,

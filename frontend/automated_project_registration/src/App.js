@@ -14,14 +14,23 @@ import {
 } from "react-router-dom";
 import { useLocation, useHistory,Link } from 'react-router-dom'
 import { useEffect, useState } from 'react';
-const App=()=> {
+
+ function App() {
   let location = useLocation();
+  let history=useHistory();
   const [batch,setbatch]=useState()
   useEffect(()=>{
-  console.log(location.state)
+    console.log(location.state)
     setbatch(location.state)
   },[])
   
+  const [room,setroom]=useState(null)
+  
+  function clearRoomCode(){
+    setroom(null)
+  }
+
+
   return (
     <div>
       <MiniState>
@@ -49,9 +58,15 @@ const App=()=> {
           <Route exact path="/user/newtopic">
           <UserNewTopic/>
           </Route>
-          <Route exact path="/user/homepage">
+          {/* <Route exact path="/user/homepage">
           <UserHome batch={batch}/>
-          </Route>
+          </Route> */}
+          <Route path="/user/homepage" >
+          {/* // render={(props) => { */}
+          {/* //   return <UserHome {...props} leaveRoomCallback={clearRoomCode} batch={batch}/> */}
+
+          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode} batch={batch}/>:history.push('/')}
+        </Route>
           {/* <Route exact path="/admin/signup">
           <AdminSignup/>
           </Route> */}

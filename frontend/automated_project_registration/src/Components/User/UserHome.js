@@ -1,9 +1,26 @@
 import React, { useEffect, useState,useContext } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Cards from '../Cards'
 import Navbar from './Navbar';
+
+
+
 function UserHome(props) {
+  let history = useHistory()
   const [topics,setopic]=useState([]);
+
+  const leaveButtonPressed=async()=> {
+  
+    const requestOptions = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+    };
+    fetch("student/leave-homepage", requestOptions).then((_response) => {
+      props.leaveRoomCallback();
+      history.push("/");
+    });
+  }
+
   useEffect(async()=>{
     console.log(props.batch)
 
@@ -28,6 +45,7 @@ function UserHome(props) {
     })} 
  
  <Link to="/user/newtopic">Add New Topic</Link>
+ <Link className="btn btn-outline-success" onClick={leaveButtonPressed}>SignOut</Link>
  </>
   )
 }
