@@ -8,7 +8,8 @@ import Navbar from './Navbar';
 function UserHome(props) {
   let history = useHistory()
   const [topics,setopic]=useState([]);
-console.log("abc")
+  const [batch,setbatch]=useState("0")
+
   const leaveButtonPressed=async()=> {
   
     // const response = await fetch("http://localhost:8000/student/leave-homepage/", {
@@ -32,13 +33,16 @@ console.log("abc")
 
   useEffect(async()=>{
     // console.log(props.batch)
+    if(props.batch!=undefined)
+    setbatch(props.batch.batch)
 
     // setbatch(props.batch.batch)
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
+      body: JSON.stringify({ "batch":props.batch.batch })
     })
     const json = await response.json();
     setopic(json.msg)
@@ -46,7 +50,7 @@ console.log("abc")
   return (
  <>
  <Navbar/>
- <h3 style={{color:"white"}}>Welcome {"batch"}</h3>
+ <h3 style={{color:"white"}}>Welcome {batch}</h3>
  {topics.map((topic,index)=>{
      return   <div className="container my-3" key={index} >
     <Cards topic={topic}/>
@@ -54,7 +58,7 @@ console.log("abc")
     })} 
  
  <Link to="/user/newtopic">Add New Topic</Link>
- <Link className="btn btn-outline-success" to="#" onClick={leaveButtonPressed}>SignOut</Link>
+ {/* <Link className="btn btn-outline-success" to="#" onClick={leaveButtonPressed}>SignOut</Link> */}
  </>
   )
 }

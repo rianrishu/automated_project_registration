@@ -108,6 +108,7 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
            data=request.data
+           print(data)
            res = not bool(data)
            if res:
              ans=[]

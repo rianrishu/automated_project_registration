@@ -19,28 +19,22 @@ import { useEffect, useState } from 'react';
   let location = useLocation();
   let history=useHistory();
   const [batch,setbatch]=useState()
+  const [room,setroom]=useState(-1)
   useEffect(()=>{
-    // console.log(location.state)
-    // setbatch(location.state)
+    console.log(location.state)
+    setbatch(location.state)
   },[])
-  
-  const [room,setroom]=useState(null)
+  console.log("APP.js")
   function setRoomCode(){
+    console.log("Set")
     setroom(1)
   }
+  console.log(room)
   function clearRoomCode(){
-    setroom(null)
+    console.log("clear")
+    setroom(-1)
   }
 
-  function goToHome(){
-    <BrowserRouter>
-      <Switch>
-        <Route exact path="/">
-        <Home/>
-        </Route>
-      </Switch>
-    </BrowserRouter>
-  }
 
   return (
     <div>
@@ -73,7 +67,7 @@ import { useEffect, useState } from 'react';
           <UserHome batch={batch}/>
           </Route> */}
           <Route path="/user/homepage" >
-          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
+          {(room!=-1)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
             // <Route exact path="/">
             <Home/>
             // </Route>

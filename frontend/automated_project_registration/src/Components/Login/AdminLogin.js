@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 import {Link} from "react-router-dom"
-import  '../../CSS/Landing.css'
+import  '../../CSS/Login.css'
 function AdminLogin() {
     const [credentials, setcred] = useState({ "userid":"","password":""})
     const handlesubmit=async()=>{

@@ -1,5 +1,6 @@
 import React,{useState,useContext} from 'react'
 import { useLocation, useHistory,Link } from 'react-router-dom'
+import '../../CSS/Login.css'
 import MiniContext from '../../Context/MiniContext';
 function UserLogin(props) {
   const history=useHistory();
@@ -21,7 +22,6 @@ function UserLogin(props) {
          props.setsession();
      history.push({
       pathname: '/user/homepage',
-      search: '?query=abc',
       state: { batch:credentials.batch}
     })
     // useCallbackUpdate(credentials.batch)
@@ -34,6 +34,7 @@ function UserLogin(props) {
 
   }
   return (
+    <section id="loginpage">
     <div className="login-box">
   <h2>Login</h2>
   <form onSubmit={handlesubmit}>
@@ -55,6 +56,7 @@ function UserLogin(props) {
   </form>
   <Link to="/user/signup">Create New User</Link>
 </div>
+</section>
   )
 }
 
