@@ -34,22 +34,23 @@ function UserSignup() {
       </div>
       <div className="user-box">
         <select name="section" onChange={onchange}>
-          <option name="A" value="a" default>A</option>
-          <option name="B" value="b">B</option>
-          <option name="C" value="c">C</option>
+          <option name="A" value="a" default style={{"color":"black"}}>A</option>
+          <option name="B" value="b" style={{"color":"black"}}>B</option>
+          <option name="C" value="c" style={{"color":"black"}}>C</option>
         </select>
-        <label style={{"color":"aqua","marginTop":"-18px","font-size": "12px"}}>Section</label>
+        <label style={{"color":"black","marginTop":"-18px","font-size": "12px"}}>Section</label>
       </div>
       <div className="user-box">
         <input type="password" name="password"  onChange={onchange} required=""/>
         <label>Password</label>
       </div>
       <Link to="" onClick={handlesubmit}>
+        {/* <span></span>
         <span></span>
         <span></span>
         <span></span>
-        <span></span>
-        Submit
+        Submit */}
+        <button className='custom-btn btn-9' >Submit</button>
       </Link>
     </form>
   </div>

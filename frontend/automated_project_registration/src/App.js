@@ -54,50 +54,7 @@ import { useEffect, useState } from 'react';
 
   return (
     <div>
-      <MiniState>
-    <BrowserRouter> 
-     <div className='container'>
-       <Switch> 
-       {/* <Route exact path="/">
-          <Home/>
-          </Route> */}
-          <Route exact path="/" > 
-            {room ? <UserHome/> :<Home/> }
-          </Route>
-          <Route exact path="/faculty/login">
-          <FacultyLogin/>
-          </Route>
-          <Route exact path="/user/login">
-          <UserLogin/>
-          </Route>
-          <Route exact path="/admin/login">
-          <AdminLogin/>
-          </Route>
-          {/* <Route exact path="/faculty/signup">
-          <FacultySignup/>
-          </Route> */}
-          <Route exact path="/user/signup">
-          <UserSignup/>
-          </Route>
-          <Route exact path="/user/newtopic">
-          <UserNewTopic/>
-          </Route>
-          {/* <Route exact path="/user/homepage">
-          <UserHome batch={batch}/>
-          </Route> */}
-          <Route path="/user/homepage" >
-          {(room!=null)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
-            <Home/>
-          }
-        </Route>
-          {/* <Route exact path="/admin/signup">
-          <AdminSignup/>
-          </Route> */}
-        </Switch> 
-        </div>
-        </BrowserRouter> 
-
-        </MiniState>
+      <UserHome/>
         </div>
   );
 }

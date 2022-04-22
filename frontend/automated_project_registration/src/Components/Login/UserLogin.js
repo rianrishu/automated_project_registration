@@ -46,14 +46,21 @@ function UserLogin() {
       <label>Password</label>
     </div>
     <Link to="#" onClick={handlesubmit}>
+      {/* <span></span>
       <span></span>
       <span></span>
-      <span></span>
-      <span></span>
+      <span></span> */}
+      {/* Submit */}
+      <div className='d-flex justify-content-center'>
+    <button className='custom-btn btn-9' >
       Submit
+    </button>
+    </div>
     </Link>
   </form>
-  <Link to="/user/signup">Create New User</Link>
+  <Link to="/user/signup"><button className='custom-btn btn-9' >
+  Create New User
+    </button></Link>
 </div>
   )
 }
