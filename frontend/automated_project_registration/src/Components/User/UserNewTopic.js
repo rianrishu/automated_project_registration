@@ -1,18 +1,19 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
+import MiniContext from '../../Context/MiniContext';
 import { Link } from 'react-router-dom'
-function UserNewTopic() {
+function UserNewTopic(props) {
     const [credentials, setcred] = useState({ "name":" ","description":" "})
     const handlesubmit=async()=>{
-        console.log(credentials)
-        const response = await fetch("http://localhost:8000/student/login/", {
+       console.log(props.batch)
+        const response = await fetch("http://localhost:8000/student/addnewtopic/", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "name":credentials.name,"description":credentials.description })
+            body: JSON.stringify({ "name":credentials.name,"description":credentials.description,"selected_by":props.batch })
           })
           const json = await response.json();
-          if(response.status==202){
+          if(response.status==200){
         
           }
        else
@@ -31,10 +32,10 @@ function UserNewTopic() {
         <label>Topic Name</label>
       </div>
       <div className="user-box">
-       <textarea name="description"  cols="30" rows="4"  onChange={onchange} />
-        <label style={{"color":"aqua","marginTop":"-18px","font-size": "12px"}}>Description</label>
+       <textarea name="description" id="description" cols="30" rows="4"  onChange={onchange} />
+        <label htmlFor="description">Description</label>
       </div>
-      <Link to="#" onClick={handlesubmit}>
+      <Link to="#" className='custom-btn btn-9' onClick={handlesubmit}>
         <span></span>
         <span></span>
         <span></span>

@@ -29,11 +29,12 @@ class StudentLogin(models.Model):
     login_at=models.DateTimeField(auto_now_add=True)
 
 class GetTopics(models.Model):
-   name=models.CharField(max_length=3, null=False)
-   description=models.CharField(max_length=15, null=False)
+   name=models.CharField(max_length=30, null=False)
+   description=models.CharField(max_length=1500, null=False)
    selected_by=models.CharField(max_length=3,null=False) 
 
 class SelectedTopics(models.Model):
    name=models.CharField(max_length=20, null=False)
-   batchid=models.CharField(max_length=3,null=False)      
+   batchid=models.CharField(max_length=3,null=False)  
+      
     

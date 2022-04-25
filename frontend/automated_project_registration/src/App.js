@@ -3,6 +3,7 @@ import AdminLogin from './Components/Login/AdminLogin';
 import UserLogin from './Components/Login/UserLogin';
 import FacultyLogin from './Components/Login/FacultyLogin';
 import Home from './Components/Home';
+
 import UserSignup from './Components/Signup/UserSignup'
 import UserHome from './Components/User/UserHome'
 import UserNewTopic from './Components/User/UserNewTopic';
@@ -10,31 +11,29 @@ import MiniState from './Context/MiniState';
 import {
   BrowserRouter,
  Switch,
-  Route
+  Route,
+  Redirect
 } from "react-router-dom";
 import { useLocation, useHistory,Link } from 'react-router-dom'
-import { useEffect, useState } from 'react';
+import { useEffect, useState ,useContext} from 'react';
 
  function App() {
+  const history=useHistory();
   let location = useLocation();
-  let history=useHistory();
-  const [batch,setbatch]=useState()
-  const [room,setroom]=useState(-1)
+  const [batch,setbatch]=useState();
   useEffect(()=>{
-    console.log(location.state)
-    setbatch(location.state)
-  },[])
-  console.log("APP.js")
-  function setRoomCode(){
-    console.log("Set")
-    setroom(1)
-  }
-  console.log(room)
-  function clearRoomCode(){
-    console.log("clear")
-    setroom(-1)
-  }
+    if(location.state!=undefined)
+      setbatch(location.state.batch)
+  },[batch])
 
+
+  // useEffect(async ()=>{
+  //   fetch('/student/user-in-homepage/')
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     console.log(data.code)
+  //   })
+  // },[])
 
   return (
     <div>
@@ -49,7 +48,7 @@ import { useEffect, useState } from 'react';
           <FacultyLogin/>
           </Route>
           <Route exact path="/user/login">
-          <UserLogin setsession={setRoomCode}/>
+          <UserLogin />
           </Route>
           <Route exact path="/admin/login">
           <AdminLogin/>
@@ -61,17 +60,13 @@ import { useEffect, useState } from 'react';
           <UserSignup/>
           </Route>
           <Route exact path="/user/newtopic">
-          <UserNewTopic/>
+          <UserNewTopic batch={batch}/>
           </Route>
           {/* <Route exact path="/user/homepage">
           <UserHome batch={batch}/>
           </Route> */}
           <Route path="/user/homepage" >
-          {(room!=-1)?<UserHome leaveRoomCallback={clearRoomCode}  batch={batch}/>:
-            // <Route exact path="/">
-            <Home/>
-            // </Route>
-          }
+          <UserHome   batch={batch}/>
         </Route>
           {/* <Route exact path="/admin/signup">
           <AdminSignup/>

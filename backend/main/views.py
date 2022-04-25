@@ -10,7 +10,7 @@ from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
 from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
-from .models import Student, StudentLogin, GetTopics, SelectedTopics
+from .models import Student, StudentLogin, GetTopics, SelectedTopics 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -88,6 +88,7 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
                         self.request.session['batch_code'] = batch_response
+                        print("login",self.request.session.get('batch_code')) 
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -100,6 +101,19 @@ class LeaveHomePage(viewsets.ModelViewSet):
         if 'batch_code' in self.request.session:
             self.request.session.pop('batch_code')        
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
+
+class UserInHomepage(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        print("abc",self.request.session.get('batch_code'))    
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        data={
+            'code': self.request.session.get('batch_code')
+        }
+        print(self.request.session.get('batch_code'))
+        if data['code'] == None:
+            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(data, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
        queryset=GetTopics.objects.all()
@@ -139,3 +153,26 @@ class StudentTopics(viewsets.ModelViewSet):
                    return Response({'msg':'Success'}, status=status.HTTP_200_OK)
                 else:
                    return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+class StudentNewTopic(viewsets.ModelViewSet):
+    queryset=GetTopics.objects.all()
+    serilazier_class=StudentTopicSerializer
+    def create(self, request, fromat=None):
+        serializer = StudentTopicSerializer(data=request.data)
+        if serializer.is_valid():
+            batch_res=serializer.data['selected_by']
+            name_res=serializer.data['name']
+            description_res=serializer.data['description']
+            data={
+             "description":description_res,
+              "name":name_res,
+              "selected_by":batch_res
+            }
+            # print(data)
+            db.collection("topics").add(data)
+            return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
+        else:
+          return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
+            
