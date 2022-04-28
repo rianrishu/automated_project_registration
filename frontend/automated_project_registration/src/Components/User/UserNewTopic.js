@@ -1,16 +1,21 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext, useEffect} from 'react'
 import MiniContext from '../../Context/MiniContext';
-import { Link } from 'react-router-dom'
-function UserNewTopic(props) {
+import { Link, useLocation } from 'react-router-dom'
+function UserNewTopic() {
     const [credentials, setcred] = useState({ "name":" ","description":" "})
+    let location=useLocation();
+    const [batch,setbatch]=useState(null)
+   useEffect(()=>{
+    if(location.state!=undefined)
+    setbatch(location.state)
+   },[])
     const handlesubmit=async()=>{
-       console.log(props.batch)
         const response = await fetch("http://localhost:8000/student/addnewtopic/", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "name":credentials.name,"description":credentials.description,"selected_by":props.batch })
+            body: JSON.stringify({ "name":credentials.name,"description":credentials.description,"selected_by":batch })
           })
           const json = await response.json();
           if(response.status==200){

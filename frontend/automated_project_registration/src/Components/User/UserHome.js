@@ -1,34 +1,35 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory,useLocation } from "react-router-dom";
 import Cards from "../Cards";
 import Navbar from "./Navbar";
 import '../../CSS/Sidenav.css'
 import { HashLink as Link } from 'react-router-hash-link';
-function UserHome({batch}) {
+function UserHome() {
   let history = useHistory()
+  let location=useLocation();
   const [topics,setopic]=useState([]);
-  const [batch1,setbatch]=useState(0)
+  const [batch,setbatch]=useState(null)
   const select_topic=async (id)=>{
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ "batchid":batch,"name":id })
+      body: JSON.stringify({ "batchid":"1","name":id })
     })
     const json = await response.json();
     console.log(json)
   }
   useEffect(async () => {
-    if(batch!=undefined){
-      setbatch(batch)
+    
+    if(location.state!=undefined){
+      setbatch(location.state.batch);
       }
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         'Content-Type': 'application/json',
-      },
-      // body: JSON.stringify({ "batch":props.batch.batch })
+      }
     })
     // fetch('http://localhost:8000/student/user-in-homepage/')
     // .then((response) => response.json())
@@ -44,12 +45,12 @@ function UserHome({batch}) {
       // .then(data => {console.log(data)})
     const json = await response.json();
     setopic(json.msg);
-  }, [batch]);
+  }, []);
   
   return (
 <>
  <section id="sidenavhead">
- <header> <Navbar  batch={batch1}/></header>
+ <header> <Navbar  batch={batch}/></header>
  
  <nav id="sidenav">
    <ul>

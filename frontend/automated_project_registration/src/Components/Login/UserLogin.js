@@ -1,11 +1,8 @@
 import React,{useState,useContext} from 'react'
 import { useLocation, useHistory,Link } from 'react-router-dom'
 import '../../CSS/Login.css'
-import MiniContext from '../../Context/MiniContext';
-function UserLogin() {
+function UserLogin(props) {
   const history=useHistory();
-  const context=useContext(MiniContext);
-  const {batch,setbatch}=context;
   const [credentials, setcred] = useState({ "batch":" ","password":" "})
   const handlesubmit=async()=>{
    
@@ -18,8 +15,6 @@ function UserLogin() {
         })
         const json = await response.json();
         if(response.status==202){
-        setbatch(credentials.batch);
-    console.log(batch,credentials.batch)
      history.push({
       pathname: '/user/homepage',
       state: { batch:credentials.batch}
@@ -47,11 +42,6 @@ function UserLogin() {
       <label>Password</label>
     </div>
     <Link to="#" onClick={handlesubmit}>
-      {/* <span></span>
-      <span></span>
-      <span></span>
-      <span></span> */}
-      {/* Submit */}
       <div className='d-flex justify-content-center'>
     <button className='custom-btn btn-9' >
       Submit

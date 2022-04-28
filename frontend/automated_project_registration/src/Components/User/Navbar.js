@@ -36,7 +36,7 @@ function Navbar({batch}) {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" to="/user/newtopic" state={{ "batch": batch1 }}>
+              <Link className="nav-link active" to={{pathname:"/user/newtopic",state:batch1}}>
                 Add Topic
               </Link>
             </li>

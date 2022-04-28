@@ -18,15 +18,6 @@ import { useLocation, useHistory,Link } from 'react-router-dom'
 import { useEffect, useState ,useContext} from 'react';
 
  function App() {
-  const history=useHistory();
-  let location = useLocation();
-  const [batch,setbatch]=useState();
-  useEffect(()=>{
-    if(location.state!=undefined)
-      setbatch(location.state.batch)
-  },[batch])
-
-
   // useEffect(async ()=>{
   //   fetch('/student/user-in-homepage/')
   //   .then((response) => response.json())
@@ -51,7 +42,7 @@ import { useEffect, useState ,useContext} from 'react';
           <UserLogin />
           </Route>
           <Route exact path="/admin/login">
-          <AdminLogin/>
+          <AdminLogin />
           </Route>
           {/* <Route exact path="/faculty/signup">
           <FacultySignup/>
@@ -60,13 +51,13 @@ import { useEffect, useState ,useContext} from 'react';
           <UserSignup/>
           </Route>
           <Route exact path="/user/newtopic">
-          <UserNewTopic batch={batch}/>
+          <UserNewTopic />
           </Route>
           {/* <Route exact path="/user/homepage">
           <UserHome batch={batch}/>
           </Route> */}
           <Route path="/user/homepage" >
-          <UserHome   batch={batch}/>
+          <UserHome   />
         </Route>
           {/* <Route exact path="/admin/signup">
           <AdminSignup/>
