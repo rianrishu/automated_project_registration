@@ -18,19 +18,25 @@ function UserHome() {
       body: JSON.stringify({ "batchid":"1","name":id })
     })
     const json = await response.json();
+    gettopics();
     console.log(json)
+  }
+  const gettopics=async()=>{
+    const response = await fetch("http://localhost:8000/student/gettopics/", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }) 
+    const json = await response.json();
+    setopic(json.msg);
   }
   useEffect(async () => {
     
     if(location.state!=undefined){
       setbatch(location.state.batch);
       }
-    const response = await fetch("http://localhost:8000/student/gettopics/", {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
+    
     // fetch('http://localhost:8000/student/user-in-homepage/')
     // .then((response) => response.json())
     // .then((data) => {
@@ -43,8 +49,7 @@ function UserHome() {
       // fetch("/student/user-in-homepage")
       // .then(response => response.json())
       // .then(data => {console.log(data)})
-    const json = await response.json();
-    setopic(json.msg);
+   gettopics();
   }, []);
   
   return (
