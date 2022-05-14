@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import AdminLoginSerializer, StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
-from .models import AdminLogin, Student, StudentLogin, GetTopics, SelectedTopics
+from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer
+from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -88,6 +88,7 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
                         self.request.session['batch_code'] = batch_response
+                        print("login",self.request.session.get('batch_code')) 
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -103,11 +104,15 @@ class LeaveHomePage(viewsets.ModelViewSet):
 
 class UserInHomepage(viewsets.ModelViewSet):
     def list(self, request, format=None):
+        print("abc",self.request.session.get('batch_code'))    
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
         data={
             'code': self.request.session.get('batch_code')
-        }        
+        }
+        print(self.request.session.get('batch_code'))
+        if data['code'] == None:
+            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
         return JsonResponse(data, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
@@ -117,6 +122,7 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
            data=request.data
+           print(data)
            res = not bool(data)
            if res:
              ans=[]
@@ -149,8 +155,54 @@ class StudentTopics(viewsets.ModelViewSet):
                    return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
 
 
-class AdminLoginHandle(viewsets.ModelViewSet):
+
+class StudentNewTopic(viewsets.ModelViewSet):
+    queryset=GetTopics.objects.all()
+    serilazier_class=StudentTopicSerializer
+    def create(self, request, fromat=None):
+        serializer = StudentTopicSerializer(data=request.data)
+        if serializer.is_valid():
+            batch_res=serializer.data['selected_by']
+            name_res=serializer.data['name']
+            description_res=serializer.data['description']
+            data={
+             "description":description_res,
+              "name":name_res,
+              "selected_by":batch_res
+            }
+            # print(data)
+            db.collection("topics").add(data)
+            return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
+        else:
+          return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
+
+class AdminLoginViewSet(viewsets.ModelViewSet):
     queryset=AdminLogin.objects.all()
-    serializer_class=AdminLoginSerializer
+    serilazier_class=AdminLoginSerializer
     def create(self, request):
-        print("IN admin login handle")
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        serializer = AdminLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            print(data)
+            userid=serializer.data['userid']
+            password_response=serializer.data['password']
+            admins=db.collection('Admin').get()
+            temp=[]
+            flag=-1
+            for admin in admins:
+                temp.append(admin.userid)
+            for admin_temp in temp:
+                if admin_temp == userid:
+                    flag=1
+                    password_db=db.collection('Admin').document(admin).get()
+                    data=password_db.to_dict()['password']
+                    if(check_password(password_response, data)):
+                        self.request.session['batch_code'] = userid
+                        print("login",self.request.session.get('batch_code')) 
+                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    else:
+                        return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+            if flag==-1:
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+            

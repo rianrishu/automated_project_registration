@@ -1,66 +1,87 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory,useLocation } from "react-router-dom";
 import Cards from "../Cards";
 import Navbar from "./Navbar";
-import  '../../CSS/homepage'
-function UserHome(props) {
-  let history = useHistory();
-  const [topics, setopic] = useState([]);
-  console.log("abc");
-  const leaveButtonPressed = async () => {
-    // const response = await fetch("http://localhost:8000/student/leave-homepage/", {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   }
-    // })
-    // props.leaveRoomCallback();
-    props.leaveRoomCallback();
-    history.push("/");
-    // const requestOptions = {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    // };
-    // fetch("student/leave-homepage", requestOptions).then((_response) => {
-    //   props.leaveRoomCallback();
-    //   history.push("/");
-    // });
-  };
-
-  useEffect(async () => {
-    // console.log(props.batch)
-
-    // setbatch(props.batch.batch)
+import '../../CSS/Sidenav.css'
+import { HashLink as Link } from 'react-router-hash-link';
+function UserHome() {
+  let history = useHistory()
+  let location=useLocation();
+  const [topics,setopic]=useState([]);
+  const [batch,setbatch]=useState(null);
+  const [abc,setabc]=useState("false")
+  const select_topic=async (id)=>{
+    setabc("true");
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    });
+      body: JSON.stringify({ "batchid":"1","name":id })
+    })
+    const json = await response.json();
+    gettopics();
+    console.log(json)
+  }
+  const gettopics=async()=>{
+    const response = await fetch("http://localhost:8000/student/gettopics/", {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }) 
     const json = await response.json();
     setopic(json.msg);
+  }
+  useEffect(async () => {
+    
+    if(location.state!=undefined){
+      setbatch(location.state.batch);
+      }
+    
+    // fetch('http://localhost:8000/student/user-in-homepage/')
+    // .then((response) => response.json())
+    // .then((data) => {
+    //   console.log(data.code)
+    // })
+      // const response1=await fetch("/student/user-in-homepage")
+      // const json1=await response1.json();
+      // setbatch(json1.code);
+      // console.log(json1)
+      // fetch("/student/user-in-homepage")
+      // .then(response => response.json())
+      // .then(data => {console.log(data)})
+   gettopics();
   }, []);
+  
   return (
-    <>
-      <Navbar />
-      {topics.map((topic, index) => {
-        return (
-          <div className="container my-3" key={index}>
-            <Cards topic={topic} index={index}/>
-          </div>
-        );
-      })}
- <Link to="#section2">CLick</Link>
-      <Link to="/user/newtopic">Add New Topic</Link>
-      <Link
-        className="btn btn-outline-success"
-        to="#"
-        onClick={leaveButtonPressed}
-      >
-        SignOut
-      </Link>
-    </>
-  );
+<>
+ <section id="sidenavhead">
+ <header> <Navbar  batch={batch}/></header>
+ 
+ <nav id="sidenav">
+   <ul>
+ {topics.map((topic,index)=>{
+     return   <li key={index}>
+     <Link to={`#section-${index}`} >{topic.name.substring(0,18)}...</Link>
+
+    </li>
+    })}
+    </ul>
+ </nav>
+ <main>
+   
+ {topics.map((topic,index)=>{
+     return   <section key={index} id={`section-${index}`}>
+    <Cards topic={topic} index={index} disab={abc} select_topic={select_topic}/>
+    </section>
+    })}
+    
+    </main> 
+ 
+ </section>
+ </>
+  )
 }
 
 export default UserHome;

@@ -14,10 +14,9 @@ import {  CardActionArea, CardActions } from '@mui/material';
 
 const Cards = (props) => {
   const {name,description,id}=props.topic
-  const index=props.index
-  console.log(`section${index}`)
+  const {ab}=props.disab;
   return (
-    <Card id={`section${index}`}>
+    <Card>
       <CardActionArea>
         <CardContent>
           <Typography gutterBottom variant="h5" component="div">
@@ -30,7 +29,7 @@ const Cards = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-      <button className="custom-btn btn-15">Select</button>
+      <button className="custom-btn btn-15" onClick={() =>props.select_topic(id)} disabled={ab}>Select</button>
       </CardActions>
     </Card>
 

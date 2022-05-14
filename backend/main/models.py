@@ -29,8 +29,8 @@ class StudentLogin(models.Model):
     login_at=models.DateTimeField(auto_now_add=True)
 
 class GetTopics(models.Model):
-   name=models.CharField(max_length=3, null=False)
-   description=models.CharField(max_length=15, null=False)
+   name=models.CharField(max_length=30, null=False)
+   description=models.CharField(max_length=1500, null=False)
    selected_by=models.CharField(max_length=3,null=False) 
 
 class SelectedTopics(models.Model):
@@ -38,6 +38,7 @@ class SelectedTopics(models.Model):
    batchid=models.CharField(max_length=3,null=False)  
 
 class AdminLogin(models.Model):
-    username=models.CharField(max_length=20, null=False)
-    password=models.CharField(max_length=20, null=False)       
+   userid=models.CharField(max_length=20, null=False)
+   password=models.CharField(max_length=30,null=False)     
+      
     

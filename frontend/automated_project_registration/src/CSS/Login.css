@@ -1,7 +1,10 @@
 html {
     height: 100%;
+    background: cornsilk;
   }
-  body {
+  #loginpage {
+    height: 100%;
+    width: 100vw;
     margin:0;
     padding:0;
     font-family: sans-serif;
@@ -47,10 +50,9 @@ html {
     width: 100%;
     padding: 10px 0;
     font-size: 16px;
-    color: #fff;
+    color: rgb(30, 27, 27);
     margin-bottom: 30px;
     margin-top: 20px;
-    border-bottom: 1px solid #fff;
     outline: none;
     background: transparent;
   }
@@ -86,6 +88,13 @@ html {
     font-size: 12px;
   }
   
+  .login-box .user-box textarea:focus ~ label,
+  .login-box .user-box textarea:valid ~ label {
+    top: -20px;
+    left: 0;
+    color: #181D31;
+    font-size: 12px;
+  }
   .login-box form a {
     position: relative;
     display: inline-block;
