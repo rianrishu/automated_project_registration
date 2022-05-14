@@ -14,6 +14,7 @@ import {  CardActionArea, CardActions } from '@mui/material';
 
 const Cards = (props) => {
   const {name,description,id}=props.topic
+  const {ab}=props.disab;
   return (
     <Card>
       <CardActionArea>
@@ -28,7 +29,7 @@ const Cards = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-      <button className="custom-btn btn-15" onClick={() =>props.select_topic(id)}>Select</button>
+      <button className="custom-btn btn-15" onClick={() =>props.select_topic(id)} disabled={ab}>Select</button>
       </CardActions>
     </Card>
 

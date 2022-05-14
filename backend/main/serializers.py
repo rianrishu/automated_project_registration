@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from .models import Student, StudentLogin, GetTopics,SelectedTopics
+from .models import Student, StudentLogin, GetTopics,SelectedTopics,AdminLogin
 
 class StudentSerializer(serializers.ModelSerializer):
     # password = serializers.CharField(
@@ -35,4 +35,14 @@ class StudentTopicSerializer(serializers.ModelSerializer):
 class StudentSelectedTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model=SelectedTopics
-        fields=('name','batchid')        
+        fields=('name','batchid')   
+
+class StudentSelectedTopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=SelectedTopics
+        fields=('name','batchid')              
+
+class AdminLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=AdminLogin
+        fields=('userid','password')  

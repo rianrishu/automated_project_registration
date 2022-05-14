@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
-from .models import Student, StudentLogin, GetTopics, SelectedTopics 
+from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer
+from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -175,4 +175,34 @@ class StudentNewTopic(viewsets.ModelViewSet):
             return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
         else:
           return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
+
+class AdminLoginViewSet(viewsets.ModelViewSet):
+    queryset=AdminLogin.objects.all()
+    serilazier_class=AdminLoginSerializer
+    def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        serializer = AdminLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            print(data)
+            userid=serializer.data['userid']
+            password_response=serializer.data['password']
+            admins=db.collection('Admin').get()
+            temp=[]
+            flag=-1
+            for admin in admins:
+                temp.append(admin.userid)
+            for admin_temp in temp:
+                if admin_temp == userid:
+                    flag=1
+                    password_db=db.collection('Admin').document(admin).get()
+                    data=password_db.to_dict()['password']
+                    if(check_password(password_response, data)):
+                        self.request.session['batch_code'] = userid
+                        print("login",self.request.session.get('batch_code')) 
+                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    else:
+                        return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+            if flag==-1:
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
             

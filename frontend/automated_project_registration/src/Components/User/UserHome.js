@@ -8,8 +8,10 @@ function UserHome() {
   let history = useHistory()
   let location=useLocation();
   const [topics,setopic]=useState([]);
-  const [batch,setbatch]=useState(null)
+  const [batch,setbatch]=useState(null);
+  const [abc,setabc]=useState("false")
   const select_topic=async (id)=>{
+    setabc("true");
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
@@ -71,7 +73,7 @@ function UserHome() {
    
  {topics.map((topic,index)=>{
      return   <section key={index} id={`section-${index}`}>
-    <Cards topic={topic} index={index} select_topic={select_topic}/>
+    <Cards topic={topic} index={index} disab={abc} select_topic={select_topic}/>
     </section>
     })}
     

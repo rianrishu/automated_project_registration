@@ -35,7 +35,7 @@ function FacultyLogin() {
       Submit
     </Link>
   </form>
-  <Link to="faculty/signup">Create New Faculty</Link>
+  {/* <Link to="faculty/signup">Create New Faculty</Link> */}
 </div>
   )
 }

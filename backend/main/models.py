@@ -36,5 +36,9 @@ class GetTopics(models.Model):
 class SelectedTopics(models.Model):
    name=models.CharField(max_length=20, null=False)
    batchid=models.CharField(max_length=3,null=False)  
+
+class AdminLogin(models.Model):
+   userid=models.CharField(max_length=20, null=False)
+   password=models.CharField(max_length=30,null=False)     
       
     

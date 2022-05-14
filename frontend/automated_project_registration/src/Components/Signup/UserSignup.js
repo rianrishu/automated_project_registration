@@ -44,7 +44,7 @@ function UserSignup() {
         <input type="password" name="password"  onChange={onchange} required=""/>
         <label>Password</label>
       </div>
-      <Link to="" onClick={handlesubmit}>
+      <Link to="/user/login" onClick={handlesubmit}>
         {/* <span></span>
         <span></span>
         <span></span>

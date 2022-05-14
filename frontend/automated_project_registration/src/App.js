@@ -3,7 +3,7 @@ import AdminLogin from './Components/Login/AdminLogin';
 import UserLogin from './Components/Login/UserLogin';
 import FacultyLogin from './Components/Login/FacultyLogin';
 import Home from './Components/Home';
-
+import AdminHome from './Components/Admin/AdminHome';
 import UserSignup from './Components/Signup/UserSignup'
 import UserHome from './Components/User/UserHome'
 import UserNewTopic from './Components/User/UserNewTopic';
@@ -53,15 +53,12 @@ import { useEffect, useState ,useContext} from 'react';
           <Route exact path="/user/newtopic">
           <UserNewTopic />
           </Route>
-          {/* <Route exact path="/user/homepage">
-          <UserHome batch={batch}/>
-          </Route> */}
           <Route path="/user/homepage" >
-          <UserHome   />
+          <UserHome/>
         </Route>
-          {/* <Route exact path="/admin/signup">
-          <AdminSignup/>
-          </Route> */}
+        <Route path="/admin/homepage" >
+          <AdminHome/>
+        </Route>
         </Switch> 
         </div>
         </BrowserRouter> 
