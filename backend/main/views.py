@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
-from .models import Student, StudentLogin, GetTopics, SelectedTopics
+from .serializers import AdminLoginSerializer, StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer
+from .models import AdminLogin, Student, StudentLogin, GetTopics, SelectedTopics
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -147,3 +147,10 @@ class StudentTopics(viewsets.ModelViewSet):
                    return Response({'msg':'Success'}, status=status.HTTP_200_OK)
                 else:
                    return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+class AdminLoginHandle(viewsets.ModelViewSet):
+    queryset=AdminLogin.objects.all()
+    serializer_class=AdminLoginSerializer
+    def create(self, request):
+        print("IN admin login handle")
