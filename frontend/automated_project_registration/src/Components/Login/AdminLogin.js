@@ -5,24 +5,20 @@ function AdminLogin() {
   let history=useHistory()
     const [credentials, setcred] = useState({ "userid":"","password":""})
     const handlesubmit=async()=>{
-        const response = await fetch("http://localhost:8000/admin/login", {
+        const response = await fetch("http://localhost:8000/admin1/login/", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "userid":credentials.userid,"Password":credentials.password })
+            body: JSON.stringify({ "userid":credentials.userid,"password":credentials.password })
           })
           const json = await response.json();
-          if(response.status==202){
-            history.push({
-              pathname: '/admin/homepage'
-            })
-          }
+          if(response.status==202)
+            history.push('/admin/homepage')
           else
           alert("Wrong Credentials");
         }
         const onchange = (e) => {
-      console.log("abc")
         setcred({ ...credentials, [e.target.name]: e.target.value })
     }
   return (
@@ -37,7 +33,7 @@ function AdminLogin() {
       <input type="password" name="password"  onChange={onchange} required=""/>
       <label>Password</label>
     </div>
-    <Link to="">
+    <Link to="#" onClick={handlesubmit}>
       <span></span>
       <span></span>
       <span></span>

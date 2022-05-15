@@ -1,6 +1,7 @@
 from datetime import datetime
 from email.policy import default
 from operator import mod
+from re import T
 from sqlite3 import Date
 from statistics import mode
 from django import forms
@@ -31,7 +32,8 @@ class StudentLogin(models.Model):
 class GetTopics(models.Model):
    name=models.CharField(max_length=30, null=False)
    description=models.CharField(max_length=1500, null=False)
-   selected_by=models.CharField(max_length=3,null=False) 
+   selected_by=models.CharField(max_length=3,null=False,blank=True) 
+   faculty=models.CharField(max_length=20,null=True,blank=True) 
 
 class SelectedTopics(models.Model):
    name=models.CharField(max_length=20, null=False)
@@ -39,6 +41,8 @@ class SelectedTopics(models.Model):
 
 class AdminLogin(models.Model):
    userid=models.CharField(max_length=20, null=False)
-   password=models.CharField(max_length=30,null=False)     
+   password=models.CharField(max_length=30,null=False)   
+       
+    
       
     
