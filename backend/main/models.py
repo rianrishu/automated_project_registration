@@ -42,6 +42,14 @@ class SelectedTopics(models.Model):
 class AdminLogin(models.Model):
    userid=models.CharField(max_length=20, null=False)
    password=models.CharField(max_length=30,null=False)   
+
+class StudentTopicAcceptReject(models.Model):
+   name=models.CharField(max_length=30, null=False)
+   description=models.CharField(max_length=1500, null=False)
+   selected_by=models.CharField(max_length=3,null=False,blank=True) 
+   faculty=models.CharField(max_length=20,null=True,blank=True) 
+   status=models.CharField(max_length=10, null=True, blank=True)
+
        
     
       

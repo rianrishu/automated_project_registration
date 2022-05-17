@@ -1,3 +1,5 @@
+from doctest import REPORTING_FLAGS
+from re import T
 from urllib import response
 from django.http import HttpResponse, JsonResponse
 import json
@@ -9,8 +11,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer 
-from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin 
+from .serializers import StudentLoginSerializer, StudentSerializer, StudentTopicAcceptRejectSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer 
+from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin, StudentTopicAcceptReject 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -250,5 +252,71 @@ class AdminGetalltopics(viewsets.ModelViewSet):
                 }
                 ans.append(data)
         return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+
+class AdminGetTopicAddedByStudent(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        student_topics=db.collection('StudentTopics').get()
+        temp_ids=[]
+        res=[]
+        for topic in student_topics:
+            temp_ids.append(topic.id)
+        for id in temp_ids:
+            topic_details=db.collection('StudentTopics').document(id).get()
+            name=topic_details.to_dict()['name']
+            description=topic_details.to_dict()['description']
+            selected_by=topic_details.to_dict()['selected_by']
+            # faculty=topic_details.to_dict()['faculty']
+            status=topic_details.to_dict()['status']
+            if(status==""):
+                data={
+                    "description":description,
+                    "name":name,
+                    "selected_by":selected_by,
+                    # "faculty":faculty,
+                    "status":status
+                }
+                res.append(data)
+        return Response({"data" : res})        
+
+
+class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
+    queryset=StudentTopicAcceptReject.objects.all()
+    serilazier_class=StudentTopicAcceptRejectSerializer
+    def create(self, request):
+        #fetching topic add by student of batch session
+        serializer = StudentTopicAcceptRejectSerializer(data=request.data)
+        if serializer.is_valid():
+            name=serializer.data['name']
+            description=serializer.data['description']
+            selected_by=serializer.data['selected_by']
+            faculty=serializer.data['faculty']
+            status_=serializer.data['status']
+            if(status_ == "Accepted"):
+                Topic=serializer.data['faculty']  
+                data={
+                "description":description,
+                "name":name,
+                "selected_by":selected_by,
+                "faculty":faculty,
+                "status":status_
+                }
+                db.collection("topics").add(data)
+                return Response({"msg" : "successfully added topic"}, status=status.HTTP_200_OK) 
+            elif(status_ == "Rejected"):
+                student_topics=db.collection('StudentTopics').get()
+                temp_ids=[]
+                res=[]
+                for topic in student_topics:
+                    temp_ids.append(topic.id)
+                for id in temp_ids:
+                    topic_details=db.collection('StudentTopics').document(id).get()
+                    name_st=topic_details.to_dict()['name']
+                    if(name_st == name):
+                        db.collection('StudentTopics').document(id).set({
+                            "status": status_
+                        })
+                        return Response({"msg": "Topic rejected updated successfully"}, status=status.HTTP_200_OK)
+        return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
             
