@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer
-from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin
+from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer, UserInHomeSerializer
+from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin, UserInHome
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -103,17 +103,19 @@ class LeaveHomePage(viewsets.ModelViewSet):
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
 
 class UserInHomepage(viewsets.ModelViewSet):
-    def list(self, request, format=None):
-        print("abc",self.request.session.get('batch_code'))    
+    # queryset=UserInHome.objects.all()
+    # serilazier_class=UserInHomeSerializer
+    def list(self, request, format=None): 
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
+        # serializer = UserInHomeSerializer(data=request.data)
         data={
             'code': self.request.session.get('batch_code')
         }
         print(self.request.session.get('batch_code'))
         if data['code'] == None:
-            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse(data, status=status.HTTP_200_OK)        
+            return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
        queryset=GetTopics.objects.all()

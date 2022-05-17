@@ -39,11 +39,11 @@ function UserHome() {
       setbatch(location.state.batch);
       }
     
-    // fetch('http://localhost:8000/student/user-in-homepage/')
-    // .then((response) => response.json())
-    // .then((data) => {
-    //   console.log(data.code)
-    // })
+    fetch('http://localhost:8000/student/user-in-homepage/')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data)
+    })
       // const response1=await fetch("/student/user-in-homepage")
       // const json1=await response1.json();
       // setbatch(json1.code);

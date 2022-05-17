@@ -22,7 +22,7 @@ import { useEffect, useState ,useContext} from 'react';
   //   fetch('/student/user-in-homepage/')
   //   .then((response) => response.json())
   //   .then((data) => {
-  //     console.log(data.code)
+  //     console.log(data)
   //   })
   // },[])
 

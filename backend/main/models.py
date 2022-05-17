@@ -40,5 +40,9 @@ class SelectedTopics(models.Model):
 class AdminLogin(models.Model):
    userid=models.CharField(max_length=20, null=False)
    password=models.CharField(max_length=30,null=False)     
+
+class UserInHome(models.Model):
+    batch_id=models.CharField(max_length=5, null=True, blank=True)
+    faculty_id = models.CharField(max_length=5, null=True, blank=True)   
       
     

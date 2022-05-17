@@ -1,7 +1,7 @@
-from dataclasses import field
+from dataclasses import field, fields
 from pyexpat import model
 from rest_framework import serializers
-from .models import Student, StudentLogin, GetTopics,SelectedTopics,AdminLogin
+from .models import Student, StudentLogin, GetTopics,SelectedTopics,AdminLogin, UserInHome
 
 class StudentSerializer(serializers.ModelSerializer):
     # password = serializers.CharField(
@@ -47,3 +47,9 @@ class AdminLoginSerializer(serializers.ModelSerializer):
     class Meta:
         model=AdminLogin
         fields=('userid','password')  
+
+
+class UserInHomeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=UserInHome
+        fields=('batch_id', 'faculty_id')        
