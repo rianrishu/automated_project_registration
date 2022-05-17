@@ -1,8 +1,11 @@
 import React from 'react'
-
+import Navbar from './Navbar'
+import '../../CSS/fullwd.css'
 function AdminHome() {
   return (
-    <div>AdminHome</div>
+  <section id="homewd">
+  <Navbar  />
+   </section>
   )
 }
 

@@ -9,8 +9,8 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer, UserInHomeSerializer
-from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin, UserInHome
+from .serializers import StudentLoginSerializer, StudentSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer 
+from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
@@ -103,9 +103,8 @@ class LeaveHomePage(viewsets.ModelViewSet):
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
 
 class UserInHomepage(viewsets.ModelViewSet):
-    # queryset=UserInHome.objects.all()
-    # serilazier_class=UserInHomeSerializer
-    def list(self, request, format=None): 
+    def list(self, request, format=None):
+        print("abc",self.request.session.get('batch_code'))    
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
         # serializer = UserInHomeSerializer(data=request.data)
@@ -114,8 +113,8 @@ class UserInHomepage(viewsets.ModelViewSet):
         }
         print(self.request.session.get('batch_code'))
         if data['code'] == None:
-            return Response(data, status=status.HTTP_400_BAD_REQUEST)
-        return Response(data, status=status.HTTP_200_OK)        
+            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(data, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
        queryset=GetTopics.objects.all()
@@ -167,13 +166,22 @@ class StudentNewTopic(viewsets.ModelViewSet):
             batch_res=serializer.data['selected_by']
             name_res=serializer.data['name']
             description_res=serializer.data['description']
-            data={
+            if batch_res=='':
+             faculty=serializer.data['faculty']  
+             data={
+             "description":description_res,
+              "name":name_res,
+              "selected_by":batch_res,
+              "faculty":faculty
+             }
+             db.collection("topics").add(data)
+            else:
+              data={
              "description":description_res,
               "name":name_res,
               "selected_by":batch_res
-            }
-            # print(data)
-            db.collection("topics").add(data)
+              }
+              db.collection("StudentTopics").add(data)
             return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
         else:
           return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
@@ -186,25 +194,61 @@ class AdminLoginViewSet(viewsets.ModelViewSet):
             self.request.session.create()
         serializer = AdminLoginSerializer(data=request.data)
         if serializer.is_valid():
-            print(data)
             userid=serializer.data['userid']
             password_response=serializer.data['password']
             admins=db.collection('Admin').get()
+            # print(admins[0].userid)
             temp=[]
             flag=-1
             for admin in admins:
-                temp.append(admin.userid)
+                temp.append(admin.id)
             for admin_temp in temp:
-                if admin_temp == userid:
+                aduserid=db.collection('Admin').document(admin_temp).get()
+                data=aduserid.to_dict()['userid']
+                if  data== userid:
                     flag=1
-                    password_db=db.collection('Admin').document(admin).get()
+                    password_db=db.collection('Admin').document(admin_temp).get()
                     data=password_db.to_dict()['password']
-                    if(check_password(password_response, data)):
-                        self.request.session['batch_code'] = userid
-                        print("login",self.request.session.get('batch_code')) 
+                    if(password_response==data): 
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
                 return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+
+class FacultyDetailViewSet(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        facultys=db.collection('Faculty').get()
+        temp=[]
+        ans=[]
+        for faculty in facultys: 
+          temp.append(faculty.id)
+        for faculty_temp in temp:
+                aduserid=db.collection('Faculty').document(faculty_temp).get()
+                data=aduserid.to_dict()['user_name'] 
+                ans.append(data)
+        return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+class AdminGetalltopics(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        topics=db.collection('topics').get()
+        temp=[]
+        ans=[]
+        for topic in topics: 
+          temp.append(topic.id)
+        for faculty_temp in temp:
+                aduserid=db.collection('topics').document(faculty_temp).get()
+                name=aduserid.to_dict()['name']
+                description=aduserid.to_dict()['description']
+                selected_by=aduserid.to_dict()['selected_by']
+                faculty=aduserid.to_dict()['faculty']
+                data={
+                "description":description,
+                "name":name,
+               "selected_by":selected_by,
+                "faculty":faculty
+                }
+                ans.append(data)
+        return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
             

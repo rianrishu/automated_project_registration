@@ -1,37 +1,44 @@
 import React,{useState,useContext, useEffect} from 'react'
-import MiniContext from '../../Context/MiniContext';
 import { Link, useLocation } from 'react-router-dom'
 function UserNewTopic() {
-    const [credentials, setcred] = useState({ "name":" ","description":" "})
+    const [credentials, setcred] = useState({ "name":" ","description":" ","faculty":"Pramod TC"})
     let location=useLocation();
-    const [batch,setbatch]=useState(null)
-   useEffect(()=>{
-    if(location.state!=undefined)
-    setbatch(location.state)
-   },[])
+    const [faculty,setfaculty]=useState([])
+  
     const handlesubmit=async()=>{
-      console.log(credentials,batch)
-        const response = await fetch("http://localhost:8000/student/addnewtopic/", {
+        const response = await fetch("http://localhost:8000/admin1/addnewtopic/", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "name":credentials.name,"description":credentials.description,"selected_by":batch })
+            body: JSON.stringify({ "name":credentials.name,"description":credentials.description,"selected_by":"","faculty":credentials.faculty })
           })
           const json = await response.json();
           if(response.status==200){
-        alert("Submitted Successfully")
+           alert('submitted successfully')
+           window.location.reload(false);
           }
        else
        alert("Wrong Credentials");
     }
+    //Faculty details fetching
+    useEffect(async ()=>{
+      const response = await fetch("http://localhost:8000/faculty/detail/", {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      })
+      const json = await response.json();
+      setfaculty(json.msg)
+    },[])
     const onchange = (e) => {
         setcred({ ...credentials, [e.target.name]: e.target.value })
         
     }
   return (
     <div className="login-box">
-    <h2>Add Your Topic</h2>
+    <h2>Add  Topic</h2>
     <form >
       <div className="user-box">
         <input type="text" name="name"  onChange={onchange} required=""/>
@@ -41,6 +48,11 @@ function UserNewTopic() {
        <textarea name="description" id="description" cols="30" rows="4"  onChange={onchange} />
         <label htmlFor="description">Description</label>
       </div>
+      <select name="faculty" onChange={onchange}>
+       {faculty.map((element,index)=>{
+          return <option key={index} value={element}>{element}</option>
+       })}
+      </select>
       <Link to="#" className='custom-btn btn-9' onClick={handlesubmit}>
         <span></span>
         <span></span>

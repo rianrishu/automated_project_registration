@@ -8,6 +8,8 @@ import UserSignup from './Components/Signup/UserSignup'
 import UserHome from './Components/User/UserHome'
 import UserNewTopic from './Components/User/UserNewTopic';
 import MiniState from './Context/MiniState';
+import GetTopics from './Components/Admin/GetTopics';
+import AddTopic from './Components/Admin/AddTopic'
 import {
   BrowserRouter,
  Switch,
@@ -22,7 +24,7 @@ import { useEffect, useState ,useContext} from 'react';
   //   fetch('/student/user-in-homepage/')
   //   .then((response) => response.json())
   //   .then((data) => {
-  //     console.log(data)
+  //     console.log(data.code)
   //   })
   // },[])
 
@@ -58,6 +60,12 @@ import { useEffect, useState ,useContext} from 'react';
         </Route>
         <Route path="/admin/homepage" >
           <AdminHome/>
+        </Route>
+        <Route path="/admin/addtopic" >
+          <AddTopic/>
+        </Route>
+        <Route path="/admin/gettopics" >
+          <GetTopics/>
         </Route>
         </Switch> 
         </div>

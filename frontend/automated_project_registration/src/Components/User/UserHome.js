@@ -17,7 +17,7 @@ function UserHome() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ "batchid":"1","name":id })
+      body: JSON.stringify({ "batchid":batch,"name":id })
     })
     const json = await response.json();
     gettopics();
@@ -42,8 +42,15 @@ function UserHome() {
     fetch('http://localhost:8000/student/user-in-homepage/')
     .then((response) => response.json())
     .then((data) => {
-      console.log(data)
+      console.log(data.code)
     })
+    // const response = await fetch("http://localhost:8000/student/addnewtopic/", {
+    //         method: 'POST',
+    //         headers: {
+    //           'Content-Type': 'application/json',
+    //         },
+    //         body: JSON.stringify({ "name":credentials.name,"description":credentials.description,"selected_by":batch })
+    //       })
       // const response1=await fetch("/student/user-in-homepage")
       // const json1=await response1.json();
       // setbatch(json1.code);
