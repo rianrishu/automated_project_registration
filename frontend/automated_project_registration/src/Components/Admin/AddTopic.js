@@ -1,7 +1,7 @@
 import React,{useState,useContext, useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom'
 function UserNewTopic() {
-    const [credentials, setcred] = useState({ "name":" ","description":" ","faculty":" "})
+    const [credentials, setcred] = useState({ "name":" ","description":" ","faculty":"Pramod TC"})
     let location=useLocation();
     const [faculty,setfaculty]=useState([])
   

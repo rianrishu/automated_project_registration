@@ -8,6 +8,7 @@ import UserSignup from './Components/Signup/UserSignup'
 import UserHome from './Components/User/UserHome'
 import UserNewTopic from './Components/User/UserNewTopic';
 import MiniState from './Context/MiniState';
+import GetTopics from './Components/Admin/GetTopics';
 import AddTopic from './Components/Admin/AddTopic'
 import {
   BrowserRouter,
@@ -62,6 +63,9 @@ import { useEffect, useState ,useContext} from 'react';
         </Route>
         <Route path="/admin/addtopic" >
           <AddTopic/>
+        </Route>
+        <Route path="/admin/gettopics" >
+          <GetTopics/>
         </Route>
         </Switch> 
         </div>

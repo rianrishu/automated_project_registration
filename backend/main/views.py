@@ -227,4 +227,27 @@ class FacultyDetailViewSet(viewsets.ModelViewSet):
                 data=aduserid.to_dict()['user_name'] 
                 ans.append(data)
         return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+class AdminGetalltopics(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        topics=db.collection('topics').get()
+        temp=[]
+        ans=[]
+        for topic in topics: 
+          temp.append(topic.id)
+        for faculty_temp in temp:
+                aduserid=db.collection('topics').document(faculty_temp).get()
+                name=aduserid.to_dict()['name']
+                description=aduserid.to_dict()['description']
+                selected_by=aduserid.to_dict()['selected_by']
+                faculty=aduserid.to_dict()['faculty']
+                data={
+                "description":description,
+                "name":name,
+               "selected_by":selected_by,
+                "faculty":faculty
+                }
+                ans.append(data)
+        return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
             

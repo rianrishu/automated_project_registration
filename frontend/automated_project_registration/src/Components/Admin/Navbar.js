@@ -33,6 +33,11 @@ function Navbar() {
                 Add Topic
               </Link>
             </li>
+            <li className="nav-item">
+              <Link className="nav-link active" to={{pathname:"/admin/gettopics"}}>
+                Get All Topic
+              </Link>
+            </li>
           </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>SignOut</button>

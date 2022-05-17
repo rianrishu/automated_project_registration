@@ -10,6 +10,7 @@ function UserNewTopic() {
     setbatch(location.state)
    },[])
     const handlesubmit=async()=>{
+      console.log(credentials,batch)
         const response = await fetch("http://localhost:8000/student/addnewtopic/", {
             method: 'POST',
             headers: {
@@ -19,7 +20,7 @@ function UserNewTopic() {
           })
           const json = await response.json();
           if(response.status==200){
-        
+        alert("Submitted Successfully")
           }
        else
        alert("Wrong Credentials");
