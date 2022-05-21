@@ -1,8 +1,6 @@
-from dataclasses import field, fields
-from operator import mod
-from pyexpat import model
+from dataclasses import field
 from rest_framework import serializers
-from .models import Student, StudentLogin, GetTopics,SelectedTopics,AdminLogin, StudentTopicAcceptReject 
+from .models import *
 
 class StudentSerializer(serializers.ModelSerializer):
     # password = serializers.CharField(
