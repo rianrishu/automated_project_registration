@@ -106,17 +106,18 @@ class LeaveHomePage(viewsets.ModelViewSet):
 
 class UserInHomepage(viewsets.ModelViewSet):
     def list(self, request, format=None):
-        print("abc",self.request.session.get('batch_code'))    
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-        # serializer = UserInHomeSerializer(data=request.data)
-        data={
-            'code': self.request.session.get('batch_code')
-        }
-        print(self.request.session.get('batch_code'))
-        if data['code'] == None:
-            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse(data, status=status.HTTP_200_OK)        
+        # print("abc",self.request.session.get('batch_code'))    
+        # if not self.request.session.exists(self.request.session.session_key):
+        #     print("not exists")
+        #     self.request.session.create()
+        # # serializer = UserInHomeSerializer(data=request.data)
+        # data={
+        #     'code': self.request.session.get('batch_code')
+        # }
+        # print(self.request.session.get('batch_code'))
+        # if data['code'] == None:
+        #     return Response(data, status=status.HTTP_400_BAD_REQUEST)
+        return Response({}, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
        queryset=GetTopics.objects.all()

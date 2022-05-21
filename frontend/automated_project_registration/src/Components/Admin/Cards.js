@@ -1,10 +1,7 @@
 // import Card from "react-bootstrap/Card";
 //import ReactDOM from "react-dom";
-//import React from "react";
-import React,{useState,useContext, useEffect} from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import React from "react";
 import { Button } from "react-bootstrap";
-
 // import "bootstrap/dist/css/bootstrap.css";
 // import "./Cards.sass";
 // import "./script.Babel";
@@ -18,17 +15,6 @@ import {  CardActionArea, CardActions } from '@mui/material';
 const Cards = (props) => {
   const {name,description,id}=props.topic
   const {ab}=props.disab;
-  const [faculty,setfaculty]=useState([])
-  useEffect(async ()=>{
-    const response = await fetch("http://localhost:8000/faculty/detail/", {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    const json = await response.json();
-    setfaculty(json.msg)
-  },[])
   return (
     <Card>
       <CardActionArea>
@@ -42,16 +28,8 @@ const Cards = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      
       <CardActions>
       <button className="custom-btn btn-15" onClick={() =>props.select_topic(id)} disabled={ab}>Select</button>
-      <select name="faculty" onChange={onchange}>
-       {faculty.map((element,index)=>{
-          return <option key={index} value={element}>{element}</option>
-       })}
-      </select>
-      <button className="custom-btn btn-15" onClick={() =>props.select_topic(id)} disabled={ab}>Reject</button>
-
       </CardActions>
     </Card>
 

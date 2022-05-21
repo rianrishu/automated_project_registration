@@ -5,6 +5,7 @@ import Navbar from "./Navbar";
 import '../../CSS/Sidenav.css'
 import { HashLink as Link } from 'react-router-hash-link';
 function UserHome() {
+  
   let history = useHistory()
   let location=useLocation();
   const [topics,setopic]=useState([]);
@@ -40,7 +41,11 @@ function UserHome() {
       }
     
     fetch('http://localhost:8000/student/user-in-homepage/')
-    .then((response) => response.json())
+    .then((response) => {
+      console.log(response)
+      // console.log(response.json())
+      return response.json()
+    })
     .then((data) => {
       console.log(data.code)
     })
