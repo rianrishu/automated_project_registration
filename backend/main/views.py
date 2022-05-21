@@ -178,7 +178,9 @@ class StudentNewTopic(viewsets.ModelViewSet):
               data={
              "description":description_res,
               "name":name_res,
-              "selected_by":batch_res
+              "selected_by":batch_res,
+              "faculty": "",
+              "status": ""
               }
               db.collection("StudentTopics").add(data)
             return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
