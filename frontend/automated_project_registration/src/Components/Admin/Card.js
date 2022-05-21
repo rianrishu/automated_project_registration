@@ -14,11 +14,15 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea, CardActions } from "@mui/material";
 
 const Cards = (props) => {
-  const { name, description, id } = props.topic;
+  const { name, description,selected_by } = props.topic;
   const { ab } = props.disab;
+  const [selected_fac,set_selected_fac]=useState("Pramod TC")
   const [faculty, setfaculty] = useState([]);
+  const onchange=(e)=>{
+      set_selected_fac(e.target.value)
+  }
   useEffect(async () => {
-    const response = await fetch("http://localhost:8000/admin1/get-topic-student", {
+    const response = await fetch("http://localhost:8000/faculty/detail", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -53,7 +57,7 @@ const Cards = (props) => {
         <button
           style={{ marginLeft: 100 }}
           className="custom-btn btn-15"
-          onClick={() => props.select_topic(id)}
+          onClick={() => props.select_topic(name,description,selected_by,selected_fac,"Accepted")}
           disabled={ab}
         >
           Select
@@ -61,7 +65,7 @@ const Cards = (props) => {
         <button
           style={{ marginLeft: 700 }}
           className="custom-btn btn-15"
-          onClick={() => props.select_topic(id)}
+          onClick={() => props.select_topic(name,description,selected_by,selected_fac,"Rejected")}
           disabled={ab}
         >
           Reject

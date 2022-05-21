@@ -8,40 +8,55 @@ function AdminHome() {
   let location = useLocation();
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
-  const [abc, setabc] = useState("false");
-  const select_topic = async (id) => {
-    setabc("true");
-    const response = await fetch("http://localhost:8000/student/gettopics/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ batchid: batch, name: id }),
-    });
+  const [abc, setabc] = useState(1);
+  const select_topic = async (
+    name,
+    description,
+    selected_by,
+    faculty,
+    status
+  ) => {
+    if (status === "Rejected") faculty = "";
+    const response = await fetch(
+      "http://localhost:8000/admin1/topic-accept-reject/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: name,
+          description: description,
+          selected_by: selected_by,
+          faculty: faculty,
+          status: status,
+        }),
+      }
+    );
     const json = await response.json();
-    gettopics();
     console.log(json);
+    gettopics();
   };
   const gettopics = async () => {
-    const response = await fetch("http://localhost:8000/student/gettopics/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      "http://localhost:8000/admin1/get-topic-student/",
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
     const json = await response.json();
-    setopic(json.msg);
+    if (json.data.length != 0) {
+      setopic(json.data);
+      setabc(0);
+    } else setabc(1);
   };
   useEffect(async () => {
     if (location.state != undefined) {
       setbatch(location.state.batch);
     }
-
-    fetch("http://localhost:8000/student/user-in-homepage/")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.code);
-      });
     gettopics();
   }, []);
 
@@ -67,7 +82,12 @@ function AdminHome() {
           </ul>
         </nav>
         <main>
-          {topics.map((topic, index) => {
+          {abc == 1 ? (
+            <h1 style={{ color: "grey", align: "center" }}>
+              No Topics To display
+            </h1>
+          ):
+          (topics.map((topic, index) => {
             return (
               <section key={index} id={`section-${index}`}>
                 <Cards
@@ -78,7 +98,7 @@ function AdminHome() {
                 />
               </section>
             );
-          })}
+          }))}
         </main>
       </section>
     </>

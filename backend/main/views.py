@@ -283,6 +283,7 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
     def create(self, request):
         #fetching topic add by student of batch session
         serializer = StudentTopicAcceptRejectSerializer(data=request.data)
+        # print(serializer.data)
         if serializer.is_valid():
             name=serializer.data['name']
             description=serializer.data['description']
@@ -299,6 +300,18 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
                 "status":status_
                 }
                 db.collection("topics").add(data)
+                student_topics=db.collection('StudentTopics').get()
+                temp_ids=[]
+                res=[]
+                for topic in student_topics:
+                    temp_ids.append(topic.id)
+                for id in temp_ids:
+                    topic_details=db.collection('StudentTopics').document(id).get()
+                    name_st=topic_details.to_dict()['name']
+                    if(name_st == name):
+                        db.collection('StudentTopics').document(id).update({
+                            "status": status_
+                        })
                 return Response({"msg" : "successfully added topic"}, status=status.HTTP_200_OK) 
             elif(status_ == "Rejected"):
                 student_topics=db.collection('StudentTopics').get()
@@ -310,7 +323,7 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
                     topic_details=db.collection('StudentTopics').document(id).get()
                     name_st=topic_details.to_dict()['name']
                     if(name_st == name):
-                        db.collection('StudentTopics').document(id).set({
+                        db.collection('StudentTopics').document(id).update({
                             "status": status_
                         })
                         return Response({"msg": "Topic rejected updated successfully"}, status=status.HTTP_200_OK)
