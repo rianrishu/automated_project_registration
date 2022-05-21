@@ -1,7 +1,8 @@
-from genericpath import exists
-from time import process_time_ns
+from doctest import REPORTING_FLAGS
+from re import T
 from urllib import response
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+import json
 from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
@@ -10,13 +11,13 @@ from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
 from rest_framework import viewsets
-from .serializers import StudentLoginSerializer, StudentSerializer
-from .models import Student, StudentLogin
-import pyrebase
+from .serializers import StudentLoginSerializer, StudentSerializer, StudentTopicAcceptRejectSerializer,StudentTopicSerializer, StudentSelectedTopicSerializer ,AdminLoginSerializer 
+from .models import Student, StudentLogin, GetTopics, SelectedTopics ,AdminLogin, StudentTopicAcceptReject 
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
+import json
 
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
@@ -41,17 +42,20 @@ class StudentViewSet(viewsets.ModelViewSet):
     queryset=Student.objects.all()
     serializer_class=StudentSerializer
     def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             # serializer.save()
             
-            studnet_leader=serializer.data['student_leader']
+            student_leader=serializer.data['student_leader']
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
             section=serializer.data['section']
+            batch_session = self.request.session.session_key
             password=make_password(serializer.data['password'])
             data={
-            "student_leader":studnet_leader,
+            "student_leader":student_leader,
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
@@ -59,6 +63,7 @@ class StudentViewSet(viewsets.ModelViewSet):
             # data = {"name": name, "email":email}
             batch=generate_batch(section)
             # database.child("users").set(data) 
+            self.request.session['batch_code'] = batch
             db.collection("students").document(batch).set(data)
             return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
 
@@ -67,6 +72,8 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
     queryset=StudentLogin.objects.all()
     serilazier_class=StudentLoginSerializer
     def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
         serializer = StudentLoginSerializer(data=request.data)
         if serializer.is_valid():
             batch_response=serializer.data['batch']
@@ -81,11 +88,235 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     flag=1
                     password_db=db.collection('students').document(batch_response).get()
                     data=password_db.to_dict()['password']
-                    print(data)
                     if(check_password(password_response, data)):
+                        self.request.session['batch_code'] = batch_response
+                        print("login",self.request.session.get('batch_code')) 
                         return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
-                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)                
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)   
+
+
+class LeaveHomePage(viewsets.ModelViewSet):
+    def create(self, requst, format=None):
+        if 'batch_code' in self.request.session:
+            self.request.session.pop('batch_code')        
+        return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
+
+class UserInHomepage(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        print("abc",self.request.session.get('batch_code'))    
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        # serializer = UserInHomeSerializer(data=request.data)
+        data={
+            'code': self.request.session.get('batch_code')
+        }
+        print(self.request.session.get('batch_code'))
+        if data['code'] == None:
+            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse(data, status=status.HTTP_200_OK)        
              
+class StudentTopics(viewsets.ModelViewSet):
+       queryset=GetTopics.objects.all()
+       queryset1=SelectedTopics.objects.all()
+       serilazier_class=StudentTopicSerializer
+       serilazier_class=StudentSelectedTopicSerializer
+       def create(self, request):
+           data=request.data
+           print(data)
+           res = not bool(data)
+           if res:
+             ans=[]
+             index=0
+             docs = db.collection('topics').stream()
+             for doc in docs:
+                 name=doc.to_dict()['name']
+                 description=doc.to_dict()['description']
+                 selectedby=doc.to_dict()['selected_by']
+                 id=doc.id
+                 if (len(selectedby)!=0):
+                  continue
+                 obj={
+                   "name":name,
+                   "description":description,
+                   "selected_by":selectedby,
+                   "id":id
+                  }
+                 ans.append(obj)   
+             return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+           else:
+                serializer = StudentSelectedTopicSerializer(data=request.data)
+                if serializer.is_valid():
+                   batchid=serializer.data['batchid']
+                   topic=serializer.data['name']
+                   db.collection("topics").document(topic).update({"selected_by":batchid})
+                   return Response({'msg':'Success'}, status=status.HTTP_200_OK)
+                else:
+                   return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+
+
+
+class StudentNewTopic(viewsets.ModelViewSet):
+    queryset=GetTopics.objects.all()
+    serilazier_class=StudentTopicSerializer
+    def create(self, request, fromat=None):
+        serializer = StudentTopicSerializer(data=request.data)
+        if serializer.is_valid():
+            batch_res=serializer.data['selected_by']
+            name_res=serializer.data['name']
+            description_res=serializer.data['description']
+            if batch_res=='':
+             faculty=serializer.data['faculty']  
+             data={
+             "description":description_res,
+              "name":name_res,
+              "selected_by":batch_res,
+              "faculty":faculty
+             }
+             db.collection("topics").add(data)
+            else:
+              data={
+             "description":description_res,
+              "name":name_res,
+              "selected_by":batch_res
+              }
+              db.collection("StudentTopics").add(data)
+            return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
+        else:
+          return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
+
+class AdminLoginViewSet(viewsets.ModelViewSet):
+    queryset=AdminLogin.objects.all()
+    serilazier_class=AdminLoginSerializer
+    def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        serializer = AdminLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            userid=serializer.data['userid']
+            password_response=serializer.data['password']
+            admins=db.collection('Admin').get()
+            # print(admins[0].userid)
+            temp=[]
+            flag=-1
+            for admin in admins:
+                temp.append(admin.id)
+            for admin_temp in temp:
+                aduserid=db.collection('Admin').document(admin_temp).get()
+                data=aduserid.to_dict()['userid']
+                if  data== userid:
+                    flag=1
+                    password_db=db.collection('Admin').document(admin_temp).get()
+                    data=password_db.to_dict()['password']
+                    if(password_response==data): 
+                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    else:
+                        return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+            if flag==-1:
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+
+class FacultyDetailViewSet(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        facultys=db.collection('Faculty').get()
+        temp=[]
+        ans=[]
+        for faculty in facultys: 
+          temp.append(faculty.id)
+        for faculty_temp in temp:
+                aduserid=db.collection('Faculty').document(faculty_temp).get()
+                data=aduserid.to_dict()['user_name'] 
+                ans.append(data)
+        return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+class AdminGetalltopics(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        topics=db.collection('topics').get()
+        temp=[]
+        ans=[]
+        for topic in topics: 
+          temp.append(topic.id)
+        for faculty_temp in temp:
+                aduserid=db.collection('topics').document(faculty_temp).get()
+                name=aduserid.to_dict()['name']
+                description=aduserid.to_dict()['description']
+                selected_by=aduserid.to_dict()['selected_by']
+                faculty=aduserid.to_dict()['faculty']
+                data={
+                "description":description,
+                "name":name,
+               "selected_by":selected_by,
+                "faculty":faculty
+                }
+                ans.append(data)
+        return Response({'msg':ans}, status=status.HTTP_200_OK) 
+
+
+class AdminGetTopicAddedByStudent(viewsets.ModelViewSet):
+    def list(self, request, format=None):
+        student_topics=db.collection('StudentTopics').get()
+        temp_ids=[]
+        res=[]
+        for topic in student_topics:
+            temp_ids.append(topic.id)
+        for id in temp_ids:
+            topic_details=db.collection('StudentTopics').document(id).get()
+            name=topic_details.to_dict()['name']
+            description=topic_details.to_dict()['description']
+            selected_by=topic_details.to_dict()['selected_by']
+            # faculty=topic_details.to_dict()['faculty']
+            status=topic_details.to_dict()['status']
+            if(status==""):
+                data={
+                    "description":description,
+                    "name":name,
+                    "selected_by":selected_by,
+                    # "faculty":faculty,
+                    "status":status
+                }
+                res.append(data)
+        return Response({"data" : res})        
+
+
+class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
+    queryset=StudentTopicAcceptReject.objects.all()
+    serilazier_class=StudentTopicAcceptRejectSerializer
+    def create(self, request):
+        #fetching topic add by student of batch session
+        serializer = StudentTopicAcceptRejectSerializer(data=request.data)
+        if serializer.is_valid():
+            name=serializer.data['name']
+            description=serializer.data['description']
+            selected_by=serializer.data['selected_by']
+            faculty=serializer.data['faculty']
+            status_=serializer.data['status']
+            if(status_ == "Accepted"):
+                Topic=serializer.data['faculty']  
+                data={
+                "description":description,
+                "name":name,
+                "selected_by":selected_by,
+                "faculty":faculty,
+                "status":status_
+                }
+                db.collection("topics").add(data)
+                return Response({"msg" : "successfully added topic"}, status=status.HTTP_200_OK) 
+            elif(status_ == "Rejected"):
+                student_topics=db.collection('StudentTopics').get()
+                temp_ids=[]
+                res=[]
+                for topic in student_topics:
+                    temp_ids.append(topic.id)
+                for id in temp_ids:
+                    topic_details=db.collection('StudentTopics').document(id).get()
+                    name_st=topic_details.to_dict()['name']
+                    if(name_st == name):
+                        db.collection('StudentTopics').document(id).set({
+                            "status": status_
+                        })
+                        return Response({"msg": "Topic rejected updated successfully"}, status=status.HTTP_200_OK)
+        return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+            

@@ -6,8 +6,6 @@ from sqlite3 import Date
 from statistics import mode
 from django import forms
 from django.db import models
-from django.forms import Widget
-from pkg_resources import require
 
 SECTION_CHOICES=(
     ('', ''),
@@ -30,4 +28,29 @@ class StudentLogin(models.Model):
     batch=models.CharField(max_length=3, null=False)
     password=models.CharField(max_length=15, null=False)
     login_at=models.DateTimeField(auto_now_add=True)
+
+class GetTopics(models.Model):
+   name=models.CharField(max_length=30, null=False)
+   description=models.CharField(max_length=1500, null=False)
+   selected_by=models.CharField(max_length=3,null=False,blank=True) 
+   faculty=models.CharField(max_length=20,null=True,blank=True) 
+
+class SelectedTopics(models.Model):
+   name=models.CharField(max_length=20, null=False)
+   batchid=models.CharField(max_length=3,null=False)  
+
+class AdminLogin(models.Model):
+   userid=models.CharField(max_length=20, null=False)
+   password=models.CharField(max_length=30,null=False)   
+
+class StudentTopicAcceptReject(models.Model):
+   name=models.CharField(max_length=30, null=False)
+   description=models.CharField(max_length=1500, null=False)
+   selected_by=models.CharField(max_length=3,null=False,blank=True) 
+   faculty=models.CharField(max_length=20,null=True,blank=True) 
+   status=models.CharField(max_length=10, null=True, blank=True)
+
+       
+    
+      
     
