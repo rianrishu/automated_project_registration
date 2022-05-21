@@ -18,7 +18,7 @@ const Cards = (props) => {
   const { ab } = props.disab;
   const [faculty, setfaculty] = useState([]);
   useEffect(async () => {
-    const response = await fetch("http://localhost:8000/faculty/detail/", {
+    const response = await fetch("http://localhost:8000/admin1/get-topic-student", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,15 +41,31 @@ const Cards = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-      <div className="d-flex justify-content-end">
+        <select name="faculty" onChange={onchange}>
+          {faculty.map((element, index) => {
+            return (
+              <option key={index} value={element}>
+                {element}
+              </option>
+            );
+          })}
+        </select>
         <button
+          style={{ marginLeft: 100 }}
           className="custom-btn btn-15"
           onClick={() => props.select_topic(id)}
           disabled={ab}
         >
           Select
         </button>
-        </div>
+        <button
+          style={{ marginLeft: 700 }}
+          className="custom-btn btn-15"
+          onClick={() => props.select_topic(id)}
+          disabled={ab}
+        >
+          Reject
+        </button>
       </CardActions>
     </Card>
   );

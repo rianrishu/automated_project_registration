@@ -48,11 +48,12 @@ function UserNewTopic() {
        <textarea name="description" id="description" cols="30" rows="4"  onChange={onchange} />
         <label htmlFor="description">Description</label>
       </div>
-      <select name="faculty" onChange={onchange}>
+      Assign Faculty : <select name="faculty" onChange={onchange}>
        {faculty.map((element,index)=>{
           return <option key={index} value={element}>{element}</option>
        })}
       </select>
+      <div class="d-flex justify-content-around">
       <Link to="#" className='custom-btn btn-9' onClick={handlesubmit}>
         <span></span>
         <span></span>
@@ -60,6 +61,7 @@ function UserNewTopic() {
         <span></span>
         Submit
       </Link>
+    </div>
     </form>
   </div>
   )
