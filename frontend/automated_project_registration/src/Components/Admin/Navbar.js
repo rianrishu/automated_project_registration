@@ -59,6 +59,14 @@ function Navbar() {
                 Get All Topic
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/addfaculty" }}
+              >
+               Add Faculty
+              </Link>
+            </li>
           </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>

@@ -30,10 +30,11 @@ class StudentLogin(models.Model):
     login_at=models.DateTimeField(auto_now_add=True)
 
 class GetTopics(models.Model):
-   name=models.CharField(max_length=30, null=False)
-   description=models.CharField(max_length=1500, null=False)
+   name=models.CharField(max_length=100, null=False,blank=True)
+   description=models.CharField(max_length=1500, null=False,blank=True)
    selected_by=models.CharField(max_length=3,null=False,blank=True) 
-   faculty=models.CharField(max_length=20,null=True,blank=True) 
+   faculty=models.CharField(max_length=20,null=True,blank=True)
+   id_topic=models.CharField(max_length=50,null=True,blank=True) 
 
 class SelectedTopics(models.Model):
    name=models.CharField(max_length=20, null=False)

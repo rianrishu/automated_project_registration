@@ -4,14 +4,14 @@ import Cards from "../Cards";
 import Navbar from "./Navbar";
 import "../../CSS/Sidenav.css";
 import { HashLink as Link } from "react-router-hash-link";
+import MiniContext from "../../Context/MiniContext";
 function UserHome() {
   let history = useHistory();
   let location = useLocation();
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
-  const [abc, setabc] = useState("false");
+  console.log(batch)
   const select_topic = async (id) => {
-    setabc("true");
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
@@ -24,26 +24,35 @@ function UserHome() {
     console.log(json);
   };
   const gettopics = async () => {
+      if(batch!=null){
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ "selected_by":batch,"name":""})
     });
     const json = await response.json();
+    if(json.msg==="Selected")
+    {
+
+    }
+    else
     setopic(json.msg);
+  }
   };
   useEffect(async () => {
     if (location.state != undefined) {
       setbatch(location.state.batch);
+     
     }
-
-    fetch("http://localhost:8000/student/user-in-homepage/")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.code);
-      });
     gettopics();
+    // fetch("http://localhost:8000/student/user-in-homepage/")
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data.code);
+    //   });
+  
   }, []);
 
   return (
@@ -68,13 +77,13 @@ function UserHome() {
           </ul>
         </nav>
         <main>
+          
           {topics.map((topic, index) => {
             return (
               <section key={index} id={`section-${index}`}>
                 <Cards
                   topic={topic}
                   index={index}
-                  disab={abc}
                   select_topic={select_topic}
                 />
               </section>
