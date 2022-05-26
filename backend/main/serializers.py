@@ -30,7 +30,7 @@ class StudentLoginSerializer(serializers.ModelSerializer):
 class StudentTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model=GetTopics
-        fields=('name','description','selected_by','faculty')
+        fields=('name','description','selected_by','faculty','id_topic')
 
 class StudentSelectedTopicSerializer(serializers.ModelSerializer):
     class Meta:

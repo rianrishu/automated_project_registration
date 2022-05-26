@@ -48,6 +48,7 @@ function AdminHome() {
       }
     );
     const json = await response.json();
+    console.log(json)
     if (json.data.length != 0) {
       setopic(json.data);
       setabc(0);

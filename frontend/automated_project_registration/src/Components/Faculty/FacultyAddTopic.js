@@ -6,10 +6,11 @@ function FacultyAddTopic() {
     const [faculty,setfaculty]=useState("")
    useEffect(()=>{
     if(location.state!=undefined)
-    setfaculty(location.state)
+    setfaculty(location.state.userid)
    },[])
   
     const handlesubmit=async()=>{
+      console.log(faculty)
         const response = await fetch("http://localhost:8000/admin1/addnewtopic/", {
             method: 'POST',
             headers: {
