@@ -1,20 +1,30 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 function FacultyLogin() {
+  let history = useHistory();
   const [credentials, setcred] = useState({ userid: "", password: "" });
   const handlesubmit = async () => {
-    const response = await fetch("http://localhost:8000/student", {
+    const response = await fetch("http://localhost:8000/faculty/login/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        UserID: credentials.userid,
-        Password: credentials.password,
+        userid: credentials.userid,
+        password: credentials.password,
       }),
     });
+    console.log(response)
     const json = await response.json();
+    if (response.status == 202) history.push(
+      {
+        pathname: '/faculty/homepage',
+        state: { userid:credentials.userid}
+      }
+    );
+    else alert("Wrong Credentials");
   };
   const onchange = (e) => {
     setcred({ ...credentials, [e.target.name]: e.target.value });
@@ -43,7 +53,6 @@ function FacultyLogin() {
           </div>
         </Link>
       </form>
-      {/* <Link to="faculty/signup">Create New Faculty</Link> */}
     </div>
   );
 }
