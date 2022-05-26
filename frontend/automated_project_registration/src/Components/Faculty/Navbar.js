@@ -17,7 +17,7 @@ function Navbar() {
   return (
     <nav
       className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "85vw" }}
+      style={{ background: "#394867", width: "97vw" }}
     >
       <div
         className="container-fluid"
@@ -39,24 +39,16 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
+              <Link className="nav-link active" aria-current="page">
                 Home
               </Link>
             </li>
             <li className="nav-item">
               <Link
                 className="nav-link active"
-                to={{ pathname: "/admin/addtopic" }}
+                to={{ pathname: "/faculty/addtopic" }}
               >
                 Add Topic
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                className="nav-link active"
-                to={{ pathname: "/admin/gettopics" }}
-              >
-                Get All Topic
               </Link>
             </li>
           </ul>

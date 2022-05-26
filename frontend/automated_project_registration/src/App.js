@@ -5,12 +5,14 @@ import UserLogin from "./Components/Login/UserLogin";
 import FacultyLogin from "./Components/Login/FacultyLogin";
 import Home from "./Components/Home";
 import AdminHome from "./Components/Admin/AdminHome";
+import FacultyHome from "./Components/Faculty/FacultyHome"
 import UserSignup from "./Components/Signup/UserSignup";
 import UserHome from "./Components/User/UserHome";
 import UserNewTopic from "./Components/User/UserNewTopic";
 import MiniState from "./Context/MiniState";
 import GetTopics from "./Components/Admin/GetTopics";
 import AddTopic from "./Components/Admin/AddTopic";
+import FacultyAddTopic from "./Components/Faculty/FacultyAddTopic"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
@@ -62,6 +64,12 @@ function App() {
               </Route>
               <Route path="/admin/gettopics">
                 <GetTopics />
+              </Route>
+              <Route path="/faculty/homepage">
+                <FacultyHome />
+              </Route>
+              <Route path="/faculty/addtopic">
+                <FacultyAddTopic />
               </Route>
             </Switch>
           </div>
