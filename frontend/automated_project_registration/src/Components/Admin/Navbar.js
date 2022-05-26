@@ -1,15 +1,30 @@
-import React, { useEffect,useState } from "react";
-import { Link,useHistory } from "react-router-dom";
-
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 
 function Navbar() {
-  let history=useHistory()
-   const handleclick=async()=>{
-  history.push('/')
-   }
+  let history = useHistory();
+  const handleclick = async () => {
+    history.push("/");
+  };
+  function MouseOver(event) {
+    event.target.style.background = "black";
+  }
+
+  function MouseOut(event) {
+    event.target.style.background = "";
+  }
+
   return (
-    <nav className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "   style={{"display":"block","width":"100%"}}>
-      <div className="container-fluid">
+    <nav
+      className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
+      style={{ background: "#394867", width: "97vw" }}
+    >
+      <div
+        className="container-fluid"
+        // onMouseOver={MouseOver}
+        // onMouseOut={MouseOut}
+        // style={{ display: "block", width: "98vw", background: "pink" }}
+      >
         <button
           className="navbar-toggler"
           type="button"
@@ -21,7 +36,7 @@ function Navbar() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent" >
+        <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
               <Link className="nav-link active" aria-current="page" to="/">
@@ -29,18 +44,26 @@ function Navbar() {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" to={{pathname:"/admin/addtopic"}}>
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/addtopic" }}
+              >
                 Add Topic
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link active" to={{pathname:"/admin/gettopics"}}>
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/gettopics" }}
+              >
                 Get All Topic
               </Link>
             </li>
           </ul>
           <form className="d-flex">
-            <button className="custom-btn btn-5" onClick={handleclick}>SignOut</button>
+            <button className="custom-btn btn-5" onClick={handleclick}>
+              SignOut
+            </button>
           </form>
         </div>
       </div>

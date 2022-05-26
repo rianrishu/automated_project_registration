@@ -28,6 +28,14 @@
   color: #61dafb;
 }
 
+.btn2 {
+  margin-left: 54rem;
+}
+
+.nav3:hover {
+  background-color: black;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
