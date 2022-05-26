@@ -2,6 +2,7 @@
 //import ReactDOM from "react-dom";
 //import React from "react";
 import { Button } from "react-bootstrap";
+
 // import "bootstrap/dist/css/bootstrap.css";
 // import "./Cards.sass";
 // import "./script.Babel";
@@ -40,6 +41,7 @@ const Cards = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
+      
       <CardActions>
       <div className="d-flex justify-content-end">
         <button
