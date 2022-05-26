@@ -16,6 +16,7 @@ router.register('admin1/addnewtopic',StudentNewTopic)
 router.register('faculty/detail',FacultyDetailViewSet, basename='facultydetail')
 router.register('admin1/get-topic-student', AdminGetTopicAddedByStudent, basename='get-topic-student')
 router.register('admin1/topic-accept-reject', StudentTopicAcceptRejectHandler, basename='accept/reject admin')
+
 urlpatterns=[
     path('',include(router.urls)),
 ]

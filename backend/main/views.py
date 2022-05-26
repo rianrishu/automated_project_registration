@@ -1,3 +1,4 @@
+from turtle import back
 from urllib import response
 from django.http import HttpResponse, JsonResponse
 import json
@@ -121,18 +122,24 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentTopicSerializer
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
+        serializer = StudentTopicSerializer(data=request.data)
+        print(request.data)
+        if serializer.is_valid():
            data=request.data
-           print(data)
-           res = not bool(data)
+           name=serializer.data['name']
+           res = not bool(name)
            if res:
              ans=[]
              index=0
+             batch=serializer.data['selected_by']
              docs = db.collection('topics').stream()
              for doc in docs:
                  name=doc.to_dict()['name']
                  description=doc.to_dict()['description']
                  selectedby=doc.to_dict()['selected_by']
                  id=doc.id
+                 if(selectedby==batch): 
+                  return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
                  if (len(selectedby)!=0):
                   continue
                  obj={
@@ -143,8 +150,8 @@ class StudentTopics(viewsets.ModelViewSet):
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
-
-           else:
+        else:   
+        
                 serializer = StudentSelectedTopicSerializer(data=request.data)
                 if serializer.is_valid():
                    batchid=serializer.data['batchid']
@@ -160,11 +167,14 @@ class StudentNewTopic(viewsets.ModelViewSet):
     queryset=GetTopics.objects.all()
     serilazier_class=StudentTopicSerializer
     def create(self, request, fromat=None):
+        print(request.data)
         serializer = StudentTopicSerializer(data=request.data)
         if serializer.is_valid():
             batch_res=serializer.data['selected_by']
             name_res=serializer.data['name']
             description_res=serializer.data['description']
+            faculty=serializer.data['faculty']
+            print(faculty,name_res) 
             if batch_res=='':
              faculty=serializer.data['faculty']  
              data={
@@ -174,7 +184,7 @@ class StudentNewTopic(viewsets.ModelViewSet):
               "faculty":faculty
              }
              db.collection("topics").add(data)
-            else:
+            elif faculty==None :
               data={
              "description":description_res,
               "name":name_res,
@@ -183,6 +193,17 @@ class StudentNewTopic(viewsets.ModelViewSet):
               "status": ""
               }
               db.collection("StudentTopics").add(data)
+            else:
+                batch_under=db.collection('faculty').document(faculty).get('batches')
+                print(batch_under)
+                # batch_under=batch_under.to_dict()['batches']
+                # if batch_under<3:
+                #     id=serializer.data['id_topic'] 
+                #     db.collection('topics').document(id).update({
+                #             "name":name_res,"description":description_res,"faculty":faculty,"selected_by":batch_res
+                #         })
+                # else:
+                #     return Response({'msg':'Batches exceed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)          
             return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
         else:
           return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
@@ -247,7 +268,8 @@ class AdminGetalltopics(viewsets.ModelViewSet):
                 "description":description,
                 "name":name,
                "selected_by":selected_by,
-                "faculty":faculty
+                "faculty":faculty,
+                "id":faculty_temp
                 }
                 ans.append(data)
         return Response({'msg':ans}, status=status.HTTP_200_OK) 

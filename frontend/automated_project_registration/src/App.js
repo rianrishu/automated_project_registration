@@ -10,6 +10,7 @@ import UserHome from "./Components/User/UserHome";
 import UserNewTopic from "./Components/User/UserNewTopic";
 import MiniState from "./Context/MiniState";
 import GetTopics from "./Components/Admin/GetTopics";
+import Addfaculty from "./Components/Admin/Addfaculty"
 import AddTopic from "./Components/Admin/AddTopic";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useLocation, useHistory, Link } from "react-router-dom";
@@ -62,6 +63,9 @@ function App() {
               </Route>
               <Route path="/admin/gettopics">
                 <GetTopics />
+              </Route>
+              <Route path="/admin/addfaculty">
+                <Addfaculty />
               </Route>
             </Switch>
           </div>

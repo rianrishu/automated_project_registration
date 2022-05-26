@@ -1,8 +1,11 @@
 import React,{useState,useContext} from 'react'
 import { useLocation, useHistory,Link } from 'react-router-dom'
+import MiniContext from '../../Context/MiniContext';
 import '../../CSS/Login.css'
 function UserLogin(props) {
   const history=useHistory();
+  let context=useContext(MiniContext);
+   const {setconbch}=context
   const [credentials, setcred] = useState({ "batch":" ","password":" "})
   const handlesubmit=async()=>{
    
@@ -15,9 +18,11 @@ function UserLogin(props) {
         })
         const json = await response.json();
         if(response.status==202){
+        
      history.push({
       pathname: '/user/homepage',
       state: { batch:credentials.batch}
+
     })
     // useCallbackUpdate(credentials.batch)
         }

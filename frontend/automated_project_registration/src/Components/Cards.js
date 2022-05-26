@@ -15,7 +15,7 @@ import { CardActionArea, CardActions } from "@mui/material";
 
 const Cards = (props) => {
   const { name, description, id } = props.topic;
-  const { ab } = props.disab;
+  
   const [faculty, setfaculty] = useState([]);
   useEffect(async () => {
     const response = await fetch("http://localhost:8000/faculty/detail/", {
@@ -45,7 +45,6 @@ const Cards = (props) => {
         <button
           className="custom-btn btn-15"
           onClick={() => props.select_topic(id)}
-          disabled={ab}
         >
           Select
         </button>
