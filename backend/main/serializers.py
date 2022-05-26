@@ -51,3 +51,13 @@ class StudentTopicAcceptRejectSerializer(serializers.ModelSerializer):
     class Meta:
         model=StudentTopicAcceptReject
         fields=('name','description','selected_by','faculty','status')
+
+class FacultyLoginSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=AdminLogin
+        fields=('userid','password')
+
+class FacultyUpdatePasswordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=AdminLogin
+        fields=('userid','password')                 

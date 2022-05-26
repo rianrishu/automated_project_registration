@@ -215,7 +215,7 @@ class AdminLoginViewSet(viewsets.ModelViewSet):
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
-                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+                return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST)
 
 class FacultyDetailViewSet(viewsets.ModelViewSet):
     def list(self, request, format=None):
@@ -329,6 +329,66 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
                             "status": status_
                         })
                         return Response({"msg": "Topic rejected updated successfully"}, status=status.HTTP_200_OK)
-        return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)        
+        return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)  
+
+
+class FacultyLoginViewSet(viewsets.ModelViewSet):
+    queryset=AdminLogin.objects.all()
+    serilazier_class=FacultyLoginSerializer
+    def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        serializer = FacultyLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            userid=serializer.data['userid']
+            password_response=serializer.data['password']
+            admins=db.collection('Faculty').get()
+            # print(admins[0].userid)
+            temp=[]
+            flag=-1
+            for admin in admins:
+                temp.append(admin.id)
+            for faculty_temp in temp:
+                aduserid=db.collection('Faculty').document(faculty_temp).get()
+                data=aduserid.to_dict()['userid']
+                if  data== userid:
+                    flag=1
+                    password_db=db.collection('Faculty').document(faculty_temp).get()
+                    data=password_db.to_dict()['password']
+                    if(password_response==data): 
+                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    else:
+                        return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+            if flag==-1:
+                return Response({'msg':'Username is not valid'}, status=status.HTTP_400_BAD_REQUEST)
+
+class FacultyUpdatePasswordViewSet(viewsets.ModelViewSet):
+    queryset=AdminLogin.objects.all()
+    serilazier_class=FacultyUpdatePasswordSerializer
+    def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        serializer = FacultyUpdatePasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            userid=serializer.data['userid']
+            new_password = serializer.data['password']
+            admins=db.collection('Faculty').get()
+            # print(admins[0].userid)
+            temp=[]
+            flag=-1
+            for admin in admins:
+                temp.append(admin.id)
+            for faculty_temp in temp:
+                aduserid=db.collection('Faculty').document(faculty_temp).get()
+                data=aduserid.to_dict()['userid']
+                if  data== userid:
+                    flag=1
+                    password_db=db.collection('Faculty').document(faculty_temp).update({
+                        "password": new_password
+                    })
+                    return Response({'msg': 'password update successful'}, status=status.HTTP_202_ACCEPTED)
+            if flag==-1:
+                return Response({'msg':'Username is not valid'}, status=status.HTTP_400_BAD_REQUEST)                
+
 
             
