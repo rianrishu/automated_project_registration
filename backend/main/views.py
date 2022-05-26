@@ -245,11 +245,7 @@ class FacultyDetailViewSet(viewsets.ModelViewSet):
         ans=[]
         for faculty in facultys: 
           temp.append(faculty.id)
-        for faculty_temp in temp:
-                aduserid=db.collection('Faculty').document(faculty_temp).get()
-                data=aduserid.to_dict()['userid'] 
-                ans.append(data)
-        return Response({'msg':ans}, status=status.HTTP_200_OK) 
+        return Response({'msg':temp}, status=status.HTTP_200_OK) 
 
 class AdminGetalltopics(viewsets.ModelViewSet):
     def list(self, request, format=None):
@@ -412,4 +408,29 @@ class FacultyUpdatePasswordViewSet(viewsets.ModelViewSet):
             if flag==-1:
                 return Response({'msg':'Username is not valid'}, status=status.HTTP_400_BAD_REQUEST)                
 
+
+class FacultyCreateViewSet(viewsets.ModelViewSet):
+    queryset=AdminLogin.objects.all()
+    serilazier_class=FacultyLoginSerializer
+    def create(self, request):
+        if not self.request.session.exists(self.request.session.session_key):
+            self.request.session.create()
+        serializer = FacultyLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            userid=serializer.data['userid']
+            password_response=serializer.data['password']
+            admins=db.collection('Faculty').get()
+            # print(admins[0].userid)
+            temp=[]
+            flag=-1
+            for admin in admins:
+                temp.append(admin.id)
+            for faculty_temp in temp:
+                if userid==faculty_temp:
+                    return Response({'msg':'UserId Already Exist'}, status=status.HTTP_400_BAD_REQUEST)
+            db.collection('Faculty').document(userid).set({"password":password_response,"batches":0})
+            return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+        else:
+         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+                
 

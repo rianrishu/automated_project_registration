@@ -60,6 +60,9 @@ function App() {
               <Route path="/admin/homepage">
                 <AdminHome />
               </Route>
+              <Route path="/admin/addfaculty">
+                <Addfaculty />
+              </Route>
               <Route path="/admin/addtopic">
                 <AddTopic />
               </Route>

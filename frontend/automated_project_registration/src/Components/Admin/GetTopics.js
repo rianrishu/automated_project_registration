@@ -64,6 +64,7 @@ if(json.status==200)
       },
     });
     const json1 = await response.json();
+
     setfaculty(json1.msg);
   }, [])
   return (

@@ -4,12 +4,12 @@ function Addfaculty() {
     const [credentials, setcred] = useState({ "username":" ","password":" "});
     const handlesubmit=async()=>{
    
-        const response = await fetch("http://localhost:8000/student/login/", {
+        const response = await fetch("http://localhost:8000/admin1/createfaculty/", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ "username":credentials.batch,"password":credentials.password })
+            body: JSON.stringify({ "userid":credentials.username,"password":credentials.password })
           })
           const json = await response.json();
           if(response.status==202){
@@ -17,7 +17,7 @@ function Addfaculty() {
      
           }
        else
-       alert("Wrong Credentials");
+       alert("User Already Exist");
     }
 const onchange = (e) => {
       setcred({ ...credentials, [e.target.name]: e.target.value })
