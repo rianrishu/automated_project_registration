@@ -247,7 +247,7 @@ class FacultyDetailViewSet(viewsets.ModelViewSet):
           temp.append(faculty.id)
         for faculty_temp in temp:
                 aduserid=db.collection('Faculty').document(faculty_temp).get()
-                data=aduserid.to_dict()['user_name'] 
+                data=aduserid.to_dict()['userid'] 
                 ans.append(data)
         return Response({'msg':ans}, status=status.HTTP_200_OK) 
 
@@ -413,31 +413,3 @@ class FacultyUpdatePasswordViewSet(viewsets.ModelViewSet):
                 return Response({'msg':'Username is not valid'}, status=status.HTTP_400_BAD_REQUEST)                
 
 
-class FacultyViewSet(viewsets.ModelViewSet):
-    queryset=Student.objects.all()
-    serializer_class=StudentSerializer
-    def create(self, request):
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-        serializer = StudentSerializer(data=request.data)
-        if serializer.is_valid():
-            # serializer.save()
-            
-            student_leader=serializer.data['student_leader']
-            student_1=serializer.data['student_1']
-            student_2=serializer.data['student_2']
-            section=serializer.data['section']
-            batch_session = self.request.session.session_key
-            password=make_password(serializer.data['password'])
-            data={
-            "student_leader":student_leader,
-             "student_1":student_1, 
-             "student_2":student_2,
-             "section":section,
-              "password": password}
-            # data = {"name": name, "email":email}
-            batch=generate_batch(section)
-            # database.child("users").set(data) 
-            self.request.session['batch_code'] = batch
-            db.collection("students").document(batch).set(data)
-            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)            
