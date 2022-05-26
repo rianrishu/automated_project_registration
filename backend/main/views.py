@@ -226,7 +226,7 @@ class FacultyDetailViewSet(viewsets.ModelViewSet):
           temp.append(faculty.id)
         for faculty_temp in temp:
                 aduserid=db.collection('Faculty').document(faculty_temp).get()
-                data=aduserid.to_dict()['user_name'] 
+                data=aduserid.to_dict()['userid'] 
                 ans.append(data)
         return Response({'msg':ans}, status=status.HTTP_200_OK) 
 

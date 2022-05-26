@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-function Navbar() {
+function Navbar(props) {
   let history = useHistory();
   const handleclick = async () => {
     history.push("/");
@@ -46,7 +46,7 @@ function Navbar() {
             <li className="nav-item">
               <Link
                 className="nav-link active"
-                to={{ pathname: "/faculty/addtopic" }}
+                to={{ pathname: "/faculty/addtopic",state:{userid:props.faculty} }}
               >
                 Add Topic
               </Link>
