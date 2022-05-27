@@ -67,7 +67,19 @@ function Navbar() {
                Add Faculty
               </Link>
             </li>
-          </ul>
+         
+          <div class="btn-group">
+  <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Action
+  </button>
+  <div class="dropdown-menu">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="#">Separated link</a>
+  </div>
+</div> </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut

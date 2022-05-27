@@ -130,18 +130,18 @@ class StudentTopics(viewsets.ModelViewSet):
            res = not bool(name)
            if res:
              ans=[]
-             index=0
-             batch=serializer.data['selected_by']
+            #  index=0
+            #  batch=serializer.data['selected_by']
              docs = db.collection('topics').stream()
              for doc in docs:
                  name=doc.to_dict()['name']
                  description=doc.to_dict()['description']
                  selectedby=doc.to_dict()['selected_by']
                  id=doc.id
-                 if(selectedby==batch): 
-                  return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
-                 if (len(selectedby)!=0):
-                  continue
+                #  if(selectedby==batch): 
+                #   return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
+                #  if (len(selectedby)!=0):
+                #   continue
                  obj={
                    "name":name,
                    "description":description,

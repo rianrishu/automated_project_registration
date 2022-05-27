@@ -24,13 +24,14 @@ function UserHome() {
     console.log(json);
   };
   const gettopics = async () => {
+    console.log(batch)
       if(batch!=null){
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ "selected_by":batch,"name":""})
+      body: JSON.stringify({"name":" "})
     });
     const json = await response.json();
     if(json.msg==="Selected")
@@ -43,15 +44,16 @@ function UserHome() {
   };
   useEffect(async () => {
     if (location.state != undefined) {
+
       setbatch(location.state.batch);
      
     }
     gettopics();
-    // fetch("http://localhost:8000/student/user-in-homepage/")
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data.code);
-    //   });
+    fetch("http://localhost:8000/student/user-in-homepage/")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data.code);
+      });
   
   }, []);
 
