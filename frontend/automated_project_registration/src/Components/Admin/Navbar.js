@@ -16,8 +16,8 @@ function Navbar() {
 
   return (
     <nav
-      className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "97vw" }}
+      className="btn-8 nav1 navbar sticky-top  navbar-expand-lg navbar-dark "
+      style={{ background: "#394867", width: "90vw" }}
     >
       <div
         className="container-fluid"
@@ -39,11 +39,6 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
               <Link
                 className="nav-link active"
                 to={{ pathname: "/admin/addtopic" }}
@@ -64,22 +59,10 @@ function Navbar() {
                 className="nav-link active"
                 to={{ pathname: "/admin/addfaculty" }}
               >
-               Add Faculty
+                Add Faculty
               </Link>
             </li>
-         
-          <div class="btn-group">
-  <button type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Action
-  </button>
-  <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="#">Separated link</a>
-  </div>
-</div> </ul>
+          </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut

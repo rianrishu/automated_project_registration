@@ -24,14 +24,13 @@ function UserHome() {
     console.log(json);
   };
   const gettopics = async () => {
-    console.log(batch)
       if(batch!=null){
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({"name":" "})
+      body: JSON.stringify({ "selected_by":batch,"name":""})
     });
     const json = await response.json();
     if(json.msg==="Selected")
@@ -44,7 +43,6 @@ function UserHome() {
   };
   useEffect(async () => {
     if (location.state != undefined) {
-
       setbatch(location.state.batch);
      
     }
