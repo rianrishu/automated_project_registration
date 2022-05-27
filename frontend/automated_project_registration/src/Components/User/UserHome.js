@@ -24,22 +24,28 @@ function UserHome() {
     console.log(json);
   };
   const gettopics = async () => {
-      if(batch!=null){
+    let token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImI1IiwiZXhwIjoxNjUzNjc4MzY4LCJpYXQiOjE2NTM2OTQ1Njh9.iVRRkWXUGG96aMBEzpSjSxYnLG9nOKQIbbkagxjnSKI"
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "Authorization":`Bearer ${token}`,
+        "Cookie":{jwt:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImI1IiwiZXhwIjoxNjUzNjc4MzY4LCJpYXQiOjE2NTM2OTQ1Njh9.iVRRkWXUGG96aMBEzpSjSxYnLG9nOKQIbbkagxjnSKI"}
       },
-      body: JSON.stringify({ "selected_by":batch,"name":""})
+      // credentials: 'include',
+      body: JSON.stringify({ "selected_by":" ","name":" "})
     });
     const json = await response.json();
+    console.log(json)
     if(json.msg==="Selected")
     {
-
+ 
     }
     else
     setopic(json.msg);
-  }
+
+    
+
   };
   useEffect(async () => {
     if (location.state != undefined) {
@@ -47,11 +53,11 @@ function UserHome() {
      
     }
     gettopics();
-    fetch("http://localhost:8000/student/user-in-homepage/")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data.code);
-      });
+    // fetch("http://localhost:8000/student/user-in-homepage/")
+    //   .then((response) => response.json())
+    //   .then((data) => {
+    //     console.log(data.code);
+    //   });
   
   }, []);
 

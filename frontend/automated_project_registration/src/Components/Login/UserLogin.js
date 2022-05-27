@@ -14,11 +14,14 @@ function UserLogin(props) {
           headers: {
             'Content-Type': 'application/json',
           },
+          
           body: JSON.stringify({ "batch":credentials.batch,"password":credentials.password })
         })
         const json = await response.json();
-        if(response.status==202){
-        
+        console.log(json)
+        let username="jwt"
+        if(json.msg=="Success"){
+          document.cookie=`jwt=${json.jwt}`
      history.push({
       pathname: '/user/homepage',
       state: { batch:credentials.batch}
