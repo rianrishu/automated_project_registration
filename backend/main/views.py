@@ -6,6 +6,9 @@ from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
 from telnetlib import STATUS
+import requests
+from rest_framework_simplejwt.backends import TokenBackend
+import jwt
 from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
@@ -16,12 +19,14 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
-import json
-
+import json,datetime
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
 firebase_admin.initialize_app(cred)
 db=firestore.client()
+
 
 def generate_batch(section):
     bacthes=db.collection('students').get()
@@ -70,6 +75,8 @@ class StudentViewSet(viewsets.ModelViewSet):
 class StudentLoginViewSet(viewsets.ModelViewSet):
     queryset=StudentLogin.objects.all()
     serilazier_class=StudentLoginSerializer
+    authentication_classes = [JWTAuthentication]
+    # permission_classes = [Is]
     def create(self, request):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
@@ -89,8 +96,20 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
                         self.request.session['batch_code'] = batch_response
-                        print("login",self.request.session.get('batch_code')) 
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                        payload = {
+                        'id': batch_response,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
+                        'iat':datetime.datetime.now()
+                        }
+                        token = jwt.encode(payload, '123', algorithm='HS256')
+                        response=Response()
+                        response.set_cookie(key='jwt',value=token,httponly=True)  
+                        response.data={
+                            'jwt':token,
+                            'msg':"Success"
+                        }
+                        
+                        return response 
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -117,41 +136,48 @@ class UserInHomepage(viewsets.ModelViewSet):
         return JsonResponse(data, status=status.HTTP_200_OK)        
              
 class StudentTopics(viewsets.ModelViewSet):
+    
        queryset=GetTopics.objects.all()
        queryset1=SelectedTopics.objects.all()
        serilazier_class=StudentTopicSerializer
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
+          
         serializer = StudentTopicSerializer(data=request.data)
+        token =request.COOKIES.get('jwt')
         print(request.data)
         if serializer.is_valid():
+           
+           print(token)
+           if not token:
+               print("Not Token")
+           payload=jwt.decode(token, '123',algorithms=['HS256'])
+           print(payload['id'])
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
            if res:
              ans=[]
              index=0
-             batch=serializer.data['selected_by']
+            #  batch=serializer.data['selected_by']
              docs = db.collection('topics').stream()
              for doc in docs:
                  name=doc.to_dict()['name']
                  description=doc.to_dict()['description']
                  selectedby=doc.to_dict()['selected_by']
-                 id=doc.id
-                 if(selectedby==batch): 
-                  return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
-                 if (len(selectedby)!=0):
-                  continue
+                #  id=doc.id
+                #  if(selectedby==batch): 
+                #   return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
+                #  if (len(selectedby)!=0):
+                #   continue
                  obj={
                    "name":name,
                    "description":description,
-                   "selected_by":selectedby,
-                   "id":id
+                   "selected_by":selectedby
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
         else:   
-        
                 serializer = StudentSelectedTopicSerializer(data=request.data)
                 if serializer.is_valid():
                    batchid=serializer.data['batchid']

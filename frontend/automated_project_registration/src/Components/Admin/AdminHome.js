@@ -48,7 +48,7 @@ function AdminHome() {
       }
     );
     const json = await response.json();
-    console.log(json)
+    console.log(json);
     if (json.data.length != 0) {
       setopic(json.data);
       setabc(0);
@@ -63,13 +63,13 @@ function AdminHome() {
 
   return (
     <>
-      <section id="sidenavhead">
-        <header>
-          {" "}
-          <Navbar />
-        </header>
+      <section>
+        {/* <header> */}
+        {/* {" "} */}
+        <Navbar />
+        {/* </header> */}
 
-        <nav id="sidenav">
+        <nav>
           <ul>
             {topics.map((topic, index) => {
               return (
@@ -87,19 +87,20 @@ function AdminHome() {
             <h1 style={{ color: "grey", align: "center" }}>
               No Topics To display
             </h1>
-          ):
-          (topics.map((topic, index) => {
-            return (
-              <section key={index} id={`section-${index}`}>
-                <Cards
-                  topic={topic}
-                  index={index}
-                  disab={abc}
-                  select_topic={select_topic}
-                />
-              </section>
-            );
-          }))}
+          ) : (
+            topics.map((topic, index) => {
+              return (
+                <section key={index} id={`section-${index}`}>
+                  <Cards
+                    topic={topic}
+                    index={index}
+                    disab={abc}
+                    select_topic={select_topic}
+                  />
+                </section>
+              );
+            })
+          )}
         </main>
       </section>
     </>
