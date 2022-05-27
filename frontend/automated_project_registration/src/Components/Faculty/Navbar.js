@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 
-function Navbar() {
+function Navbar(props) {
   let history = useHistory();
   const handleclick = async () => {
     history.push("/");
   };
   function MouseOver(event) {
-    event.target.style.background = "black";
+    event.target.style.background = "white";
   }
 
   function MouseOut(event) {
@@ -17,7 +17,7 @@ function Navbar() {
   return (
     <nav
       className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "97vw" }}
+      style={{ background: "#394867", width: "86vw" }}
     >
       <div
         className="container-fluid"
@@ -39,14 +39,12 @@ function Navbar() {
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page">
-                Home
-              </Link>
-            </li>
-            <li className="nav-item">
               <Link
                 className="nav-link active"
-                to={{ pathname: "/faculty/addtopic" }}
+                to={{
+                  pathname: "/faculty/addtopic",
+                  state: { userid: props.faculty },
+                }}
               >
                 Add Topic
               </Link>

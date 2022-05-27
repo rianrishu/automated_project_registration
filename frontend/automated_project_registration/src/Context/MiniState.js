@@ -3,9 +3,10 @@ import MiniContext from "./MiniContext"
 import React, { useState } from 'react'
 
 function MiniState(props) {
- const [results,setresults]=useState([]);
+ 
+ const [conbch,setconbch]=useState("null")
   return (
-    <MiniContext.Provider value={{results,setresults}}>
+    <MiniContext.Provider value={{conbch,setconbch}}>
         {props.children}
     </MiniContext.Provider>
   )
