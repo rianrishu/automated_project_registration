@@ -101,15 +101,8 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                         'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
                         'iat':datetime.datetime.now()
                         }
-                        token = jwt.encode(payload, '123', algorithm='HS256')
-                        response=Response()
-                        response.set_cookie(key='jwt',value=token,httponly=True)  
-                        response.data={
-                            'jwt':token,
-                            'msg':"Success"
-                        }
-                        
-                        return response 
+                        token = jwt.encode(payload, '123', algorithm='HS256').decode()
+                        return Response({'msg':'Success','jwt':token}, status=status.HTTP_200_OK) 
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -123,17 +116,30 @@ class LeaveHomePage(viewsets.ModelViewSet):
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
 
 class UserInHomepage(viewsets.ModelViewSet):
-    def list(self, request, format=None):
-        print("abc",self.request.session.get('batch_code'))    
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-        data={
-            'code': self.request.session.get('batch_code')
-        }
-        print(self.request.session.get('batch_code'))
-        if data['code'] == None:
-            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse(data, status=status.HTTP_200_OK)        
+    queryset=AuthToken.objects.all()
+    serilazier_class=AuthTokenSerializer
+    def create(self, request):
+        serializer = AuthTokenSerializer(data=request.data)
+        if serializer.is_valid():
+          token=serializer.data['token']
+          if not token:
+              return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)
+          try: 
+             payload=jwt.decode(token, '123',algorithms=['HS256'])
+             return Response({'msg':payload['id']}, status=status.HTTP_200_OK)
+          except:
+            return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)
+        # print("abc",self.request.session.get('batch_code'))    
+        # if not self.request.session.exists(self.request.session.session_key):
+        #     self.request.session.create()
+        # data={
+        #     'code': self.request.session.get('batch_code')
+        # }
+        # print(self.request.session.get('batch_code'))
+        # if data['code'] == None:
+        else:
+         return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)    
+                
              
 class StudentTopics(viewsets.ModelViewSet):
     
@@ -144,15 +150,13 @@ class StudentTopics(viewsets.ModelViewSet):
        def create(self, request):
           
         serializer = StudentTopicSerializer(data=request.data)
-        token =request.COOKIES.get('jwt')
-        print(request.data)
+        # token =request.data
+        # print(token)
         if serializer.is_valid():
-           
-           print(token)
-           if not token:
-               print("Not Token")
-           payload=jwt.decode(token, '123',algorithms=['HS256'])
-           print(payload['id'])
+        #    if not token:
+            #    print("Not Token")
+        #    payload=jwt.decode(token, '123',algorithms=['HS256'])
+        #    print(payload['id'])
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
@@ -458,5 +462,3 @@ class FacultyCreateViewSet(viewsets.ModelViewSet):
             return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
         else:
          return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
-                
-

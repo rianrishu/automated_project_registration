@@ -1,13 +1,33 @@
 import React,{useState,useContext, useEffect} from 'react'
 import MiniContext from '../../Context/MiniContext';
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation ,useHistory} from 'react-router-dom'
 function UserNewTopic() {
     const [credentials, setcred] = useState({ "name":" ","description":" "})
-    let location=useLocation();
+   let history=useHistory()
     const [batch,setbatch]=useState(null)
-   useEffect(()=>{
-    if(location.state!=undefined)
-    setbatch(location.state)
+   useEffect(async ()=>{
+     if(localStorage.getItem('token')){
+    const response = await fetch("http://localhost:8000/student/user-in-homepage/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        
+      },
+      body: JSON.stringify({"token":localStorage.getItem('token')})
+    });
+     const json=await response.json();
+     if(response.status===200){
+     setbatch(json.msg)
+     }
+     else{
+       alert('Please Login using valid token')
+       history.push('/')
+     }
+    }
+    else{
+      alert('Login First')
+      history.push('/user/login')
+    }
    },[])
     const handlesubmit=async()=>{
       console.log(credentials,batch)

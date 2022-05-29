@@ -1,16 +1,15 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
-import Cards from "../Cards";
+import Cards from "./Cards";
 import Navbar from "./Navbar";
 import "../../CSS/Sidenav.css";
 import { HashLink as Link } from "react-router-hash-link";
-import MiniContext from "../../Context/MiniContext";
 function UserHome() {
   let history = useHistory();
   let location = useLocation();
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
-  console.log(batch)
+
   const select_topic = async (id) => {
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
@@ -21,44 +20,50 @@ function UserHome() {
     });
     const json = await response.json();
     gettopics();
-    console.log(json);
   };
   const gettopics = async () => {
-    let token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImI1IiwiZXhwIjoxNjUzNjc4MzY4LCJpYXQiOjE2NTM2OTQ1Njh9.iVRRkWXUGG96aMBEzpSjSxYnLG9nOKQIbbkagxjnSKI"
+    let url="http://localhost:8000/student/gettopics/"
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization":`Bearer ${token}`,
-        "Cookie":{jwt:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImI1IiwiZXhwIjoxNjUzNjc4MzY4LCJpYXQiOjE2NTM2OTQ1Njh9.iVRRkWXUGG96aMBEzpSjSxYnLG9nOKQIbbkagxjnSKI"}
+        "Content-Type": "application/json"
       },
-      // credentials: 'include',
-      body: JSON.stringify({ "selected_by":" ","name":" "})
+      body: JSON.stringify({"name":" "})
     });
     const json = await response.json();
-    console.log(json)
+    
     if(json.msg==="Selected")
     {
  
     }
     else
     setopic(json.msg);
-
-    
-
+  
   };
   useEffect(async () => {
-    if (location.state != undefined) {
-      setbatch(location.state.batch);
-     
+    if(localStorage.getItem('token')){
+    const response = await fetch("http://localhost:8000/student/user-in-homepage/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        
+      },
+      body: JSON.stringify({"token":localStorage.getItem('token')})
+    });
+     const json=await response.json();
+     if(response.status===200){
+     gettopics();
+     setbatch(json.msg)
+     }
+     else{
+       alert('Please Login using valid token')
+       history.push('/')
+     }
     }
-    gettopics();
-    // fetch("http://localhost:8000/student/user-in-homepage/")
-    //   .then((response) => response.json())
-    //   .then((data) => {
-    //     console.log(data.code);
-    //   });
-  
+    else{
+      alert('Login First')
+      history.push('/user/login')
+    }
   }, []);
 
   return (
