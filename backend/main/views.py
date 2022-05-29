@@ -148,36 +148,32 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentTopicSerializer
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
-          
         serializer = StudentTopicSerializer(data=request.data)
-        # token =request.data
-        # print(token)
         if serializer.is_valid():
-        #    if not token:
-            #    print("Not Token")
-        #    payload=jwt.decode(token, '123',algorithms=['HS256'])
-        #    print(payload['id'])
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
            if res:
              ans=[]
              index=0
-            #  batch=serializer.data['selected_by']
+             batch=serializer.data['selected_by']
+             print(batch)
              docs = db.collection('topics').stream()
              for doc in docs:
                  name=doc.to_dict()['name']
                  description=doc.to_dict()['description']
                  selectedby=doc.to_dict()['selected_by']
-                #  id=doc.id
-                #  if(selectedby==batch): 
-                #   return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
-                #  if (len(selectedby)!=0):
-                #   continue
+                 id=doc.id
+                 if(selectedby==batch): 
+                     return Response({'msg':"Already Selected"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 
+                  
+                 if (len(selectedby)!=0):
+                  continue
                  obj={
                    "name":name,
                    "description":description,
-                   "selected_by":selectedby
+                   "selected_by":selectedby,
+                   "id":id
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 

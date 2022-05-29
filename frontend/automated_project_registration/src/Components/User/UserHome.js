@@ -6,10 +6,10 @@ import "../../CSS/Sidenav.css";
 import { HashLink as Link } from "react-router-hash-link";
 function UserHome() {
   let history = useHistory();
-  let location = useLocation();
   const [topics, setopic] = useState([]);
-  const [batch, setbatch] = useState(null);
-
+  const [abc,setabc]=useState(0)
+  const [batch, setbatch] = useState("null");
+  let sendbatch="null"
   const select_topic = async (id) => {
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
@@ -21,24 +21,23 @@ function UserHome() {
     const json = await response.json();
     gettopics();
   };
-  const gettopics = async () => {
-    let url="http://localhost:8000/student/gettopics/"
+  const gettopics = async()=>{
+    console.log(batch)
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({"name":" "})
-    });
-    const json = await response.json();
-    
-    if(json.msg==="Selected")
-    {
- 
-    }
-    else
+      body: JSON.stringify({"selected_by":sendbatch,"name":" "}),
+    })
+   
+        const json=await response.json();
+    if(json.msg==="200")
     setopic(json.msg);
-  
+      else{
+        setabc(1)
+    alert('Already Selected')
+      }
   };
   useEffect(async () => {
     if(localStorage.getItem('token')){
@@ -51,9 +50,11 @@ function UserHome() {
       body: JSON.stringify({"token":localStorage.getItem('token')})
     });
      const json=await response.json();
+     console.log(json)
      if(response.status===200){
-     gettopics();
-     setbatch(json.msg)
+       setbatch(json.msg)
+       sendbatch=json.msg
+         gettopics();
      }
      else{
        alert('Please Login using valid token')
@@ -76,6 +77,7 @@ function UserHome() {
 
         <nav id="sidenav">
           <ul>
+            {abc&&<h1>No Topics To display</h1>}
             {topics.map((topic, index) => {
               return (
                 <li key={index}>
