@@ -5,6 +5,7 @@ from re import T
 from sqlite3 import Date
 from statistics import mode
 from django import forms
+from django.core.validators import RegexValidator
 from django.db import models
 
 SECTION_CHOICES=(
@@ -44,6 +45,8 @@ class AdminLogin(models.Model):
    userid=models.CharField(max_length=20, null=False)
    password=models.CharField(max_length=30,null=False)  
 
+class AuthToken(models.Model):
+   token=models.CharField(max_length=200, null=False)  
 
 class StudentTopicAcceptReject(models.Model):
    name=models.CharField(max_length=30, null=False)

@@ -18,10 +18,9 @@ function UserLogin(props) {
           body: JSON.stringify({ "batch":credentials.batch,"password":credentials.password })
         })
         const json = await response.json();
-        console.log(json)
-        let username="jwt"
-        if(json.msg=="Success"){
-          document.cookie=`jwt=${json.jwt}`
+      
+        if(response.status===200){
+          localStorage.setItem('token',json.jwt)
      history.push({
       pathname: '/user/homepage',
       state: { batch:credentials.batch}
