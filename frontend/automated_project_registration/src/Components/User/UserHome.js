@@ -5,12 +5,13 @@ import Navbar from "./Navbar";
 import "../../CSS/Sidenav.css";
 import { HashLink as Link } from "react-router-hash-link";
 import MiniContext from "../../Context/MiniContext";
+
 function UserHome() {
   let history = useHistory();
   let location = useLocation();
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
-  console.log(batch)
+  // console.log(batch);
   const select_topic = async (id) => {
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
@@ -23,42 +24,38 @@ function UserHome() {
     gettopics();
     console.log(json);
   };
-  const gettopics = async () => {
-    let token="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImI1IiwiZXhwIjoxNjUzNjc4MzY4LCJpYXQiOjE2NTM2OTQ1Njh9.iVRRkWXUGG96aMBEzpSjSxYnLG9nOKQIbbkagxjnSKI"
+  const gettopics = async () => { 
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization":`Bearer ${token}`,
-        "Cookie":{jwt:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6ImI1IiwiZXhwIjoxNjUzNjc4MzY4LCJpYXQiOjE2NTM2OTQ1Njh9.iVRRkWXUGG96aMBEzpSjSxYnLG9nOKQIbbkagxjnSKI"}
+        "Content-Type": "application/json"
       },
       // credentials: 'include',
-      body: JSON.stringify({ "selected_by":" ","name":" "})
+      body: JSON.stringify({ selected_by: " ", name: " " }),
     });
     const json = await response.json();
-    console.log(json)
-    if(json.msg==="Selected")
-    {
- 
-    }
-    else
-    setopic(json.msg);
-
-    
-
+    console.log(json);
+    if (json.msg === "Selected") {
+    } else setopic(json.msg);
   };
   useEffect(async () => {
     if (location.state != undefined) {
       setbatch(location.state.batch);
-     
     }
     gettopics();
-    // fetch("http://localhost:8000/student/user-in-homepage/")
+    // fetch("http://127.0.0.1:8000/student/user-in-homepage/")
     //   .then((response) => response.json())
     //   .then((data) => {
     //     console.log(data.code);
     //   });
-  
+    const response1 = await fetch("http://localhost:8000/student/user-in-homepage/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+  })
+    const json1 = await response1.json();
+    console.log(json1);
   }, []);
 
   return (
@@ -83,7 +80,6 @@ function UserHome() {
           </ul>
         </nav>
         <main>
-          
           {topics.map((topic, index) => {
             return (
               <section key={index} id={`section-${index}`}>

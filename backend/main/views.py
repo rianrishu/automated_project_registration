@@ -123,10 +123,10 @@ class LeaveHomePage(viewsets.ModelViewSet):
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
 
 class UserInHomepage(viewsets.ModelViewSet):
-    def list(self, request, format=None):
+    def create(self, request, format=None):
         print("abc",self.request.session.get('batch_code'))    
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
+        # if not self.request.session.exists(self.request.session.session_key):
+        #     self.request.session.create()
         data={
             'code': self.request.session.get('batch_code')
         }
@@ -145,7 +145,7 @@ class StudentTopics(viewsets.ModelViewSet):
           
         serializer = StudentTopicSerializer(data=request.data)
         token =request.COOKIES.get('jwt')
-        print(request.data)
+        print(type(token))
         if serializer.is_valid():
            
            print(token)
