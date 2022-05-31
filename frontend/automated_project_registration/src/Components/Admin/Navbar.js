@@ -1,8 +1,61 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { ToggleButton } from "react-bootstrap";
 
 function Navbar() {
+  const [notifyFaculty, setnotifyFaculty] = useState("/");
+  const [openTopic, setopenTopic] = useState("/");
   let history = useHistory();
+  let abc="/"
+  let abc1="/"
+  const callnotifyfacutly=async()=>{
+    console.log(notifyFaculty)
+    const response = await fetch("http://localhost:8000/notify/faculty/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({"status": abc})
+    })
+    const json = await response.json()
+    setnotifyFaculty(json.msg)
+  }
+ const callnotifystudent=async()=>{
+  const response1 = await fetch("http://localhost:8000/notify/student/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({"status": abc1})
+  })
+  const json1 = await response1.json()
+  setopenTopic(json1.msg)
+ }
+
+  const handleclkfac=()=>{
+    if(notifyFaculty==="true"){
+      abc="false"
+    setnotifyFaculty("false");
+    }
+    else{
+      abc="true"
+    setnotifyFaculty("true");
+    }
+    callnotifyfacutly()
+    
+  }
+  const handleclkstu=()=>{
+    if(openTopic==="true"){
+      abc1="false"
+    setopenTopic("false");
+    }
+    else{
+      abc1="true"
+    setopenTopic("true");
+    }
+    callnotifystudent()
+    
+  }
   const handleclick = async () => {
     history.push("/");
   };
@@ -13,6 +66,15 @@ function Navbar() {
   function MouseOut(event) {
     event.target.style.background = "";
   }
+
+  function onToggle() {
+    this.setState({ toggleActive: !this.state.toggleActive });
+  }
+ 
+  useEffect(async () => {
+   callnotifyfacutly();
+   callnotifystudent();
+  }, [])
 
   return (
     <nav
@@ -63,6 +125,36 @@ function Navbar() {
               </Link>
             </li>
           </ul>
+          <li className="nav-item dropdown">
+    <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
+    <ul className="dropdown-menu">
+      <li><button className="dropdown-item" onClick={handleclkfac}>Notify Faculty : {notifyFaculty}</button></li>
+      <li><button className="dropdown-item" onClick={handleclkstu}>Open topic to Student : {openTopic}</button></li>
+    </ul>
+  </li>
+          {/* <ToggleButton 
+            id="toggle-check"
+            type="checkbox"
+            className="mx-2"
+            variant="primary"
+            checked={false}
+            value="1"
+          // onChange={(e) => setChecked(e.currentTarget.checked)}
+          >
+            Notify Faculty
+          </ToggleButton>
+          <ToggleButton
+            id="toggle-check2"
+            className="mx-2"
+            type="checkbox"
+            variant="primary"
+            // checked={checked}
+            value="1"
+            // onChange={(e) => setChecked(e.currentTarget.checked)}
+          >
+            Open Topics to Student
+          </ToggleButton>  */}
+       
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut

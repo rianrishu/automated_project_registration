@@ -19,13 +19,6 @@ import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 
 function App() {
-  // useEffect(async ()=>{
-  //   fetch('/student/user-in-homepage/')
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     console.log(data.code)
-  //   })
-  // },[])
 
   return (
     <div>

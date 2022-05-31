@@ -16,18 +16,6 @@ import { CardActionArea, CardActions } from "@mui/material";
 
 const Cards = (props) => {
   const { name, description, id } = props.topic;
-  
-  const [faculty, setfaculty] = useState([]);
-  useEffect(async () => {
-    const response = await fetch("http://localhost:8000/faculty/detail/", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await response.json();
-    setfaculty(json.msg);
-  }, []);
   return (
     <Card>
       <CardActionArea>

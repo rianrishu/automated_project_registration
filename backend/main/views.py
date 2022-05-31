@@ -6,6 +6,9 @@ from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
 from telnetlib import STATUS
+import requests
+from rest_framework_simplejwt.backends import TokenBackend
+import jwt
 from rest_framework.response import Response
 from rest_framework import generics, status
 from requests import request
@@ -16,12 +19,14 @@ import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
 import os
-import json
-
+import json,datetime
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
 firebase_admin.initialize_app(cred)
 db=firestore.client()
+
 
 def generate_batch(section):
     bacthes=db.collection('students').get()
@@ -70,6 +75,8 @@ class StudentViewSet(viewsets.ModelViewSet):
 class StudentLoginViewSet(viewsets.ModelViewSet):
     queryset=StudentLogin.objects.all()
     serilazier_class=StudentLoginSerializer
+    authentication_classes = [JWTAuthentication]
+    # permission_classes = [Is]
     def create(self, request):
         if not self.request.session.exists(self.request.session.session_key):
             self.request.session.create()
@@ -89,8 +96,13 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                     data=password_db.to_dict()['password']
                     if(check_password(password_response, data)):
                         self.request.session['batch_code'] = batch_response
-                        print("login",self.request.session.get('batch_code')) 
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                        payload = {
+                        'id': batch_response,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
+                        'iat':datetime.datetime.now()
+                        }
+                        token = jwt.encode(payload, '123', algorithm='HS256')
+                        return Response({'msg':'Success','jwt':token}, status=status.HTTP_200_OK) 
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -104,54 +116,72 @@ class LeaveHomePage(viewsets.ModelViewSet):
         return Response({'msg' : 'Success'}, status=status.HTTP_200_OK)
 
 class UserInHomepage(viewsets.ModelViewSet):
-    def list(self, request, format=None):
-        print("abc",self.request.session.get('batch_code'))    
-        if not self.request.session.exists(self.request.session.session_key):
-            self.request.session.create()
-        data={
-            'code': self.request.session.get('batch_code')
-        }
-        print(self.request.session.get('batch_code'))
-        if data['code'] == None:
-            return JsonResponse(data, status=status.HTTP_400_BAD_REQUEST)
-        return JsonResponse(data, status=status.HTTP_200_OK)        
+    queryset=AuthToken.objects.all()
+    serilazier_class=AuthTokenSerializer
+    def create(self, request):
+        serializer = AuthTokenSerializer(data=request.data)
+        if serializer.is_valid():
+          token=serializer.data['token']
+          if not token:
+              return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)
+          try: 
+             payload=jwt.decode(token, '123',algorithms=['HS256'])
+             return Response({'msg':payload['id']}, status=status.HTTP_200_OK)
+          except:
+            return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)
+        # print("abc",self.request.session.get('batch_code'))    
+        # if not self.request.session.exists(self.request.session.session_key):
+        #     self.request.session.create()
+        # data={
+        #     'code': self.request.session.get('batch_code')
+        # }
+        # print(self.request.session.get('batch_code'))
+        # if data['code'] == None:
+        else:
+         return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)    
+                
              
 class StudentTopics(viewsets.ModelViewSet):
+    
        queryset=GetTopics.objects.all()
        queryset1=SelectedTopics.objects.all()
        serilazier_class=StudentTopicSerializer
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
+          
         serializer = StudentTopicSerializer(data=request.data)
-        print(request.data)
+        # token =request.data
+        # print(token)
         if serializer.is_valid():
+        #    if not token:
+            #    print("Not Token")
+        #    payload=jwt.decode(token, '123',algorithms=['HS256'])
+        #    print(payload['id'])
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
            if res:
              ans=[]
              index=0
-             batch=serializer.data['selected_by']
+            #  batch=serializer.data['selected_by']
              docs = db.collection('topics').stream()
              for doc in docs:
                  name=doc.to_dict()['name']
                  description=doc.to_dict()['description']
                  selectedby=doc.to_dict()['selected_by']
-                 id=doc.id
-                 if(selectedby==batch): 
-                  return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
-                 if (len(selectedby)!=0):
-                  continue
+                #  id=doc.id
+                #  if(selectedby==batch): 
+                #   return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
+                #  if (len(selectedby)!=0):
+                #   continue
                  obj={
                    "name":name,
                    "description":description,
-                   "selected_by":selectedby,
-                   "id":id
+                   "selected_by":selectedby
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
         else:   
-        
                 serializer = StudentSelectedTopicSerializer(data=request.data)
                 if serializer.is_valid():
                    batchid=serializer.data['batchid']
@@ -432,5 +462,42 @@ class FacultyCreateViewSet(viewsets.ModelViewSet):
             return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
         else:
          return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
-                
+
+class FacultyNotifyHandler(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def create(self, request, format=None):
+        serializer=NotifySerializer(data=request.data)
+        if serializer.is_valid():
+            flag = 0
+            status_=serializer.data['status']
+            if status_ == "/":
+                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_faculty']
+                print(status_db)
+                return Response({"msg": status_db}, status=status.HTTP_200_OK)
+            if status_ == "true":
+                flag = 1
+            db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_faculty":status_})
+            if flag == 1:
+                return Response({"msg": "true"}, status=status.HTTP_200_OK)
+            return Response({"msg": "false"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+
+class StudentShowTopicHandler(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def create(self, request, format=None):
+        serializer=NotifySerializer(data=request.data)
+        if serializer.is_valid():
+            flag = 0
+            status_=serializer.data['status']
+            if status_ == "/":
+                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
+                return Response({"msg": status_db}, status=status.HTTP_200_OK)
+            if status_ == "true":
+                flag = 1
+            db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_student":status_})
+            if flag == 1:
+                return Response({"msg": "true"}, status=status.HTTP_200_OK)
+            return Response({"msg": "false"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+
 

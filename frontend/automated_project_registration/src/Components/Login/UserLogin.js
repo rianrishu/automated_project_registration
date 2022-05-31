@@ -14,11 +14,13 @@ function UserLogin(props) {
           headers: {
             'Content-Type': 'application/json',
           },
+          
           body: JSON.stringify({ "batch":credentials.batch,"password":credentials.password })
         })
         const json = await response.json();
-        if(response.status==202){
-        
+      
+        if(response.status===200){
+          localStorage.setItem('token',json.jwt)
      history.push({
       pathname: '/user/homepage',
       state: { batch:credentials.batch}

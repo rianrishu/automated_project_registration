@@ -67,8 +67,8 @@ function AdminHome() {
         {/* <header> */}
         {/* {" "} */}
         <Navbar />
+        
         {/* </header> */}
-
         <nav>
           <ul>
             {topics.map((topic, index) => {

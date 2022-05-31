@@ -6,6 +6,7 @@ function Navbar({batch}) {
   const [batch1,setbatch]=useState("0")
   let history=useHistory()
    const handleclick=async()=>{
+    localStorage.removeItem('token');
   history.push('/')
    }
    useEffect(()=>{
