@@ -101,7 +101,7 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                         'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
                         'iat':datetime.datetime.now()
                         }
-                        token = jwt.encode(payload, '123', algorithm='HS256').decode()
+                        token = jwt.encode(payload, '123', algorithm='HS256')
                         return Response({'msg':'Success','jwt':token}, status=status.HTTP_200_OK) 
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -472,6 +472,7 @@ class FacultyNotifyHandler(viewsets.ModelViewSet):
             status_=serializer.data['status']
             if status_ == "/":
                 status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_faculty']
+                print(status_db)
                 return Response({"msg": status_db}, status=status.HTTP_200_OK)
             if status_ == "true":
                 flag = 1

@@ -6,6 +6,20 @@ function Navbar() {
   const [notifyFaculty, setnotifyFaculty] = useState("/");
   const [openTopic, setopenTopic] = useState("/");
   let history = useHistory();
+  const handleclkfac=()=>{
+    if(notifyFaculty==="true")
+    setnotifyFaculty("false");
+    else
+    setnotifyFaculty("true");
+    
+  }
+  const handleclkstu=()=>{
+    if(openTopic==="true")
+    setopenTopic("false");
+    else
+    setopenTopic("true");
+    
+  }
   const handleclick = async () => {
     history.push("/");
   };
@@ -20,29 +34,32 @@ function Navbar() {
   function onToggle() {
     this.setState({ toggleActive: !this.state.toggleActive });
   }
+ const updatesoon=async()=>{
+  const response = await fetch("http://localhost:8000/notify/faculty/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({"status": notifyFaculty})
+  })
+  const json = await response.json()
+  setnotifyFaculty(json.msg)
+  console.log(notifyFaculty)
 
+  const response1 = await fetch("http://localhost:8000/notify/student/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({"status": openTopic})
+  })
+  const json1 = await response1.json()
+  setopenTopic(json1.msg)
+  console.log(openTopic)
+ }
   useEffect(async () => {
-    const response = await fetch("http://localhost:8000/notify/faculty/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status: notifyFaculty }),
-    });
-    const json = await response.json();
-    setnotifyFaculty(json.msg);
-    console.log(notifyFaculty);
-
-    const response1 = await fetch("http://localhost:8000/notify/student/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ status: openTopic }),
-    });
-    const json1 = await response1.json();
-    setopenTopic(json1.msg);
-  }, []);
+   updatesoon();
+  }, [])
 
   return (
     <nav
@@ -93,25 +110,13 @@ function Navbar() {
               </Link>
             </li>
           </ul>
-          <div
-            className={`form-check form-switch text-${
-              mode === notifyFaculty ? "black" : "light"
-            }`}
-          >
-            <input
-              className="form-check-input text-light"
-              type="checkbox"
-              role="switch"
-              id="flexSwitchCheckDefault"
-              onClick={props.Toggle}
-            />
-            <label
-              className="form-check-label"
-              htmlFor="flexSwitchCheckDefault"
-            >
-              Enable Dark Mode
-            </label>
-          </div>
+          <li className="nav-item dropdown">
+    <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
+    <ul className="dropdown-menu">
+      <li><button className="dropdown-item" onClick={handleclkfac}>Notify Faculty : {notifyFaculty}</button></li>
+      <li><button className="dropdown-item" onClick={handleclkstu}>Open topic to Student : {openTopic}</button></li>
+    </ul>
+  </li>
           {/* <ToggleButton 
             id="toggle-check"
             type="checkbox"
@@ -134,7 +139,7 @@ function Navbar() {
           >
             Open Topics to Student
           </ToggleButton>  */}
-
+       
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut
