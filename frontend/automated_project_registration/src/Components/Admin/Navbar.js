@@ -6,18 +6,54 @@ function Navbar() {
   const [notifyFaculty, setnotifyFaculty] = useState("/");
   const [openTopic, setopenTopic] = useState("/");
   let history = useHistory();
+  let abc="/"
+  let abc1="/"
+  const callnotifyfacutly=async()=>{
+    console.log(notifyFaculty)
+    const response = await fetch("http://localhost:8000/notify/faculty/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({"status": abc})
+    })
+    const json = await response.json()
+    setnotifyFaculty(json.msg)
+  }
+ const callnotifystudent=async()=>{
+  const response1 = await fetch("http://localhost:8000/notify/student/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({"status": abc1})
+  })
+  const json1 = await response1.json()
+  setopenTopic(json1.msg)
+ }
+
   const handleclkfac=()=>{
-    if(notifyFaculty==="true")
+    if(notifyFaculty==="true"){
+      abc="false"
     setnotifyFaculty("false");
-    else
+    }
+    else{
+      abc="true"
     setnotifyFaculty("true");
+    }
+    callnotifyfacutly()
     
   }
   const handleclkstu=()=>{
-    if(openTopic==="true")
+    if(openTopic==="true"){
+      abc1="false"
     setopenTopic("false");
-    else
+    }
+    else{
+      abc1="true"
     setopenTopic("true");
+    }
+    callnotifystudent()
     
   }
   const handleclick = async () => {
@@ -34,31 +70,10 @@ function Navbar() {
   function onToggle() {
     this.setState({ toggleActive: !this.state.toggleActive });
   }
- const updatesoon=async()=>{
-  const response = await fetch("http://localhost:8000/notify/faculty/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({"status": notifyFaculty})
-  })
-  const json = await response.json()
-  setnotifyFaculty(json.msg)
-  console.log(notifyFaculty)
-
-  const response1 = await fetch("http://localhost:8000/notify/student/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({"status": openTopic})
-  })
-  const json1 = await response1.json()
-  setopenTopic(json1.msg)
-  console.log(openTopic)
- }
+ 
   useEffect(async () => {
-   updatesoon();
+   callnotifyfacutly();
+   callnotifystudent();
   }, [])
 
   return (

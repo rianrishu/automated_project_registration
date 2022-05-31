@@ -478,8 +478,8 @@ class FacultyNotifyHandler(viewsets.ModelViewSet):
                 flag = 1
             db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_faculty":status_})
             if flag == 1:
-                return Response({"msg": "add topic"}, status=status.HTTP_200_OK)
-            return Response({"msg": "stop add topic"}, status=status.HTTP_200_OK)
+                return Response({"msg": "true"}, status=status.HTTP_200_OK)
+            return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)     
 
 class StudentShowTopicHandler(viewsets.ModelViewSet):
@@ -496,8 +496,8 @@ class StudentShowTopicHandler(viewsets.ModelViewSet):
                 flag = 1
             db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_student":status_})
             if flag == 1:
-                return Response({"msg": "show topic"}, status=status.HTTP_200_OK)
-            return Response({"msg": "hide topic"}, status=status.HTTP_200_OK)
+                return Response({"msg": "true"}, status=status.HTTP_200_OK)
+            return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)     
 
 
