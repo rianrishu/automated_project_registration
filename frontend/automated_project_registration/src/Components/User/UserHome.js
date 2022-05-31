@@ -69,7 +69,7 @@ function UserHome() {
       }
     } else {
       alert("Login First");
-      history.push("/user/login");
+      history.push("/");
     }
     callnotifystudent();
 
