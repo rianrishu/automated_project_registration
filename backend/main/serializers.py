@@ -67,3 +67,8 @@ class AuthTokenSerializer(serializers.ModelSerializer):
     class Meta:
         model=AuthToken
         fields=('token',)   
+
+class NotifySerializer(serializers.ModelSerializer):
+    class Meta:
+        model=Notify
+        fields=('status',) 

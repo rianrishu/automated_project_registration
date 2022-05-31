@@ -56,6 +56,9 @@ class StudentTopicAcceptReject(models.Model):
    status=models.CharField(max_length=10, null=True, blank=True)   
 
 
+class Notify(models.Model):
+   status=models.CharField(max_length=30, null=False)
+
 
        
     

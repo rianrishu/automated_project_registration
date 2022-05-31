@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import { ToggleButton } from "react-bootstrap";
 
 function Navbar() {
+  const [notifyFaculty, setnotifyFaculty] = useState("/");
+  const [openTopic, setopenTopic] = useState("/");
   let history = useHistory();
   const handleclick = async () => {
     history.push("/");
@@ -13,6 +16,33 @@ function Navbar() {
   function MouseOut(event) {
     event.target.style.background = "";
   }
+
+  function onToggle() {
+    this.setState({ toggleActive: !this.state.toggleActive });
+  }
+
+  useEffect(async () => {
+    const response = await fetch("http://localhost:8000/notify/faculty/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: notifyFaculty }),
+    });
+    const json = await response.json();
+    setnotifyFaculty(json.msg);
+    console.log(notifyFaculty);
+
+    const response1 = await fetch("http://localhost:8000/notify/student/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: openTopic }),
+    });
+    const json1 = await response1.json();
+    setopenTopic(json1.msg);
+  }, []);
 
   return (
     <nav
@@ -63,6 +93,48 @@ function Navbar() {
               </Link>
             </li>
           </ul>
+          <div
+            className={`form-check form-switch text-${
+              mode === notifyFaculty ? "black" : "light"
+            }`}
+          >
+            <input
+              className="form-check-input text-light"
+              type="checkbox"
+              role="switch"
+              id="flexSwitchCheckDefault"
+              onClick={props.Toggle}
+            />
+            <label
+              className="form-check-label"
+              htmlFor="flexSwitchCheckDefault"
+            >
+              Enable Dark Mode
+            </label>
+          </div>
+          {/* <ToggleButton 
+            id="toggle-check"
+            type="checkbox"
+            className="mx-2"
+            variant="primary"
+            checked={false}
+            value="1"
+          // onChange={(e) => setChecked(e.currentTarget.checked)}
+          >
+            Notify Faculty
+          </ToggleButton>
+          <ToggleButton
+            id="toggle-check2"
+            className="mx-2"
+            type="checkbox"
+            variant="primary"
+            // checked={checked}
+            value="1"
+            // onChange={(e) => setChecked(e.currentTarget.checked)}
+          >
+            Open Topics to Student
+          </ToggleButton>  */}
+
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut

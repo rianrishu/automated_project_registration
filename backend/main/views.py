@@ -462,3 +462,41 @@ class FacultyCreateViewSet(viewsets.ModelViewSet):
             return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
         else:
          return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class FacultyNotifyHandler(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def create(self, request, format=None):
+        serializer=NotifySerializer(data=request.data)
+        if serializer.is_valid():
+            flag = 0
+            status_=serializer.data['status']
+            if status_ == "/":
+                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_faculty']
+                return Response({"msg": status_db}, status=status.HTTP_200_OK)
+            if status_ == "true":
+                flag = 1
+            db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_faculty":status_})
+            if flag == 1:
+                return Response({"msg": "add topic"}, status=status.HTTP_200_OK)
+            return Response({"msg": "stop add topic"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+
+class StudentShowTopicHandler(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def create(self, request, format=None):
+        serializer=NotifySerializer(data=request.data)
+        if serializer.is_valid():
+            flag = 0
+            status_=serializer.data['status']
+            if status_ == "/":
+                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
+                return Response({"msg": status_db}, status=status.HTTP_200_OK)
+            if status_ == "true":
+                flag = 1
+            db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_student":status_})
+            if flag == 1:
+                return Response({"msg": "show topic"}, status=status.HTTP_200_OK)
+            return Response({"msg": "hide topic"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+
+

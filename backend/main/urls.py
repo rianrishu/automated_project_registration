@@ -1,7 +1,7 @@
 from email.mime import base
 from django.urls import path,include
 from rest_framework import routers
-from .views import AdminGetTopicAddedByStudent, AdminLoginViewSet, FacultyLoginViewSet, FacultyUpdatePasswordViewSet, LeaveHomePage, StudentTopicAcceptRejectHandler, StudentViewSet, StudentLoginViewSet, StudentTopics, UserInHomepage, StudentNewTopic, FacultyDetailViewSet , AdminGetalltopics ,   FacultyCreateViewSet
+from .views import AdminGetTopicAddedByStudent, AdminLoginViewSet, FacultyLoginViewSet, FacultyNotifyHandler, FacultyUpdatePasswordViewSet, LeaveHomePage, StudentShowTopicHandler, StudentTopicAcceptRejectHandler, StudentViewSet, StudentLoginViewSet, StudentTopics, UserInHomepage, StudentNewTopic, FacultyDetailViewSet , AdminGetalltopics ,   FacultyCreateViewSet
 
 router=routers.DefaultRouter()
 router.register('student/signin',StudentViewSet)
@@ -19,6 +19,8 @@ router.register('admin1/topic-accept-reject', StudentTopicAcceptRejectHandler, b
 router.register('faculty/login', FacultyLoginViewSet),
 router.register('faculty/update-password', FacultyUpdatePasswordViewSet)
 router.register('admin1/createfaculty',  FacultyCreateViewSet)
+router.register('notify/faculty',  FacultyNotifyHandler, basename="notify faculty to add topic")
+router.register('notify/student',  StudentShowTopicHandler, basename="option to show or hide topic list to students")
 urlpatterns=[
     path('',include(router.urls)),
 ]
