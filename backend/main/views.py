@@ -63,7 +63,11 @@ class StudentViewSet(viewsets.ModelViewSet):
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
-              "password": password}
+              "password": password,
+              "phase0": 0,
+              "phase1": 0,
+              "phase2": 0
+              }
             # data = {"name": name, "email":email}
             batch=generate_batch(section)
             # database.child("users").set(data) 
@@ -500,4 +504,63 @@ class StudentShowTopicHandler(viewsets.ModelViewSet):
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)     
 
+class GetBatchListFaculty(viewsets.ModelViewSet):
+    serializer_class = FacultyGetBatchListSerializer
+    def create(self, request, format=None):
+        serializer=FacultyGetBatchListSerializer(data=request.data)
+        if serializer.is_valid():
+            faculty_userid=serializer.data['userid']
+            student_topics=db.collection('topics').get()
+            temp_ids=[]
+            res=[]
+            for topic in student_topics:
+                temp_ids.append(topic.id)
+            for id in temp_ids:
+                topic_details=db.collection('topics').document(id).get()
+                name=topic_details.to_dict()['name']
+                description=topic_details.to_dict()['description']
+                selected_by=topic_details.to_dict()['selected_by']
+                faculty=topic_details.to_dict()['faculty']
+                print(faculty)
+                if faculty_userid == faculty:
+                    res.append({
+                        "name": name,
+                        "description": description,
+                        "batch": selected_by,
+                    })
+            return Response(res, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)            
 
+class GetSetPhaseMarks(viewsets.ModelViewSet):
+    serializer_class = GetSetPhaseMarksSerializer 
+    def create(self, request, format=None):
+        serializer=GetSetPhaseMarksSerializer(data=request.data)
+        if serializer.is_valid():
+            batch = serializer.data['student_leader']
+            phase0 = serializer.data['phase0']
+            phase1 = serializer.data['phase1']
+            phase2 = serializer.data['phase2']
+            phase_marks=db.collection('students').document(batch).get()
+            if phase0 == 0 and phase1 == 0 and phase2 == 0:
+                phase0_db = phase_marks.to_dict()['phase0']
+                phase1_db = phase_marks.to_dict()['phase1']
+                phase2_db = phase_marks.to_dict()['phase2']
+                return Response({
+                    "batch": batch,
+                    "phase0": phase0_db,
+                    "phase1": phase1_db,
+                    "phase2": phase2_db
+                }, status=status.HTTP_200_OK)
+            else:
+                db.collection('students').document(batch).update({
+                    "phase0": phase0,
+                    "phase1": phase1,
+                    "phase2": phase2
+                })
+                return Response({
+                    "batch": batch,
+                    "phase0": phase0,
+                    "phase1": phase1,
+                    "phase2": phase2
+                }, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)
