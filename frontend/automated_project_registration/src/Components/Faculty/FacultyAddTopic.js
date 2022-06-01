@@ -1,5 +1,6 @@
 import React,{useState,useContext, useEffect} from 'react'
 import { Link, useLocation } from 'react-router-dom'
+import Button from "@material-ui/core/Button";
 function FacultyAddTopic() {
     const [credentials, setcred] = useState({ "name":" ","description":" ","faculty":""})
     let location=useLocation();
@@ -31,7 +32,7 @@ function FacultyAddTopic() {
         
     }
   return (
-    <div className="login-box">
+    <div id="login-box" className="login-box">
     <h2>Add Topic</h2>
     <form >
       <div className="user-box">
@@ -52,6 +53,9 @@ function FacultyAddTopic() {
       </Link>
     </div>
     </form>
+    <Button color="secondary" variant="contained" to="/faculty/homepage" component={Link}>
+            Back
+          </Button>
   </div>
   )
 }

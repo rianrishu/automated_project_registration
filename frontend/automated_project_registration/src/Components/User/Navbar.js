@@ -13,7 +13,7 @@ function Navbar({batch}) {
     setbatch(batch)
    },[batch])
   return (
-    <nav className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark " style={{background: "#394867"}}>
+    <nav className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark " style={{background: "#394867", width: "100%"}}>
       <div className="container-fluid">
         <Link className="navbar-brand" to="#">
           Welcome : {batch1}
@@ -32,7 +32,7 @@ function Navbar({batch}) {
         <div className="collapse navbar-collapse" id="navbarSupportedContent" >
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
-              <Link className="nav-link active" aria-current="page" to="/">
+              <Link className="nav-link active" aria-current="page" to="/user/homepage">
                 Home
               </Link>
             </li>
