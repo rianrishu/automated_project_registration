@@ -34,7 +34,7 @@ function GetTopics() {
       body: JSON.stringify({ "name":obj.name, "description":obj.description, "selected_by":obj.selected_by,"faculty":obj.faculty,"id_topic":obj.id })
     })
     const json = await response.json();
-if(json.status==200)
+if(response.status==200)
     alert( "Topic Updated Successfully")
     else
     alert( "Already 3 batches are assigned")

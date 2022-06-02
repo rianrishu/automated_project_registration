@@ -220,16 +220,16 @@ class StudentNewTopic(viewsets.ModelViewSet):
               }
               db.collection("StudentTopics").add(data)
             else:
-                batch_under=db.collection('faculty').document(faculty).get('batches')
+                batch_under=db.collection('Faculty').document(faculty).get()
+                batch_under=batch_under.to_dict()['batches']
                 print(batch_under)
-                # batch_under=batch_under.to_dict()['batches']
-                # if batch_under<3:
-                #     id=serializer.data['id_topic'] 
-                #     db.collection('topics').document(id).update({
-                #             "name":name_res,"description":description_res,"faculty":faculty,"selected_by":batch_res
-                #         })
-                # else:
-                #     return Response({'msg':'Batches exceed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)          
+                if batch_under<3:
+                    id=serializer.data['id_topic'] 
+                    db.collection('topics').document(id).update({
+                            "name":name_res,"description":description_res,"faculty":faculty,"selected_by":batch_res
+                        })
+                else:
+                    return Response({'msg':'Batches exceed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)          
             return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
         else:
           return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
@@ -454,7 +454,7 @@ class FacultyCreateViewSet(viewsets.ModelViewSet):
             for faculty_temp in temp:
                 if userid==faculty_temp:
                     return Response({'msg':'UserId Already Exist'}, status=status.HTTP_400_BAD_REQUEST)
-            db.collection('Faculty').document(userid).set({"password":password_response,"batches":0})
+            db.collection('Faculty').document(userid).set({"password":password_response,"batches":0,"userid":userid})
             return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
         else:
          return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
