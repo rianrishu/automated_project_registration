@@ -521,7 +521,6 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
                 description=topic_details.to_dict()['description']
                 selected_by=topic_details.to_dict()['selected_by']
                 faculty=topic_details.to_dict()['faculty']
-                print(faculty)
                 if faculty_userid == faculty:
                     res.append({
                         "name": name,
