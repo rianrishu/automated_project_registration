@@ -3,26 +3,28 @@ import { useHistory, useLocation } from "react-router-dom";
 import Cards from "./Cards";
 import Navbar from "./Navbar";
 import "../../CSS/Sidenav.css";
+import BatchDetails from "./BatchDetails";
 import { HashLink as Link } from "react-router-hash-link";
 function UserHome() {
   let history = useHistory();
   const [topics, setopic] = useState([]);
-  const [batch, setbatch] = useState(null);
+  const [topics1, setopic1] = useState([]);
+  const [batch, setbatch] = useState("null");
   const [openTopic, setopenTopic] = useState("/");
+  const [selected,setselected]=useState("false")
   let abc1="/"
   let abc="null"
   const callnotifystudent=async()=>{
-    const response1 = await fetch("http://localhost:8000/notify/student/", {
-      method: "POST",
+    const response1 = await fetch("http://localhost:8000/notify/student-get/", {
+      method: "GET",
       headers: {
         "Content-Type": "application/json"
-      },
-      body: JSON.stringify({"status": abc1})
-    })
+      }})
     const json1 = await response1.json()
     setopenTopic(json1.msg)
    }
   const select_topic = async (id) => {
+    console.log(id,batch)
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
@@ -32,6 +34,7 @@ function UserHome() {
     });
     const json = await response.json();
     gettopics();
+    window.location.reload(true);
   };
   const gettopics = async () => {
     const response = await fetch("http://localhost:8000/student/gettopics/", {
@@ -43,11 +46,18 @@ function UserHome() {
     });
     const json = await response.json();
 
-    if (json.msg === "Selected") {
-    } else setopic(json.msg);
+    if (json.msg === "Already Selected") {
+      setopenTopic("false")
+      setselected("true")
+      console.log(json.msg1)
+      setopic1(json.msg1);
+      return
+    }
+    setopic(json.msg)
   };
   useEffect(async () => {
     if (localStorage.getItem("token")) {
+      callnotifystudent();
       const response = await fetch(
         "http://localhost:8000/student/user-in-homepage/",
         {
@@ -71,7 +81,7 @@ function UserHome() {
       alert("Login First");
       history.push("/");
     }
-    callnotifystudent();
+    
 
   }, []);
 
@@ -80,9 +90,10 @@ function UserHome() {
       <section id="sidenavhead">
         <header>
           {" "}
-          <Navbar batch={batch} />
+          <Navbar batch={batch} openTopic={openTopic} selected={selected}/>
         </header>
-        {openTopic === "true" ? <>
+        {openTopic === "true" && selected=="false"? <>
+        
           <nav id="sidenav">
             <ul>
               {topics.map((topic, index) => {
@@ -109,9 +120,8 @@ function UserHome() {
               );
             })}
           </main>
-        </> : <main><section><h1 style={{ color: "grey", width: "31rem" }}>
-              No Topics To display
-            </h1></section></main>}
+        </>: (openTopic==="/"||openTopic==="false") && selected=="false"  ? <h1>NO topic to display</h1> : <main><BatchDetails topics1={topics1}/></main>
+            }
       </section>
     </>
   );
