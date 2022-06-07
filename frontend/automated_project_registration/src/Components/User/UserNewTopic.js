@@ -1,6 +1,7 @@
 import React,{useState,useContext, useEffect} from 'react'
 import MiniContext from '../../Context/MiniContext';
 import { Link, useLocation ,useHistory} from 'react-router-dom'
+import Button from "@material-ui/core/Button";
 function UserNewTopic() {
     const [credentials, setcred] = useState({ "name":" ","description":" "})
    let history=useHistory()
@@ -50,7 +51,7 @@ function UserNewTopic() {
         
     }
   return (
-    <div className="login-box">
+    <div className="login-box" id="login-box">
     <h2>Add Your Topic</h2>
     <form >
       <div className="user-box">
@@ -69,6 +70,9 @@ function UserNewTopic() {
         Submit
       </Link>
     </form>
+      <Button color="secondary" variant="contained" to="/user/homepage" component={Link}>
+            Back
+          </Button>
   </div>
   )
 }

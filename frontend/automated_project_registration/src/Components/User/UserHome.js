@@ -7,9 +7,20 @@ import { HashLink as Link } from "react-router-hash-link";
 function UserHome() {
   let history = useHistory();
   const [topics, setopic] = useState([]);
-  const [abc,setabc]=useState(0)
-  const [batch, setbatch] = useState("null");
-  let sendbatch="null"
+  const [batch, setbatch] = useState(null);
+  const [openTopic, setopenTopic] = useState("/");
+  let abc1="/"
+  const callnotifystudent=async()=>{
+    const response1 = await fetch("http://localhost:8000/notify/student/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({"status": abc1})
+    })
+    const json1 = await response1.json()
+    setopenTopic(json1.msg)
+   }
   const select_topic = async (id) => {
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
@@ -21,50 +32,46 @@ function UserHome() {
     const json = await response.json();
     gettopics();
   };
-  const gettopics = async()=>{
-    console.log(batch)
+  const gettopics = async () => {
+    let url = "http://localhost:8000/student/gettopics/";
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({"selected_by":sendbatch,"name":" "}),
-    })
-   
-        const json=await response.json();
-    if(json.msg==="200")
-    setopic(json.msg);
-      else{
-        setabc(1)
-    alert('Already Selected')
-      }
+      body: JSON.stringify({ name: " " }),
+    });
+    const json = await response.json();
+
+    if (json.msg === "Selected") {
+    } else setopic(json.msg);
   };
   useEffect(async () => {
-    if(localStorage.getItem('token')){
-    const response = await fetch("http://localhost:8000/student/user-in-homepage/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        
-      },
-      body: JSON.stringify({"token":localStorage.getItem('token')})
-    });
-     const json=await response.json();
-     console.log(json)
-     if(response.status===200){
-       setbatch(json.msg)
-       sendbatch=json.msg
-         gettopics();
-     }
-     else{
-       alert('Please Login using valid token')
-       history.push('/')
-     }
+    if (localStorage.getItem("token")) {
+      const response = await fetch(
+        "http://localhost:8000/student/user-in-homepage/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: localStorage.getItem("token") }),
+        }
+      );
+      const json = await response.json();
+      if (response.status === 200) {
+        gettopics();
+        setbatch(json.msg);
+      } else {
+        alert("Please Login using valid token");
+        history.push("/");
+      }
+    } else {
+      alert("Login First");
+      history.push("/");
     }
-    else{
-      alert('Login First')
-      history.push('/user/login')
-    }
+    callnotifystudent();
+
   }, []);
 
   return (
@@ -74,35 +81,36 @@ function UserHome() {
           {" "}
           <Navbar batch={batch} />
         </header>
-
-        <nav id="sidenav">
-          <ul>
-            {abc&&<h1>No Topics To display</h1>}
+        {openTopic === "true" ? <>
+          <nav id="sidenav">
+            <ul>
+              {topics.map((topic, index) => {
+                return (
+                  <li key={index}>
+                    <Link to={`#section-${index}`}>
+                      {topic.name.substring(0, 18)}...
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
+          </nav>
+          <main>
             {topics.map((topic, index) => {
               return (
-                <li key={index}>
-                  <Link to={`#section-${index}`}>
-                    {topic.name.substring(0, 18)}...
-                  </Link>
-                </li>
+                <section key={index} id={`section-${index}`}>
+                  <Cards
+                    topic={topic}
+                    index={index}
+                    select_topic={select_topic}
+                  />
+                </section>
               );
             })}
-          </ul>
-        </nav>
-        <main>
-          
-          {topics.map((topic, index) => {
-            return (
-              <section key={index} id={`section-${index}`}>
-                <Cards
-                  topic={topic}
-                  index={index}
-                  select_topic={select_topic}
-                />
-              </section>
-            );
-          })}
-        </main>
+          </main>
+        </> : <main><section><h1 style={{ color: "grey", width: "31rem" }}>
+              No Topics To display
+            </h1></section></main>}
       </section>
     </>
   );

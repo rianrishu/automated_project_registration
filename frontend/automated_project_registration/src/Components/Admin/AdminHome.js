@@ -9,6 +9,7 @@ function AdminHome() {
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
   const [abc, setabc] = useState(1);
+  let history=useHistory()
   const select_topic = async (
     name,
     description,
@@ -55,10 +56,15 @@ function AdminHome() {
     } else setabc(1);
   };
   useEffect(async () => {
+    if (localStorage.getItem("token")) {
     if (location.state != undefined) {
       setbatch(location.state.batch);
     }
-    gettopics();
+    gettopics();}
+    else {
+      alert("Login First");
+      history.push("/");
+    }
   }, []);
 
   return (
@@ -67,8 +73,8 @@ function AdminHome() {
         {/* <header> */}
         {/* {" "} */}
         <Navbar />
+        
         {/* </header> */}
-
         <nav>
           <ul>
             {topics.map((topic, index) => {

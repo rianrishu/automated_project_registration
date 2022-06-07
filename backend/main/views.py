@@ -27,7 +27,7 @@ cred = credentials.Certificate(data)
 firebase_admin.initialize_app(cred)
 db=firestore.client()
 
-
+expirytime=60
 def generate_batch(section):
     bacthes=db.collection('students').get()
     temp=[]
@@ -63,13 +63,23 @@ class StudentViewSet(viewsets.ModelViewSet):
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
-              "password": password}
+              "password": password,
+              "phase0": 0,
+              "phase1": 0,
+              "phase2": 0
+              }
             # data = {"name": name, "email":email}
             batch=generate_batch(section)
             # database.child("users").set(data) 
             self.request.session['batch_code'] = batch
             db.collection("students").document(batch).set(data)
-            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
+            payload = {
+                        'id': batch,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
+                        'iat':datetime.datetime.now()
+                        }
+            token = jwt.encode(payload, '123', algorithm='HS256')
+            return Response({'msg':'Data Uploaded','jwt':token}, status=status.HTTP_201_CREATED)
 
 
 class StudentLoginViewSet(viewsets.ModelViewSet):
@@ -98,10 +108,10 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                         self.request.session['batch_code'] = batch_response
                         payload = {
                         'id': batch_response,
-                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
                         'iat':datetime.datetime.now()
                         }
-                        token = jwt.encode(payload, '123', algorithm='HS256').decode()
+                        token = jwt.encode(payload, '123', algorithm='HS256')
                         return Response({'msg':'Success','jwt':token}, status=status.HTTP_200_OK) 
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -258,7 +268,13 @@ class AdminLoginViewSet(viewsets.ModelViewSet):
                     password_db=db.collection('Admin').document(admin_temp).get()
                     data=password_db.to_dict()['password']
                     if(password_response==data): 
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                        payload = {
+                        'id': userid,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
+                        'iat':datetime.datetime.now()
+                        }
+                        token = jwt.encode(payload, '123', algorithm='HS256')
+                        return Response({'msg': 'success login','jwt':token}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -399,8 +415,14 @@ class FacultyLoginViewSet(viewsets.ModelViewSet):
                     flag=1
                     password_db=db.collection('Faculty').document(faculty_temp).get()
                     data=password_db.to_dict()['password']
-                    if(password_response==data): 
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    if(password_response==data):
+                        payload = {
+                        'id': userid,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
+                        'iat':datetime.datetime.now()
+                        }
+                        token = jwt.encode(payload, '123', algorithm='HS256') 
+                        return Response({'msg': 'success login','jwt':token}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -458,3 +480,101 @@ class FacultyCreateViewSet(viewsets.ModelViewSet):
             return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
         else:
          return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
+
+class FacultyNotifyHandler(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def create(self, request, format=None):
+        serializer=NotifySerializer(data=request.data)
+        if serializer.is_valid():
+            flag = 0
+            status_=serializer.data['status']
+            if status_ == "/":
+                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_faculty']
+                print(status_db)
+                return Response({"msg": status_db}, status=status.HTTP_200_OK)
+            if status_ == "true":
+                flag = 1
+            db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_faculty":status_})
+            if flag == 1:
+                return Response({"msg": "true"}, status=status.HTTP_200_OK)
+            return Response({"msg": "false"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+
+class StudentShowTopicHandler(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def create(self, request, format=None):
+        serializer=NotifySerializer(data=request.data)
+        if serializer.is_valid():
+            flag = 0
+            status_=serializer.data['status']
+            if status_ == "/":
+                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
+                return Response({"msg": status_db}, status=status.HTTP_200_OK)
+            if status_ == "true":
+                flag = 1
+            db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_student":status_})
+            if flag == 1:
+                return Response({"msg": "true"}, status=status.HTTP_200_OK)
+            return Response({"msg": "false"}, status=status.HTTP_200_OK)
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+
+class GetBatchListFaculty(viewsets.ModelViewSet):
+    serializer_class = FacultyGetBatchListSerializer
+    def create(self, request, format=None):
+        serializer=FacultyGetBatchListSerializer(data=request.data)
+        if serializer.is_valid():
+            faculty_userid=serializer.data['userid']
+            student_topics=db.collection('topics').get()
+            temp_ids=[]
+            res=[]
+            for topic in student_topics:
+                temp_ids.append(topic.id)
+            for id in temp_ids:
+                topic_details=db.collection('topics').document(id).get()
+                name=topic_details.to_dict()['name']
+                description=topic_details.to_dict()['description']
+                selected_by=topic_details.to_dict()['selected_by']
+                faculty=topic_details.to_dict()['faculty']
+                if faculty_userid == faculty:
+                    res.append({
+                        "name": name,
+                        "description": description,
+                        "batch": selected_by,
+                        "id":id
+                    })
+            return Response(res, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)            
+
+class GetSetPhaseMarks(viewsets.ModelViewSet):
+    serializer_class = GetSetPhaseMarksSerializer 
+    def create(self, request, format=None):
+        serializer=GetSetPhaseMarksSerializer(data=request.data)
+        if serializer.is_valid():
+            batch = serializer.data['student_leader']
+            phase0 = serializer.data['phase0']
+            phase1 = serializer.data['phase1']
+            phase2 = serializer.data['phase2']
+            phase_marks=db.collection('students').document(batch).get()
+            if phase0 == 0 and phase1 == 0 and phase2 == 0:
+                phase0_db = phase_marks.to_dict()['phase0']
+                phase1_db = phase_marks.to_dict()['phase1']
+                phase2_db = phase_marks.to_dict()['phase2']
+                return Response({
+                    "batch": batch,
+                    "phase0": phase0_db,
+                    "phase1": phase1_db,
+                    "phase2": phase2_db
+                }, status=status.HTTP_200_OK)
+            else:
+                db.collection('students').document(batch).update({
+                    "phase0": phase0,
+                    "phase1": phase1,
+                    "phase2": phase2
+                })
+                return Response({
+                    "batch": batch,
+                    "phase0": phase0,
+                    "phase1": phase1,
+                    "phase2": phase2
+                }, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)

@@ -24,6 +24,9 @@ class Student(models.Model):
     section=models.CharField(max_length=3, choices=SECTION_CHOICES)
     password=models.CharField(max_length=15, null=False)
     registered_at = models.DateTimeField(auto_now_add=True)
+    phase0 = models.FloatField(max_length=3, null=False, default=0)
+    phase1 = models.FloatField(max_length=3, null=False, default=0)
+    phase2 = models.FloatField(max_length=3, null=False, default=0)
 
 class StudentLogin(models.Model):
     batch=models.CharField(max_length=3, null=False)
@@ -54,6 +57,10 @@ class StudentTopicAcceptReject(models.Model):
    selected_by=models.CharField(max_length=3,null=False,blank=True) 
    faculty=models.CharField(max_length=20,null=True,blank=True) 
    status=models.CharField(max_length=10, null=True, blank=True)   
+
+
+class Notify(models.Model):
+   status=models.CharField(max_length=30, null=False)
 
 
 

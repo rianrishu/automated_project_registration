@@ -12,6 +12,7 @@ import UserNewTopic from "./Components/User/UserNewTopic";
 import MiniState from "./Context/MiniState";
 import GetTopics from "./Components/Admin/GetTopics";
 import Addfaculty from "./Components/Admin/Addfaculty"
+import BatchDetails from './Components/Faculty/BatchDetails'
 import AddTopic from "./Components/Admin/AddTopic";
 import FacultyAddTopic from "./Components/Faculty/FacultyAddTopic"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
@@ -19,13 +20,6 @@ import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 
 function App() {
-  // useEffect(async ()=>{
-  //   fetch('/student/user-in-homepage/')
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     console.log(data.code)
-  //   })
-  // },[])
 
   return (
     <div>
@@ -74,6 +68,9 @@ function App() {
               </Route>
               <Route path="/faculty/addtopic">
                 <FacultyAddTopic />
+              </Route>
+              <Route path="/faculty/batchdetails">
+                <BatchDetails />
               </Route>
             </Switch>
           </div>
