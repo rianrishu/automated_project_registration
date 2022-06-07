@@ -1,13 +1,20 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+import {Link,useHistory} from 'react-router-dom'
+import '../CSS/Homepage.css'
 function Home() {
-    
+    let history=useHistory();
+ const handleclick=(param)=> {
+   console.log(param)
+   history.push(`/${param}/login`);
+ }
   return (
-    <div className=" d-flex justify-content-center align-items-center container-fluid vh-100">
-    <Link className="btn btn-primary mx-5" to="/admin/login">Admin</Link>
-    <Link className="btn btn-primary mx-5" to ="/faculty/login" role="button">Faculty</Link>
-    <Link className="btn btn-primary mx-5" to ="/user/login" role="button">User</Link>
-  </div>
+    <section id="home">
+    <ul >
+    <li onClick={() => handleclick('admin')}>Admin</li>
+    <li onClick={()=>handleclick("faculty")} >Faculty</li>
+    <li onClick={() =>handleclick("user")}>User</li>
+  </ul>
+  </section>
   )
 }
 
