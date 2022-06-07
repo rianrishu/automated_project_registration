@@ -18,12 +18,15 @@ function FacultyLogin() {
     });
     console.log(response)
     const json = await response.json();
-    if (response.status == 202) history.push(
+    if (response.status == 202) {
+      localStorage.setItem('token',json.jwt)
+    history.push(
       {
         pathname: '/faculty/homepage',
         state: { userid:credentials.userid}
       }
     );
+    }
     else alert("Wrong Credentials");
   };
   const onchange = (e) => {

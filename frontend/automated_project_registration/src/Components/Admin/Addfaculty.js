@@ -1,4 +1,5 @@
 import React,{useState,useContext} from 'react'
+import Button from "@material-ui/core/Button";
 import { useLocation, useHistory,Link } from 'react-router-dom'
 function Addfaculty() {
     const [credentials, setcred] = useState({ "username":" ","password":" "});
@@ -26,7 +27,7 @@ const onchange = (e) => {
   return (
     <section id="loginpage">
     <div className="login-box">
-  <h2>ADD Faculty</h2>
+  <h2>Add Faculty</h2>
   <form onSubmit={handlesubmit}>
     <div className="user-box">
       <input type="text" name="username" id="username" onChange={onchange} required=""/>
@@ -44,6 +45,9 @@ const onchange = (e) => {
     </div>
     </Link>
   </form>
+<Button color="secondary" variant="contained" to="/admin/homepage" component={Link}>
+            Back
+          </Button>
 </div>
 </section>
   )

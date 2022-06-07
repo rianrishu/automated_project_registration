@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 // import "./Cards.sass";
 // import "./script.Babel";
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation ,useHistory} from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -18,10 +18,12 @@ const Cards = (props) => {
   const { ab } = props.disab;
   const [selected_fac,set_selected_fac]=useState("Pramod TC")
   const [faculty, setfaculty] = useState([]);
+  let history=useHistory()
   const onchange=(e)=>{
       set_selected_fac(e.target.value)
   }
   useEffect(async () => {
+    if (localStorage.getItem("token")) {
     const response = await fetch("http://localhost:8000/faculty/detail", {
       method: "GET",
       headers: {
@@ -29,7 +31,11 @@ const Cards = (props) => {
       },
     });
     const json = await response.json();
-    setfaculty(json.msg);
+    setfaculty(json.msg);}
+    else {
+      alert("Login First");
+      history.push("/");
+    }
   }, []);
   return (
     <Card>

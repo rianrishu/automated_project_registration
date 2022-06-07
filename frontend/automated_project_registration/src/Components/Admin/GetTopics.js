@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef} from 'react'
 import Table from './Table'
 import '../../CSS/adgettopic.css'
+import { Link, useLocation,useHistory } from 'react-router-dom'
 import Loading  from '../../Loading'
 function GetTopics() {
   const ref = useRef(null)
   const refClose = useRef(null)
+  let history=useHistory()
   const [results, setresults] = useState([]);
   const [faculty, setfaculty] = useState([]);
   let [loading,setloading]=useState(true);
@@ -34,7 +36,7 @@ function GetTopics() {
       body: JSON.stringify({ "name":obj.name, "description":obj.description, "selected_by":obj.selected_by,"faculty":obj.faculty,"id_topic":obj.id })
     })
     const json = await response.json();
-if(json.status==200)
+if(response.status==200)
     alert( "Topic Updated Successfully")
     else
     alert( "Already 3 batches are assigned")
@@ -56,6 +58,7 @@ if(json.status==200)
 
 
   useEffect(async () => {
+    if (localStorage.getItem("token")) {
     getalltopics()
     const response = await fetch("http://localhost:8000/faculty/detail", {
       method: "GET",
@@ -66,6 +69,11 @@ if(json.status==200)
     const json1 = await response.json();
 
     setfaculty(json1.msg);
+  }
+  else {
+    alert("Login First");
+    history.push("/");
+  }
   }, [])
   return (
     <section id="adgettopic">

@@ -27,7 +27,7 @@ cred = credentials.Certificate(data)
 firebase_admin.initialize_app(cred)
 db=firestore.client()
 
-
+expirytime=60
 def generate_batch(section):
     bacthes=db.collection('students').get()
     temp=[]
@@ -63,13 +63,23 @@ class StudentViewSet(viewsets.ModelViewSet):
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
-              "password": password}
+              "password": password,
+              "phase0": 0,
+              "phase1": 0,
+              "phase2": 0
+              }
             # data = {"name": name, "email":email}
             batch=generate_batch(section)
             # database.child("users").set(data) 
             self.request.session['batch_code'] = batch
             db.collection("students").document(batch).set(data)
-            return Response({'msg':'Data Uploaded'}, status=status.HTTP_201_CREATED)
+            payload = {
+                        'id': batch,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
+                        'iat':datetime.datetime.now()
+                        }
+            token = jwt.encode(payload, '123', algorithm='HS256')
+            return Response({'msg':'Data Uploaded','jwt':token}, status=status.HTTP_201_CREATED)
 
 
 class StudentLoginViewSet(viewsets.ModelViewSet):
@@ -98,7 +108,7 @@ class StudentLoginViewSet(viewsets.ModelViewSet):
                         self.request.session['batch_code'] = batch_response
                         payload = {
                         'id': batch_response,
-                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=60),
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
                         'iat':datetime.datetime.now()
                         }
                         token = jwt.encode(payload, '123', algorithm='HS256')
@@ -148,36 +158,32 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentTopicSerializer
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
-          
         serializer = StudentTopicSerializer(data=request.data)
-        # token =request.data
-        # print(token)
         if serializer.is_valid():
-        #    if not token:
-            #    print("Not Token")
-        #    payload=jwt.decode(token, '123',algorithms=['HS256'])
-        #    print(payload['id'])
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
            if res:
              ans=[]
              index=0
-            #  batch=serializer.data['selected_by']
+             batch=serializer.data['selected_by']
+             print(batch)
              docs = db.collection('topics').stream()
              for doc in docs:
                  name=doc.to_dict()['name']
                  description=doc.to_dict()['description']
                  selectedby=doc.to_dict()['selected_by']
-                #  id=doc.id
-                #  if(selectedby==batch): 
-                #   return Response({'msg':"Selected"}, status=status.HTTP_200_OK) 
-                #  if (len(selectedby)!=0):
-                #   continue
+                 id=doc.id
+                 if(selectedby==batch): 
+                     return Response({'msg':"Already Selected"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 
+                  
+                 if (len(selectedby)!=0):
+                  continue
                  obj={
                    "name":name,
                    "description":description,
-                   "selected_by":selectedby
+                   "selected_by":selectedby,
+                   "id":id
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
@@ -224,16 +230,16 @@ class StudentNewTopic(viewsets.ModelViewSet):
               }
               db.collection("StudentTopics").add(data)
             else:
-                batch_under=db.collection('faculty').document(faculty).get('batches')
+                batch_under=db.collection('Faculty').document(faculty).get()
+                batch_under=batch_under.to_dict()['batches']
                 print(batch_under)
-                # batch_under=batch_under.to_dict()['batches']
-                # if batch_under<3:
-                #     id=serializer.data['id_topic'] 
-                #     db.collection('topics').document(id).update({
-                #             "name":name_res,"description":description_res,"faculty":faculty,"selected_by":batch_res
-                #         })
-                # else:
-                #     return Response({'msg':'Batches exceed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)          
+                if batch_under<3:
+                    id=serializer.data['id_topic'] 
+                    db.collection('topics').document(id).update({
+                            "name":name_res,"description":description_res,"faculty":faculty,"selected_by":batch_res
+                        })
+                else:
+                    return Response({'msg':'Batches exceed'}, status=status.HTTP_405_METHOD_NOT_ALLOWED)          
             return Response({'msg':'Success'}, status=status.HTTP_200_OK) 
         else:
           return Response({'msg':'Not valid'}, status=status.HTTP_400_BAD_REQUEST)         
@@ -262,7 +268,13 @@ class AdminLoginViewSet(viewsets.ModelViewSet):
                     password_db=db.collection('Admin').document(admin_temp).get()
                     data=password_db.to_dict()['password']
                     if(password_response==data): 
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                        payload = {
+                        'id': userid,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
+                        'iat':datetime.datetime.now()
+                        }
+                        token = jwt.encode(payload, '123', algorithm='HS256')
+                        return Response({'msg': 'success login','jwt':token}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -403,8 +415,14 @@ class FacultyLoginViewSet(viewsets.ModelViewSet):
                     flag=1
                     password_db=db.collection('Faculty').document(faculty_temp).get()
                     data=password_db.to_dict()['password']
-                    if(password_response==data): 
-                        return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
+                    if(password_response==data):
+                        payload = {
+                        'id': userid,
+                        'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
+                        'iat':datetime.datetime.now()
+                        }
+                        token = jwt.encode(payload, '123', algorithm='HS256') 
+                        return Response({'msg': 'success login','jwt':token}, status=status.HTTP_202_ACCEPTED)
                     else:
                         return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
             if flag==-1:
@@ -458,7 +476,7 @@ class FacultyCreateViewSet(viewsets.ModelViewSet):
             for faculty_temp in temp:
                 if userid==faculty_temp:
                     return Response({'msg':'UserId Already Exist'}, status=status.HTTP_400_BAD_REQUEST)
-            db.collection('Faculty').document(userid).set({"password":password_response,"batches":0})
+            db.collection('Faculty').document(userid).set({"password":password_response,"batches":0,"userid":userid})
             return Response({'msg': 'success login'}, status=status.HTTP_202_ACCEPTED)
         else:
          return Response({'msg':'Not valid Login'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -500,4 +518,63 @@ class StudentShowTopicHandler(viewsets.ModelViewSet):
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)     
 
+class GetBatchListFaculty(viewsets.ModelViewSet):
+    serializer_class = FacultyGetBatchListSerializer
+    def create(self, request, format=None):
+        serializer=FacultyGetBatchListSerializer(data=request.data)
+        if serializer.is_valid():
+            faculty_userid=serializer.data['userid']
+            student_topics=db.collection('topics').get()
+            temp_ids=[]
+            res=[]
+            for topic in student_topics:
+                temp_ids.append(topic.id)
+            for id in temp_ids:
+                topic_details=db.collection('topics').document(id).get()
+                name=topic_details.to_dict()['name']
+                description=topic_details.to_dict()['description']
+                selected_by=topic_details.to_dict()['selected_by']
+                faculty=topic_details.to_dict()['faculty']
+                if faculty_userid == faculty:
+                    res.append({
+                        "name": name,
+                        "description": description,
+                        "batch": selected_by,
+                        "id":id
+                    })
+            return Response(res, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)            
 
+class GetSetPhaseMarks(viewsets.ModelViewSet):
+    serializer_class = GetSetPhaseMarksSerializer 
+    def create(self, request, format=None):
+        serializer=GetSetPhaseMarksSerializer(data=request.data)
+        if serializer.is_valid():
+            batch = serializer.data['student_leader']
+            phase0 = serializer.data['phase0']
+            phase1 = serializer.data['phase1']
+            phase2 = serializer.data['phase2']
+            phase_marks=db.collection('students').document(batch).get()
+            if phase0 == 0 and phase1 == 0 and phase2 == 0:
+                phase0_db = phase_marks.to_dict()['phase0']
+                phase1_db = phase_marks.to_dict()['phase1']
+                phase2_db = phase_marks.to_dict()['phase2']
+                return Response({
+                    "batch": batch,
+                    "phase0": phase0_db,
+                    "phase1": phase1_db,
+                    "phase2": phase2_db
+                }, status=status.HTTP_200_OK)
+            else:
+                db.collection('students').document(batch).update({
+                    "phase0": phase0,
+                    "phase1": phase1,
+                    "phase2": phase2
+                })
+                return Response({
+                    "batch": batch,
+                    "phase0": phase0,
+                    "phase1": phase1,
+                    "phase2": phase2
+                }, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)

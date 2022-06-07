@@ -16,7 +16,9 @@ function AdminLogin() {
       }),
     });
     const json = await response.json();
-    if (response.status == 202) history.push("/admin/homepage");
+    if (response.status == 202) {
+      localStorage.setItem('token',json.jwt)
+      history.push("/admin/homepage");}
     else alert("Wrong Credentials");
   };
   const onchange = (e) => {

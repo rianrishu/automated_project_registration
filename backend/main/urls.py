@@ -1,8 +1,9 @@
 from email.mime import base
 from django.urls import path,include
 from rest_framework import routers
-from .views import AdminGetTopicAddedByStudent, AdminLoginViewSet, FacultyLoginViewSet, FacultyNotifyHandler, FacultyUpdatePasswordViewSet, LeaveHomePage, StudentShowTopicHandler, StudentTopicAcceptRejectHandler, StudentViewSet, StudentLoginViewSet, StudentTopics, UserInHomepage, StudentNewTopic, FacultyDetailViewSet , AdminGetalltopics ,   FacultyCreateViewSet
 
+from .serializers import FacultyGetBatchListSerializer
+from .views import *
 router=routers.DefaultRouter()
 router.register('student/signin',StudentViewSet)
 router.register('student/login', StudentLoginViewSet)
@@ -21,6 +22,8 @@ router.register('faculty/update-password', FacultyUpdatePasswordViewSet)
 router.register('admin1/createfaculty',  FacultyCreateViewSet)
 router.register('notify/faculty',  FacultyNotifyHandler, basename="notify faculty to add topic")
 router.register('notify/student',  StudentShowTopicHandler, basename="option to show or hide topic list to students")
+router.register('faculty/batch-details', GetBatchListFaculty, basename="a")
+router.register('faculty/getsetphase', GetSetPhaseMarks, basename="get set phase marks")
 urlpatterns=[
     path('',include(router.urls)),
 ]

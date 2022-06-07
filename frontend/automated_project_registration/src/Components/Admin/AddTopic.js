@@ -1,8 +1,10 @@
 import React,{useState,useContext, useEffect} from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation,useHistory } from 'react-router-dom'
+import Button from "@material-ui/core/Button";
 function UserNewTopic() {
     const [credentials, setcred] = useState({ "name":" ","description":" ","faculty":"Pramod TC"})
     let location=useLocation();
+    let history=useHistory()
     const [faculty,setfaculty]=useState([])
   
     const handlesubmit=async()=>{
@@ -23,6 +25,7 @@ function UserNewTopic() {
     }
     //Faculty details fetching
     useEffect(async ()=>{
+      if (localStorage.getItem("token")) {
       const response = await fetch("http://localhost:8000/faculty/detail/", {
         method: 'GET',
         headers: {
@@ -30,14 +33,18 @@ function UserNewTopic() {
         }
       })
       const json = await response.json();
-      setfaculty(json.msg)
+      setfaculty(json.msg)}
+      else {
+        alert("Login First");
+        history.push("/");
+      }
     },[])
     const onchange = (e) => {
         setcred({ ...credentials, [e.target.name]: e.target.value })
         
     }
   return (
-    <div className="login-box">
+    <div id="login-box" className="login-box">
     <h2>Add  Topic</h2>
     <form >
       <div className="user-box">
@@ -63,6 +70,9 @@ function UserNewTopic() {
       </Link>
     </div>
     </form>
+    <Button color="secondary" variant="contained" to="/admin/homepage" component={Link}>
+            Back
+          </Button>
   </div>
   )
 }

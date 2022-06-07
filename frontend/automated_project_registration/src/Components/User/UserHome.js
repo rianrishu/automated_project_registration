@@ -6,7 +6,6 @@ import "../../CSS/Sidenav.css";
 import { HashLink as Link } from "react-router-hash-link";
 function UserHome() {
   let history = useHistory();
-  let location = useLocation();
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
   const [openTopic, setopenTopic] = useState("/");
