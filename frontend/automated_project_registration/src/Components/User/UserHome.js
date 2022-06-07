@@ -10,6 +10,7 @@ function UserHome() {
   const [batch, setbatch] = useState(null);
   const [openTopic, setopenTopic] = useState("/");
   let abc1="/"
+  let abc="null"
   const callnotifystudent=async()=>{
     const response1 = await fetch("http://localhost:8000/notify/student/", {
       method: "POST",
@@ -33,13 +34,12 @@ function UserHome() {
     gettopics();
   };
   const gettopics = async () => {
-    let url = "http://localhost:8000/student/gettopics/";
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name: " " }),
+      body: JSON.stringify({ name: " " ,selected_by:abc}),
     });
     const json = await response.json();
 
@@ -60,8 +60,9 @@ function UserHome() {
       );
       const json = await response.json();
       if (response.status === 200) {
-        gettopics();
         setbatch(json.msg);
+        abc=json.msg
+        gettopics();
       } else {
         alert("Please Login using valid token");
         history.push("/");

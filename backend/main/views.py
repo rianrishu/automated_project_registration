@@ -159,10 +159,12 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
         serializer = StudentTopicSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
+           
            if res:
              ans=[]
              index=0
