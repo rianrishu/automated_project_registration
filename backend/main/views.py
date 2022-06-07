@@ -152,7 +152,6 @@ class UserInHomepage(viewsets.ModelViewSet):
                 
              
 class StudentTopics(viewsets.ModelViewSet):
-    
        queryset=GetTopics.objects.all()
        queryset1=SelectedTopics.objects.all()
        serilazier_class=StudentTopicSerializer
@@ -175,7 +174,22 @@ class StudentTopics(viewsets.ModelViewSet):
                  selectedby=doc.to_dict()['selected_by']
                  id=doc.id
                  if(selectedby==batch): 
-                     return Response({'msg':"Already Selected"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 
+                    #  ans = []
+                     phase_marks = db.collection('students').document(batch).get()
+                     phase0 = phase_marks.to_dict()['phase0']
+                     phase1 = phase_marks.to_dict()['phase1']
+                     phase2 = phase_marks.to_dict()['phase2']
+                     obj={
+                   "name":name,
+                   "description":description,
+                   "selected_by":selectedby,
+                   "id":id,
+                   "phase0": phase0,
+                   "phase1": phase1,
+                   "phase2": phase2
+                    }
+                    #  ans.append(obj) 
+                     return Response({'msg':"Already Selected",'msg1':obj}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 
                   
                  if (len(selectedby)!=0):
                   continue
@@ -187,16 +201,15 @@ class StudentTopics(viewsets.ModelViewSet):
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
-        else:   
-                serializer = StudentSelectedTopicSerializer(data=request.data)
-                if serializer.is_valid():
-                   batchid=serializer.data['batchid']
-                   topic=serializer.data['name']
-                   db.collection("topics").document(topic).update({"selected_by":batchid})
-                   return Response({'msg':'Success'}, status=status.HTTP_200_OK)
-                else:
-                   return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
-
+        serializer = StudentSelectedTopicSerializer(data=request.data)
+        if serializer.is_valid():
+            batchid=serializer.data['batchid']
+            topic=serializer.data['name']
+            db.collection("topics").document(topic).update({"selected_by":batchid})
+            return Response({'msg':'Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+        # return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StudentNewTopic(viewsets.ModelViewSet):
@@ -210,8 +223,9 @@ class StudentNewTopic(viewsets.ModelViewSet):
             name_res=serializer.data['name']
             description_res=serializer.data['description']
             faculty=serializer.data['faculty']
-            print(faculty,name_res) 
-            if batch_res=='':
+            idtopicc=serializer.data['id_topic']
+            res = not bool(idtopicc)
+            if batch_res=='' and res:
              faculty=serializer.data['faculty']  
              data={
              "description":description_res,
@@ -500,23 +514,26 @@ class FacultyNotifyHandler(viewsets.ModelViewSet):
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)     
 
-class StudentShowTopicHandler(viewsets.ModelViewSet):
+class StudentShowTopicHandlerGet(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def list(self, request, format=None):
+        status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
+        return Response({"msg": status_db}, status=status.HTTP_200_OK)
+
+class StudentShowTopicHandlerPost(viewsets.ModelViewSet):
     serializer_class = NotifySerializer
     def create(self, request, format=None):
         serializer=NotifySerializer(data=request.data)
         if serializer.is_valid():
             flag = 0
             status_=serializer.data['status']
-            if status_ == "/":
-                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
-                return Response({"msg": status_db}, status=status.HTTP_200_OK)
             if status_ == "true":
                 flag = 1
             db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_student":status_})
             if flag == 1:
                 return Response({"msg": "true"}, status=status.HTTP_200_OK)
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)             
 
 class GetBatchListFaculty(viewsets.ModelViewSet):
     serializer_class = FacultyGetBatchListSerializer
