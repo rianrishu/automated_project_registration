@@ -64,6 +64,11 @@ class Notify(models.Model):
 
 
 
+class AbstractUpload(models.Model):
+    batch=models.CharField(max_length=4, null=False)
+    file = models.FileField()
+   #  uploaded_at = models.DateTimeField(auto_now_add=True)
+
        
     
       
