@@ -25,6 +25,7 @@ router.register('notify/student-get',  StudentShowTopicHandlerGet, basename="get
 router.register('notify/student-post',  StudentShowTopicHandlerPost, basename="update option to show or hide topic list to students")
 router.register('faculty/batch-details', GetBatchListFaculty, basename="a")
 router.register('faculty/getsetphase', GetSetPhaseMarks, basename="get set phase marks")
+router.register('student/upload-abstract', AbstractUploadHandler, basename="upload abstract")
 urlpatterns=[
     path('',include(router.urls)),
 ]

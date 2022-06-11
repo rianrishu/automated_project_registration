@@ -1,7 +1,9 @@
+from asyncore import read
 from turtle import back
 from urllib import response
 from django.http import HttpResponse, JsonResponse
 import json
+from pathlib import Path
 from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
@@ -18,13 +20,16 @@ from .models import *
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from firebase_admin import storage
 import os
 import json,datetime
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred,{
+    'storageBucket': 'mini-project-2022-b4dff.appspot.com'
+})
 db=firestore.client()
 
 expirytime=60
@@ -207,6 +212,9 @@ class StudentTopics(viewsets.ModelViewSet):
         if serializer.is_valid():
             batchid=serializer.data['batchid']
             topic=serializer.data['name']
+            faculty = db.collection("topics").document(topic).get().to_dict()['faculty']
+            prev_batch_cnt = db.collection("Faculty").document(faculty).get().to_dict()['batches']
+            db.collection("Faculty").document(faculty).update({'batches': prev_batch_cnt+1})
             db.collection("topics").document(topic).update({"selected_by":batchid})
             return Response({'msg':'Success'}, status=status.HTTP_200_OK)
         else:
@@ -381,6 +389,8 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
                 student_topics=db.collection('StudentTopics').get()
                 temp_ids=[]
                 res=[]
+                prev_batch_cnt = db.collection("Faculty").document(faculty).get().to_dict()['batches']
+                db.collection("Faculty").document(faculty).update({'batches': prev_batch_cnt+1})
                 for topic in student_topics:
                     temp_ids.append(topic.id)
                 for id in temp_ids:
@@ -597,3 +607,23 @@ class GetSetPhaseMarks(viewsets.ModelViewSet):
                     "phase2": phase2
                 }, status=status.HTTP_200_OK)
         return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+class AbstractUploadHandler(viewsets.ModelViewSet):
+    # serializer_class = StudentAbstractUploadSerializer
+    def create(self, request, format=None):
+        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
+        # if serializer.is_valid():
+        if request.method == 'POST':
+            print(request)
+            files = request.FILES
+            file = files['file']
+            # path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + "/file1.pdf"
+            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
+            # f = open(path_to_download_folder,'wb')
+            batch = request.data['batch']
+            bucket = storage.bucket()
+            blob = bucket.blob(batch)
+            blob.upload_from_file(file,content_type="application/pdf")
+            # blob.download_to_file(f)
+            return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
+    # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
