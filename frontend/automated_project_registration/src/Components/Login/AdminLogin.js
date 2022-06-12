@@ -17,9 +17,9 @@ function AdminLogin() {
     });
     const json = await response.json();
     if (response.status == 202) {
-      localStorage.setItem('token',json.jwt)
-      history.push("/admin/homepage");}
-    else alert("Wrong Credentials");
+      localStorage.setItem("token", json.jwt);
+      history.push("/admin/homepage");
+    } else alert("Wrong Credentials");
   };
   const onchange = (e) => {
     setcred({ ...credentials, [e.target.name]: e.target.value });
@@ -41,7 +41,14 @@ function AdminLogin() {
           />
           <label>Password</label>
         </div>
-        <Link to="#" onClick={handlesubmit}>
+        <Link
+          to="#"
+          onClick={handlesubmit}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
           <div className="d-flex justify-content-center">
             <button className="custom-btn btn-9">Submit</button>
           </div>

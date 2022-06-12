@@ -9,7 +9,7 @@ function AdminHome() {
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
   const [abc, setabc] = useState(1);
-  let history = useHistory()
+  let history = useHistory();
   const select_topic = async (
     name,
     description,
@@ -61,8 +61,7 @@ function AdminHome() {
         setbatch(location.state.batch);
       }
       gettopics();
-    }
-    else {
+    } else {
       alert("Login First");
       history.push("/");
     }
@@ -75,7 +74,7 @@ function AdminHome() {
           {" "}
           <Navbar />
         </header>
-        <nav>
+        <nav id="sidenav">
           <ul>
             {topics.map((topic, index) => {
               return (
@@ -96,7 +95,11 @@ function AdminHome() {
           ) : (
             topics.map((topic, index) => {
               return (
-                <section key={index} id={`section-${index}`}>
+                <section
+                  key={index}
+                  id={`section-${index}`}
+                  style={{ padding: "2rem" }}
+                >
                   <Cards
                     topic={topic}
                     index={index}
