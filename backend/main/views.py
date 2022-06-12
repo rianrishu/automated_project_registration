@@ -56,28 +56,97 @@ class StudentViewSet(viewsets.ModelViewSet):
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             # serializer.save()
-            
             student_leader=serializer.data['student_leader']
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
             section=serializer.data['section']
             batch_session = self.request.session.session_key
             password=make_password(serializer.data['password'])
+            batch=generate_batch(section)
             data={
             "student_leader":student_leader,
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
               "password": password,
-              "phase0": 0,
               "phase1": 0,
-              "phase2": 0
+              "phase2": 0,
+              "phase1": 0
               }
+            data1={
+            "usn":student_leader,
+              "batch": batch,
+              "phase_1_Identification and formulation of problem statement": -1,
+              "phase_1_Analysis of problem statement": -1,
+              "phase_1_Originality of problem statement": -1,
+              "phase_1_Quality of presentation": -1,
+              "phase_1_Answers to Queries": -1,
+              "phase_1_Total": -1,
+              "phase_2_Design and development of solution": -1,
+              "phase_2_Effective usage of modern tools": -1,
+              "phase_2_Work effectively as a team member/team leader": -1,
+              "phase_2_Quality of presentation": -1,
+              "phase_2_Answers to Queries": -1,
+              "phase_2_Total": -1,
+              "phase_3_Demonstration of the complete project": -1,
+              "phase_3_Work effectively as a team member/team leader": -1,
+              "phase_3_Presentation, report writing and submission": -1,
+              "phase_3_Answers to Queries": -1,
+              "phase_3_Regularity": -1,
+              "phase_3_Total": -1
+              }
+            data2={
+            "usn":student_1,
+              "batch": batch,
+              "phase_1_Identification and formulation of problem statement": -1,
+              "phase_1_Analysis of problem statement": -1,
+              "phase_1_Originality of problem statement": -1,
+              "phase_1_Quality of presentation": -1,
+              "phase_1_Answers to Queries": -1,
+              "phase_1_Total": -1,
+              "phase_2_Design and development of solution": -1,
+              "phase_2_Effective usage of modern tools": -1,
+              "phase_2_Work effectively as a team member/team leader": -1,
+              "phase_2_Quality of presentation": -1,
+              "phase_2_Answers to Queries": -1,
+              "phase_2_Total": -1,
+              "phase_3_Demonstration of the complete project": -1,
+              "phase_3_Work effectively as a team member/team leader": -1,
+              "phase_3_Presentation, report writing and submission": -1,
+              "phase_3_Answers to Queries": -1,
+              "phase_3_Regularity": -1,
+              "phase_3_Total": -1
+              }
+            data3={
+              "usn":student_2,
+              "batch": batch,
+              "phase_1_Identification and formulation of problem statement": -1,
+              "phase_1_Analysis of problem statement": -1,
+              "phase_1_Originality of problem statement": -1,
+              "phase_1_Quality of presentation": -1,
+              "phase_1_Answers to Queries": -1,
+              "phase_1_Total": -1,
+              "phase_2_Design and development of solution": -1,
+              "phase_2_Effective usage of modern tools": -1,
+              "phase_2_Work effectively as a team member/team leader": -1,
+              "phase_2_Quality of presentation": -1,
+              "phase_2_Answers to Queries": -1,
+              "phase_2_Total": -1,
+              "phase_3_Demonstration of the complete project": -1,
+              "phase_3_Work effectively as a team member/team leader": -1,
+              "phase_3_Presentation, report writing and submission": -1,
+              "phase_3_Answers to Queries": -1,
+              "phase_3_Regularity": -1,
+              "phase_3_Total": -1
+              }  
             # data = {"name": name, "email":email}
-            batch=generate_batch(section)
+            
             # database.child("users").set(data) 
             self.request.session['batch_code'] = batch
             db.collection("students").document(batch).set(data)
+            db.collection("Student_Details").document(student_leader).set(data1)
+            db.collection("Student_Details").document(student_1).set(data2)
+            db.collection("Student_Details").document(student_2).set(data3)
             payload = {
                         'id': batch,
                         'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
@@ -625,3 +694,34 @@ class AbstractUploadHandler(viewsets.ModelViewSet):
             # blob.download_to_file(f)
             return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
     # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+
+class AbstractDownloadHandler(viewsets.ModelViewSet):
+    # serializer_class = StudentAbstractUploadSerializer
+    def create(self, request, format=None):
+        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
+        # if serializer.is_valid():
+        if request.method == 'POST':
+            # print(request)
+            # files = request.FILES
+            # file = files['file']
+            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
+            batch = request.data['batch']
+            path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + str(batch) + ".pdf"
+            f = open(path_to_download_folder,'wb')
+            bucket = storage.bucket()
+            blob = bucket.blob(batch)
+            if blob.exists():
+                blob.download_to_file(f)
+                return Response({"msg": "abstract downloaded"}, status=status.HTTP_200_OK)
+            # blob.upload_from_file(file,content_type="application/pdf")
+            return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+
+# class GetPhaseDetails(viewsets.ModelViewSet):
+#     def create(self, request, format=None):
+#         if request.method == 'POST':
+#             # batch = request.data['usn']
+#             phase = request.data['phase']
+#             if phase == "phase1":
+
+                
+            

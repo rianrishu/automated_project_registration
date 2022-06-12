@@ -20,6 +20,16 @@ function BatchDetails() {
       body:JSON.stringify({"phase0":details.phase0,"phase1":details.phase1,"phase2":details.phase2,"student_leader":details.batch})
     })
   }
+  const downloadab=async()=>{
+    const response1 = await fetch("http://localhost:8000/student/download-abstract/", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body:JSON.stringify({"batch":details.batch})
+    })
+    const json1=await response1.json();
+  }
   const [phase,setph]=useState({"phase0":0,"phase1":0,"phase2":0})
   const [abc,setabc]=useState("0")
    const [details,setdetails]=useState({"name":"null","description":"null","batch":"null","id":"null","phase0":0,"phase1":0,"phase2":0})
@@ -81,6 +91,9 @@ function BatchDetails() {
     </form>
     <Button color="secondary" variant="contained" to="/faculty/homepage" component={Link}>
             Back
+          </Button>
+          <Button color="secondary" variant="contained"  onClick={downloadab}>
+            Download Abstract
           </Button>
   </div>
   );
