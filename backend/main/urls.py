@@ -21,9 +21,12 @@ router.register('faculty/login', FacultyLoginViewSet),
 router.register('faculty/update-password', FacultyUpdatePasswordViewSet)
 router.register('admin1/createfaculty',  FacultyCreateViewSet)
 router.register('notify/faculty',  FacultyNotifyHandler, basename="notify faculty to add topic")
-router.register('notify/student',  StudentShowTopicHandler, basename="option to show or hide topic list to students")
+router.register('notify/student-get',  StudentShowTopicHandlerGet, basename="get option to show or hide topic list to students")
+router.register('notify/student-post',  StudentShowTopicHandlerPost, basename="update option to show or hide topic list to students")
 router.register('faculty/batch-details', GetBatchListFaculty, basename="a")
 router.register('faculty/getsetphase', GetSetPhaseMarks, basename="get set phase marks")
+router.register('student/upload-abstract', AbstractUploadHandler, basename="upload abstract")
+router.register('student/download-abstract', AbstractDownloadHandler, basename='download abstact of students')
 urlpatterns=[
     path('',include(router.urls)),
 ]

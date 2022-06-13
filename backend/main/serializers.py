@@ -1,4 +1,4 @@
-from dataclasses import field
+from dataclasses import field, fields
 from pyexpat import model
 from rest_framework import serializers
 from .models import *
@@ -90,3 +90,9 @@ class GetSetPhaseMarksSerializer(serializers.ModelSerializer):
     class Meta:
         model=Student
         fields=('student_leader','phase0', 'phase1', 'phase2',)
+
+class StudentAbstractUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=AbstractUpload
+        fields=('batch', 'file',)
+
