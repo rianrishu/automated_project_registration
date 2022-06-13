@@ -100,3 +100,4 @@ class SpecifcPhaseMarksSerializer(serializers.ModelSerializer):
     class Meta:
         model=SpecifcPhaseMarks
         fields=('student_leader', 'student_1','student_2','phase')
+

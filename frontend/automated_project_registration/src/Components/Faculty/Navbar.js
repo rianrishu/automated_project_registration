@@ -49,17 +49,17 @@ function Navbar(props) {
                 Add Topic
               </Link>
             </li>
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <Link
                 className="nav-link active"
                 to={{
-                  pathname: "/faculty/phase1",
+                  pathname: "/faculty/allphases",
                   // state: { userid: props.faculty },
                 }}
               >
-                Set Phase 1
+                GetAllPhaseDetails
               </Link>
-            </li> */}
+            </li>
           </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>

@@ -75,6 +75,5 @@ class SpecifcPhaseMarks(models.Model):
     student_2=models.CharField(max_length=20, null=True,blank=True)
     phase=models.FloatField(max_length=3,null=False)
        
-    
-      
+
     
