@@ -1,11 +1,10 @@
 import React,{useState,useContext} from 'react'
 import { useLocation, useHistory,Link } from 'react-router-dom'
 import MiniContext from '../../Context/MiniContext';
-import '../../CSS/Login.css'
-function UserLogin(props) {
+function UserLogin() {
   const history=useHistory();
-  let context=useContext(MiniContext);
-   const {setconbch}=context
+  const context=useContext(MiniContext);
+  const {batch,setbatch}=context;
   const [credentials, setcred] = useState({ "batch":" ","password":" "})
   const handlesubmit=async()=>{
    
@@ -14,17 +13,16 @@ function UserLogin(props) {
           headers: {
             'Content-Type': 'application/json',
           },
-          
           body: JSON.stringify({ "batch":credentials.batch,"password":credentials.password })
         })
         const json = await response.json();
-      
-        if(response.status===200){
-          localStorage.setItem('token',json.jwt)
+        if(response.status==202){
+         setbatch(credentials.batch)
+  
      history.push({
       pathname: '/user/homepage',
+      search: '?query=abc',
       state: { batch:credentials.batch}
-
     })
     // useCallbackUpdate(credentials.batch)
         }
@@ -36,7 +34,6 @@ function UserLogin(props) {
 
   }
   return (
-    <section id="loginpage">
     <div className="login-box">
   <h2>Login</h2>
   <form onSubmit={handlesubmit}>
@@ -49,18 +46,15 @@ function UserLogin(props) {
       <label>Password</label>
     </div>
     <Link to="#" onClick={handlesubmit}>
-      <div className='d-flex justify-content-center'>
-    <button className='custom-btn btn-9' >
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
       Submit
-    </button>
-    </div>
     </Link>
   </form>
-  <Link to="/user/signup"><button className='custom-btn btn-9' >
-  Create New User
-    </button></Link>
+  <Link to="/user/signup">Create New User</Link>
 </div>
-</section>
   )
 }
 
