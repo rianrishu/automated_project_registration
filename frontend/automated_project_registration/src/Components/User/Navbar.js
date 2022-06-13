@@ -13,7 +13,8 @@ function Navbar({batch,openTopic,selected}) {
     setbatch(batch)
    },[batch])
   return (
-    <nav className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark " style={{background: "#394867", width: "100%"}}>
+    <nav className="navbar navbar-expand-lg navbar-dark " style={{background: "#394867"}}>
+      
       <div className="container-fluid">
         <Link className="navbar-brand" to="#">
           Welcome : {batch1}

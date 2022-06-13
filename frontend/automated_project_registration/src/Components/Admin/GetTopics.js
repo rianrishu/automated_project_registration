@@ -3,6 +3,9 @@ import Table from './Table'
 import '../../CSS/adgettopic.css'
 import { Link, useLocation,useHistory } from 'react-router-dom'
 import Loading  from '../../Loading'
+import { Grid } from '@mui/material'
+import Button from '@mui/material/Button'
+
 function GetTopics() {
   const ref = useRef(null)
   const refClose = useRef(null)
