@@ -36,6 +36,7 @@ if(response.status==200)
       body: JSON.stringify({ "phase":1,"student_leader":st_lead,"student_1":st1,"student_2":st2 })
     })
     const json = await response.json()
+    console.log(json.msg)
     setstdent_ph1(json.msg)
   }, [])
   const handlechg = (e) => {
@@ -43,41 +44,57 @@ if(response.status==200)
     setobj({ ...obj, [e.target.name]: e.target.value })
   }
   const setmarks = (index) => {
-    // console.log(stdent_ph1[index].Identification)
-    // ref.current.click();
-    // setobj({ "Identification": stdent_ph1[index].Identification, "Analysis": stdent_ph1[index].Analysis, "Originality": stdent_ph1[index].Originality, "Quality": stdent_ph1[index].Quality })
+    console.log(stdent_ph1[index])
+    ref.current.click();
+    setobj({ "Identification": stdent_ph1[index].Identification, "Analysis": stdent_ph1[index].Analysis, "Originality": stdent_ph1[index].Originality, "Quality": stdent_ph1[index].Quality,"Answers": stdent_ph1[index].Answers,"Total": stdent_ph1[index].Total   })
   }
 
   return (
     <>
-     {/* <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
+     <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
         Launch demo modal
       </button>
       <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div className="modal-dialog">
           <div className="modal-content" >
             <div className="modal-header " style={{ "background": "antiquewhite" }}>
-              <h5 className="modal-title" id="exampleModalLabel">Edit Topic</h5>
+              <h5 className="modal-title" id="exampleModalLabel">Edit Marks</h5>
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body" style={{ "background": "burlywood" }}>
               <form className="question  p-3 border-bottom" style={{ "background": "burlywood" }}>
-              <div className="d-flex flex-row align-items-center question-title">
-                  <h5 className="text-danger">Topic</h5>
-                  <input value={obj.Identification} type="number" className="form-control"  placeholder='Enter No' onChange={handlechg} name="Identification" id="Ques" required></input>
+              <div className="ans ml-2  my-3">
+              <label className="radio">Identification:
+                  <input value={obj.Identification} type="number" className="mx-2"  placeholder='Enter No' onChange={handlechg} name="Identification"  required></input>
+                </label>
                 </div>
-                <div className="d-flex flex-row align-items-center question-title">
-                  <h5 className="text-danger">Description</h5>
-                  <textarea value={obj.Analysis} className="form-control" rows="5" placeholder='Enter' onChange={handlechg} name="Analysis" id="Ques" required></textarea>
+                <div className="ans ml-2  my-3">
+                <label className="radio">Analysis:
+                  <input value={obj.Analysis} type="number" className="mx-2"  placeholder='Enter No' onChange={handlechg} name="Analysis" required></input>
+                </label>
                 </div>
                 
                 <div className="ans ml-2  my-3">
-                  <label className="radio">Selected By:
-                    <input value={obj.selected_by} name="selected_by" onChange={handlechg} className='mx-2' style={{ background: "burlywood" }} required/>
+                  <label className="radio">Originality:
+                    <input value={obj.Originality}  type="number"  onChange={handlechg} name="Originality" className='mx-2' style={{ background: "burlywood" }} required/>
+                  </label>
+                </div>
+                <div className="ans ml-2  my-3">
+                  <label className="radio">Quality:
+                    <input value={obj.Quality} type="number"  onChange={handlechg} name="Quality" className='mx-2' style={{ background: "burlywood" }} required/>
                   </label>
                 </div>
                
-
+                <div className="ans ml-2  my-3">
+                  <label className="radio">Answers:
+                    <input value={obj.Answers} type="number"   onChange={handlechg} name="Answers" className='mx-2' style={{ background: "burlywood" }} required/>
+                  </label>
+                </div>
+                <div className="ans ml-2  my-3">
+                  <label className="radio">Total:
+                    <input value={obj.Total} type="number"  onChange={handlechg} name="Total" className='mx-2' style={{ background: "burlywood" }} required/>
+                  </label>
+                </div>
               </form>
             </div>
             <div className="modal-footer" style={{ "background": "antiquewhite" }}>
@@ -86,10 +103,10 @@ if(response.status==200)
             </div>
           </div>
         </div>
-      </div> */}
+      </div>
     <div id="login-box" className="login-box my-5">
     <h2>Batch({batch})</h2>
-    <form >
+    {/* <form > */}
       <div className="user-box my-5">
         Name:{name}
       </div>
@@ -118,16 +135,16 @@ if(response.status==200)
           </tbody>
         </table>}
       <div className="d-flex justify-content-around">
-      <Link to="#" className='custom-btn btn-9'>
+      {/* <Link to="#" className='custom-btn btn-9'>
         <span></span>
         <span></span>
         <span></span>
         <span></span>
         Update
-      </Link>
+      </Link> */}
     </div>
-    </form>
-    <Button color="secondary" variant="contained" to="/admin/homepage" component={Link}>
+    {/* </form> */}
+    <Button color="secondary" variant="contained" to="/faculty/homepage" component={Link}>
             Back
           </Button>
   </div>

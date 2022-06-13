@@ -11,9 +11,8 @@ function UserHome() {
   const [topics1, setopic1] = useState([]);
   const [batch, setbatch] = useState("null");
   const [openTopic, setopenTopic] = useState("/");
-  const [selected,setselected]=useState("false")
-  let abc1="/"
-  let abc="null"
+  const [selected, setselected] = useState("false");
+  let abc = null
   const callnotifystudent=async()=>{
     const response1 = await fetch("http://localhost:8000/notify/student-get/", {
       method: "GET",
@@ -37,12 +36,13 @@ function UserHome() {
     window.location.reload(true);
   };
   const gettopics = async () => {
+    let url = "http://localhost:8000/student/gettopics/";
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name: " " ,selected_by:abc}),
+      body: JSON.stringify({ name: " ", selected_by: abc }),
     });
     const json = await response.json();
 
@@ -70,9 +70,11 @@ function UserHome() {
       );
       const json = await response.json();
       if (response.status === 200) {
-        setbatch(json.msg);
-        abc=json.msg
-        gettopics();
+        abc = json.msg
+        // setInterval(() => {
+          // }, 100000);
+          setbatch(json.msg);
+          gettopics();  
       } else {
         alert("Please Login using valid token");
         history.push("/");

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-
+import '../../CSS/Login.css'
 function FacultyLogin() {
   let history = useHistory();
   const [credentials, setcred] = useState({ userid: "", password: "" });
