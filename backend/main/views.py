@@ -232,10 +232,12 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
         serializer = StudentTopicSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
+           
            if res:
              ans=[]
              index=0
@@ -628,16 +630,59 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
             for id in temp_ids:
                 topic_details=db.collection('topics').document(id).get()
                 name=topic_details.to_dict()['name']
-                description=topic_details.to_dict()['description']
                 selected_by=topic_details.to_dict()['selected_by']
+                description=topic_details.to_dict()['description']
                 faculty=topic_details.to_dict()['faculty']
+                st_1=""
+                st_2=""
+                st_1_ph1=""
+                st_1_ph2=""
+                st_1_ph3=""
+                st_2_ph1=""
+                st_2_ph2=""
+                st_2_ph3=""
+                st_lead_ph1=""
+                st_lead_ph2=""
+                st_lead_ph3=""
+                st_lead=""  
                 if faculty_userid == faculty:
+                    if (len(selected_by)!=0):
+                        stdetails=db.collection('students').document(selected_by).get()
+                        st_1=stdetails.to_dict()['student_1']
+                        st_lead=stdetails.to_dict()['student_leader']
+                        st_2=stdetails.to_dict()['student_2']
+                        st1_phmarks=db.collection('Student_Details').document(st_1).get()
+                        st2_phmarks=db.collection('Student_Details').document(st_2).get()
+                        st3_phmarks=db.collection('Student_Details').document(st_lead).get()
+                        st_1_ph1=st1_phmarks.to_dict()['phase_1_Total']
+                        st_1_ph2=st1_phmarks.to_dict()['phase_2_Total']
+                        st_1_ph3=st1_phmarks.to_dict()['phase_3_Total']
+                        st_2_ph1=st2_phmarks.to_dict()['phase_1_Total']
+                        st_2_ph2=st2_phmarks.to_dict()['phase_2_Total']
+                        st_2_ph3=st2_phmarks.to_dict()['phase_3_Total']
+                        st_lead_ph1=st3_phmarks.to_dict()['phase_1_Total']
+                        st_lead_ph2=st3_phmarks.to_dict()['phase_2_Total']
+                        st_lead_ph3=st3_phmarks.to_dict()['phase_3_Total']
+
                     res.append({
                         "name": name,
-                        "description": description,
+                        "description":description,
                         "batch": selected_by,
-                        "id":id
+                        "id":id,
+                        "st1":st_1,
+                        "st2":st_2,
+                        "st_lead":st_lead,
+                        "st_1_ph1": st_1_ph1,
+                        "st_1_ph2": st_1_ph2,
+                        "st_1_ph3": st_1_ph3,
+                        "st_2_ph1": st_2_ph1,
+                        "st_2_ph2": st_2_ph2,
+                        "st_2_ph3": st_2_ph3,
+                        "st_lead_ph1": st_lead_ph1,
+                        "st_lead_ph2": st_lead_ph2,
+                        "st_lead_ph3": st_lead_ph3
                     })
+                 
             return Response(res, status=status.HTTP_200_OK)
         return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)            
 
@@ -694,6 +739,7 @@ class AbstractUploadHandler(viewsets.ModelViewSet):
             # blob.download_to_file(f)
             return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
     # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+<<<<<<< HEAD
 
 class AbstractDownloadHandler(viewsets.ModelViewSet):
     # serializer_class = StudentAbstractUploadSerializer
@@ -725,3 +771,50 @@ class AbstractDownloadHandler(viewsets.ModelViewSet):
 
                 
             
+=======
+def getPhase1(phase,st_lead,st_db):
+     if phase==1:
+                st_lead_Identification= st_db.to_dict()['phase_1_Identification and formulation of problem statement']
+                st_lead_Analysis= st_db.to_dict()['phase_1_Analysis of problem statement']
+                st_lead_Originality= st_db.to_dict()['phase_1_Originality of problem statement']
+                st_lead_Quality= st_db.to_dict()['phase_1_Quality of presentation']
+                st_lead_Answers= st_db.to_dict()['phase_1_Answers to Queries']
+                st_lead_Total=st_db.to_dict()['phase_1_Total']
+                obj={
+                "Identification":st_lead_Identification,
+                "Analysis":st_lead_Analysis,
+                "Originality":st_lead_Originality,
+                "Quality":st_lead_Quality,
+                "Answers":st_lead_Answers,
+                "Total":st_lead_Total
+                }
+                return obj
+
+class GetSpecificPhaseMarks(viewsets.ModelViewSet):
+    queryset=SpecifcPhaseMarks.objects.all()
+    serilazier_class=SpecifcPhaseMarksSerializer
+    def create(self, request):
+        serializer=SpecifcPhaseMarksSerializer(data=request.data)
+        if serializer.is_valid():
+            ans=[]
+            student_leader = serializer.data['student_leader']
+            student_1 = serializer.data['student_1']
+            student_2 = serializer.data['student_2']
+            phase= serializer.data['phase']
+            if phase == 1:
+                st_lead=db.collection('Student_Details').document(student_leader).get()
+                st_1=db.collection('Student_Details').document(student_1).get()
+                st_2=db.collection('Student_Details').document(student_2).get()
+                obj1=getPhase1(1,student_leader,st_lead)
+                obj2=getPhase1(1,student_1,st_1)
+                obj3=getPhase1(1,student_2,st_2)
+                ans.append(obj1)
+                ans.append(obj2)
+                ans.append(obj3)
+                
+                return Response({"msg":ans}, status=status.HTTP_200_OK)   
+
+            
+        return Response({'msg':"Bad Request"}, status=status.HTTP_400_BAD_REQUEST)       
+
+>>>>>>> bb1dedd4d48f068194ea2938b3b282a10c25c421
