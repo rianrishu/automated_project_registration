@@ -69,6 +69,11 @@ class AbstractUpload(models.Model):
     file = models.FileField()
    #  uploaded_at = models.DateTimeField(auto_now_add=True)
 
+class SpecifcPhaseMarks(models.Model):
+    student_leader=models.CharField(max_length=20, null=False)
+    student_1=models.CharField(max_length=20, null=False)
+    student_2=models.CharField(max_length=20, null=True,blank=True)
+    phase=models.FloatField(max_length=3,null=False)
        
     
       

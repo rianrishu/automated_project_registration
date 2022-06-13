@@ -18,6 +18,7 @@ import FacultyAddTopic from "./Components/Faculty/FacultyAddTopic"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
+import SetPhase1 from "./Components/Faculty/SetPhase1";
 
 function App() {
 
@@ -71,6 +72,9 @@ function App() {
               </Route>
               <Route path="/faculty/batchdetails">
                 <BatchDetails />
+              </Route>
+              <Route path="/faculty/phase1">
+                <SetPhase1 />
               </Route>
             </Switch>
           </div>

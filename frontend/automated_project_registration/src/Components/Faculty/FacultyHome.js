@@ -2,12 +2,15 @@ import React, { useEffect, useState, useContext } from "react";
 import { Link, useLocation,useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import "../../CSS/fullwd.css";
-import Cards from "./Cards";
+import '../../CSS/getbatchfaculty.css'
+import Loading  from '../../Loading'
+import Table from './Table'
 function FacultyHome() {
   let location = useLocation();
   let history=useHistory()
   let abc = "/"
   let abc1 = "null"
+  let [loading,setloading]=useState(true);
   const [faculty, setfaculty] = useState("");
   const [notifyFaculty, setnotifyFaculty] = useState("/");
   const [topic_details, setTopicDetails] = useState([])
@@ -35,6 +38,7 @@ function FacultyHome() {
     });
     const json = await response.json();
     setTopicDetails(json)
+    setloading(false)
     console.log(json)
   };
 
@@ -75,7 +79,7 @@ function FacultyHome() {
            })
   }
   return (
-    <>
+    <section id="facultyhome">
       <section id="sidenavhead">
         <header>
           {" "}
@@ -86,20 +90,45 @@ function FacultyHome() {
         </header>
       </section>
       <br />
-      <main style={{"marginTop":"60px"}}>
+      {/* <main style={{"marginTop":"60px"}}>
         {topic_details.map((topic, index) => {
           return (
-            <section key={index} id={`section-${index}`}>
-              <Cards
-                topic={topic}
-                index={index}
-                select_topic={select_topic}
-              />
-            </section>
+            // <section key={index} id={`section-${index}`}>
+            //   <Cards
+            //     topic={topic}
+            //     index={index}
+            //     select_topic={select_topic}
+            //   />
+            // </section>
+            
           );
-        })}
-      </main>
-    </>
+        })} */}
+      {/* </main> */}
+      <div className="table-wrapper">
+      {loading && <Loading/>}
+        {!loading && <table className="fl-table">
+          <thead>
+            <tr>
+              <th>S.No</th>
+              <th>Batch</th>
+              <th>Students</th>
+              <th>Topic</th>
+              <th>Phase1</th>
+              <th>Phase2</th>
+              <th>Phase3</th>
+              <th>Set Phase </th>
+            </tr>
+          </thead>
+          <tbody>
+            {topic_details.map((res, index) => {
+              return <tr key={index}>
+                <Table res={res} index={index + 1} />
+              </tr>
+            })}
+          </tbody>
+        </table>}
+        </div>
+    </section>
   );
 }
 
