@@ -121,7 +121,7 @@ if(response.status==200)
             </div>
             <div className="modal-footer" style={{ "background": "antiquewhite" }}>
               <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button disabled={obj.name.length < 1 || obj.description.length < 1 || obj.selected_by.length < 1|| obj.faculty.length <1 ||obj.selected_by.length > 2 } onClick={handleClick} type="button" className="btn btn-primary">Update Topic</button>
+              <button disabled={obj.name.length < 1 || obj.description.length < 1 || obj.faculty.length <1 ||obj.selected_by.length > 2 } onClick={handleClick} type="button" className="btn btn-primary">Update Topic</button>
             </div>
           </div>
         </div>

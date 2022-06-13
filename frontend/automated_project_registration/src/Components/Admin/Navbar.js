@@ -21,7 +21,7 @@ function Navbar() {
     setnotifyFaculty(json.msg)
   }
  const callnotifystudent=async()=>{
-  const response1 = await fetch("http://localhost:8000/notify/student/", {
+  const response1 = await fetch("http://localhost:8000/notify/student-post/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
@@ -73,7 +73,15 @@ function Navbar() {
  
   useEffect(async () => {
    callnotifyfacutly();
-   callnotifystudent();
+   const response1 = await fetch("http://localhost:8000/notify/student-get/", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json"
+    },
+  })
+  const json1 = await response1.json()
+  console.log(json1)
+  setopenTopic(json1.msg)
   }, [])
 
   return (

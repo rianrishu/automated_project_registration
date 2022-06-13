@@ -2,7 +2,7 @@ import React, { useEffect,useState } from "react";
 import { Link,useHistory } from "react-router-dom";
 import { Nav, NavBar, Container, Button } from "react-bootstrap";
 
-function Navbar({batch}) {
+function Navbar({batch,openTopic,selected}) {
   const [batch1,setbatch]=useState("0")
   let history=useHistory()
    const handleclick=async()=>{
@@ -36,11 +36,11 @@ function Navbar({batch}) {
                 Home
               </Link>
             </li>
-            <li className="nav-item">
+            {openTopic==="true" && selected==="false"?<li className="nav-item">
               <Link className="nav-link active" to={{pathname:"/user/newtopic",state:batch1}}>
                 Add Topic
               </Link>
-            </li>
+            </li>:<></>}
           </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>SignOut</button>

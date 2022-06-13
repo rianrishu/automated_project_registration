@@ -1,7 +1,9 @@
+from asyncore import read
 from turtle import back
 from urllib import response
 from django.http import HttpResponse, JsonResponse
 import json
+from pathlib import Path
 from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
@@ -18,13 +20,16 @@ from .models import *
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
+from firebase_admin import storage
 import os
 import json,datetime
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred,{
+    'storageBucket': 'mini-project-2022-b4dff.appspot.com'
+})
 db=firestore.client()
 
 expirytime=60
@@ -51,28 +56,97 @@ class StudentViewSet(viewsets.ModelViewSet):
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             # serializer.save()
-            
             student_leader=serializer.data['student_leader']
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
             section=serializer.data['section']
             batch_session = self.request.session.session_key
             password=make_password(serializer.data['password'])
+            batch=generate_batch(section)
             data={
             "student_leader":student_leader,
              "student_1":student_1, 
              "student_2":student_2,
              "section":section,
               "password": password,
-              "phase0": 0,
               "phase1": 0,
-              "phase2": 0
+              "phase2": 0,
+              "phase1": 0
               }
+            data1={
+            "usn":student_leader,
+              "batch": batch,
+              "phase_1_Identification and formulation of problem statement": -1,
+              "phase_1_Analysis of problem statement": -1,
+              "phase_1_Originality of problem statement": -1,
+              "phase_1_Quality of presentation": -1,
+              "phase_1_Answers to Queries": -1,
+              "phase_1_Total": -1,
+              "phase_2_Design and development of solution": -1,
+              "phase_2_Effective usage of modern tools": -1,
+              "phase_2_Work effectively as a team member/team leader": -1,
+              "phase_2_Quality of presentation": -1,
+              "phase_2_Answers to Queries": -1,
+              "phase_2_Total": -1,
+              "phase_3_Demonstration of the complete project": -1,
+              "phase_3_Work effectively as a team member/team leader": -1,
+              "phase_3_Presentation, report writing and submission": -1,
+              "phase_3_Answers to Queries": -1,
+              "phase_3_Regularity": -1,
+              "phase_3_Total": -1
+              }
+            data2={
+            "usn":student_1,
+              "batch": batch,
+              "phase_1_Identification and formulation of problem statement": -1,
+              "phase_1_Analysis of problem statement": -1,
+              "phase_1_Originality of problem statement": -1,
+              "phase_1_Quality of presentation": -1,
+              "phase_1_Answers to Queries": -1,
+              "phase_1_Total": -1,
+              "phase_2_Design and development of solution": -1,
+              "phase_2_Effective usage of modern tools": -1,
+              "phase_2_Work effectively as a team member/team leader": -1,
+              "phase_2_Quality of presentation": -1,
+              "phase_2_Answers to Queries": -1,
+              "phase_2_Total": -1,
+              "phase_3_Demonstration of the complete project": -1,
+              "phase_3_Work effectively as a team member/team leader": -1,
+              "phase_3_Presentation, report writing and submission": -1,
+              "phase_3_Answers to Queries": -1,
+              "phase_3_Regularity": -1,
+              "phase_3_Total": -1
+              }
+            data3={
+              "usn":student_2,
+              "batch": batch,
+              "phase_1_Identification and formulation of problem statement": -1,
+              "phase_1_Analysis of problem statement": -1,
+              "phase_1_Originality of problem statement": -1,
+              "phase_1_Quality of presentation": -1,
+              "phase_1_Answers to Queries": -1,
+              "phase_1_Total": -1,
+              "phase_2_Design and development of solution": -1,
+              "phase_2_Effective usage of modern tools": -1,
+              "phase_2_Work effectively as a team member/team leader": -1,
+              "phase_2_Quality of presentation": -1,
+              "phase_2_Answers to Queries": -1,
+              "phase_2_Total": -1,
+              "phase_3_Demonstration of the complete project": -1,
+              "phase_3_Work effectively as a team member/team leader": -1,
+              "phase_3_Presentation, report writing and submission": -1,
+              "phase_3_Answers to Queries": -1,
+              "phase_3_Regularity": -1,
+              "phase_3_Total": -1
+              }  
             # data = {"name": name, "email":email}
-            batch=generate_batch(section)
+            
             # database.child("users").set(data) 
             self.request.session['batch_code'] = batch
             db.collection("students").document(batch).set(data)
+            db.collection("Student_Details").document(student_leader).set(data1)
+            db.collection("Student_Details").document(student_1).set(data2)
+            db.collection("Student_Details").document(student_2).set(data3)
             payload = {
                         'id': batch,
                         'exp': datetime.datetime.utcnow()+datetime.timedelta(minutes=expirytime),
@@ -152,7 +226,6 @@ class UserInHomepage(viewsets.ModelViewSet):
                 
              
 class StudentTopics(viewsets.ModelViewSet):
-    
        queryset=GetTopics.objects.all()
        queryset1=SelectedTopics.objects.all()
        serilazier_class=StudentTopicSerializer
@@ -175,7 +248,22 @@ class StudentTopics(viewsets.ModelViewSet):
                  selectedby=doc.to_dict()['selected_by']
                  id=doc.id
                  if(selectedby==batch): 
-                     return Response({'msg':"Already Selected"}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 
+                    #  ans = []
+                     phase_marks = db.collection('students').document(batch).get()
+                     phase0 = phase_marks.to_dict()['phase0']
+                     phase1 = phase_marks.to_dict()['phase1']
+                     phase2 = phase_marks.to_dict()['phase2']
+                     obj={
+                   "name":name,
+                   "description":description,
+                   "selected_by":selectedby,
+                   "id":id,
+                   "phase0": phase0,
+                   "phase1": phase1,
+                   "phase2": phase2
+                    }
+                    #  ans.append(obj) 
+                     return Response({'msg':"Already Selected",'msg1':obj}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 
                   
                  if (len(selectedby)!=0):
                   continue
@@ -187,16 +275,18 @@ class StudentTopics(viewsets.ModelViewSet):
                   }
                  ans.append(obj)   
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
-        else:   
-                serializer = StudentSelectedTopicSerializer(data=request.data)
-                if serializer.is_valid():
-                   batchid=serializer.data['batchid']
-                   topic=serializer.data['name']
-                   db.collection("topics").document(topic).update({"selected_by":batchid})
-                   return Response({'msg':'Success'}, status=status.HTTP_200_OK)
-                else:
-                   return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
-
+        serializer = StudentSelectedTopicSerializer(data=request.data)
+        if serializer.is_valid():
+            batchid=serializer.data['batchid']
+            topic=serializer.data['name']
+            faculty = db.collection("topics").document(topic).get().to_dict()['faculty']
+            prev_batch_cnt = db.collection("Faculty").document(faculty).get().to_dict()['batches']
+            db.collection("Faculty").document(faculty).update({'batches': prev_batch_cnt+1})
+            db.collection("topics").document(topic).update({"selected_by":batchid})
+            return Response({'msg':'Success'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'msg':'Batch not valid'}, status=status.HTTP_400_BAD_REQUEST) 
+        # return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class StudentNewTopic(viewsets.ModelViewSet):
@@ -210,8 +300,9 @@ class StudentNewTopic(viewsets.ModelViewSet):
             name_res=serializer.data['name']
             description_res=serializer.data['description']
             faculty=serializer.data['faculty']
-            print(faculty,name_res) 
-            if batch_res=='':
+            idtopicc=serializer.data['id_topic']
+            res = not bool(idtopicc)
+            if batch_res=='' and res:
              faculty=serializer.data['faculty']  
              data={
              "description":description_res,
@@ -365,6 +456,8 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
                 student_topics=db.collection('StudentTopics').get()
                 temp_ids=[]
                 res=[]
+                prev_batch_cnt = db.collection("Faculty").document(faculty).get().to_dict()['batches']
+                db.collection("Faculty").document(faculty).update({'batches': prev_batch_cnt+1})
                 for topic in student_topics:
                     temp_ids.append(topic.id)
                 for id in temp_ids:
@@ -500,23 +593,26 @@ class FacultyNotifyHandler(viewsets.ModelViewSet):
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)     
 
-class StudentShowTopicHandler(viewsets.ModelViewSet):
+class StudentShowTopicHandlerGet(viewsets.ModelViewSet):
+    serializer_class = NotifySerializer
+    def list(self, request, format=None):
+        status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
+        return Response({"msg": status_db}, status=status.HTTP_200_OK)
+
+class StudentShowTopicHandlerPost(viewsets.ModelViewSet):
     serializer_class = NotifySerializer
     def create(self, request, format=None):
         serializer=NotifySerializer(data=request.data)
         if serializer.is_valid():
             flag = 0
             status_=serializer.data['status']
-            if status_ == "/":
-                status_db = db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').get().to_dict()['notify_student']
-                return Response({"msg": status_db}, status=status.HTTP_200_OK)
             if status_ == "true":
                 flag = 1
             db.collection('Notify').document('VyPiqWSmZK5GafAfY5Wp').update({"notify_student":status_})
             if flag == 1:
                 return Response({"msg": "true"}, status=status.HTTP_200_OK)
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
-        return Response({}, status=status.HTTP_400_BAD_REQUEST)     
+        return Response({}, status=status.HTTP_400_BAD_REQUEST)             
 
 class GetBatchListFaculty(viewsets.ModelViewSet):
     serializer_class = FacultyGetBatchListSerializer
@@ -578,3 +674,54 @@ class GetSetPhaseMarks(viewsets.ModelViewSet):
                     "phase2": phase2
                 }, status=status.HTTP_200_OK)
         return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+class AbstractUploadHandler(viewsets.ModelViewSet):
+    # serializer_class = StudentAbstractUploadSerializer
+    def create(self, request, format=None):
+        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
+        # if serializer.is_valid():
+        if request.method == 'POST':
+            print(request)
+            files = request.FILES
+            file = files['file']
+            # path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + "/file1.pdf"
+            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
+            # f = open(path_to_download_folder,'wb')
+            batch = request.data['batch']
+            bucket = storage.bucket()
+            blob = bucket.blob(batch)
+            blob.upload_from_file(file,content_type="application/pdf")
+            # blob.download_to_file(f)
+            return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
+    # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+
+class AbstractDownloadHandler(viewsets.ModelViewSet):
+    # serializer_class = StudentAbstractUploadSerializer
+    def create(self, request, format=None):
+        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
+        # if serializer.is_valid():
+        if request.method == 'POST':
+            # print(request)
+            # files = request.FILES
+            # file = files['file']
+            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
+            batch = request.data['batch']
+            path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + str(batch) + ".pdf"
+            f = open(path_to_download_folder,'wb')
+            bucket = storage.bucket()
+            blob = bucket.blob(batch)
+            if blob.exists():
+                blob.download_to_file(f)
+                return Response({"msg": "abstract downloaded"}, status=status.HTTP_200_OK)
+            # blob.upload_from_file(file,content_type="application/pdf")
+            return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+
+# class GetPhaseDetails(viewsets.ModelViewSet):
+#     def create(self, request, format=None):
+#         if request.method == 'POST':
+#             # batch = request.data['usn']
+#             phase = request.data['phase']
+#             if phase == "phase1":
+
+                
+            
