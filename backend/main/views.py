@@ -738,57 +738,59 @@ class AbstractUploadHandler(viewsets.ModelViewSet):
             blob.upload_from_file(file,content_type="application/pdf")
             # blob.download_to_file(f)
             return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
-    # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
-<<<<<<< HEAD
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
 
 class AbstractDownloadHandler(viewsets.ModelViewSet):
-    # serializer_class = StudentAbstractUploadSerializer
     def create(self, request, format=None):
-        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
-        # if serializer.is_valid():
         if request.method == 'POST':
-            # print(request)
-            # files = request.FILES
-            # file = files['file']
-            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
             batch = request.data['batch']
-            path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + str(batch) + ".pdf"
+            path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + "/" + str(batch) +".pdf"
             f = open(path_to_download_folder,'wb')
             bucket = storage.bucket()
             blob = bucket.blob(batch)
-            if blob.exists():
-                blob.download_to_file(f)
-                return Response({"msg": "abstract downloaded"}, status=status.HTTP_200_OK)
-            # blob.upload_from_file(file,content_type="application/pdf")
-            return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+            blob.download_to_file(f)
+            return Response({"msg": "abstract downloaded"}, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST) 
 
-# class GetPhaseDetails(viewsets.ModelViewSet):
-#     def create(self, request, format=None):
-#         if request.method == 'POST':
-#             # batch = request.data['usn']
-#             phase = request.data['phase']
-#             if phase == "phase1":
 
-                
-            
-=======
-def getPhase1(phase,st_lead,st_db):
-     if phase==1:
-                st_lead_Identification= st_db.to_dict()['phase_1_Identification and formulation of problem statement']
-                st_lead_Analysis= st_db.to_dict()['phase_1_Analysis of problem statement']
-                st_lead_Originality= st_db.to_dict()['phase_1_Originality of problem statement']
-                st_lead_Quality= st_db.to_dict()['phase_1_Quality of presentation']
-                st_lead_Answers= st_db.to_dict()['phase_1_Answers to Queries']
-                st_lead_Total=st_db.to_dict()['phase_1_Total']
-                obj={
-                "Identification":st_lead_Identification,
-                "Analysis":st_lead_Analysis,
-                "Originality":st_lead_Originality,
-                "Quality":st_lead_Quality,
-                "Answers":st_lead_Answers,
-                "Total":st_lead_Total
-                }
-                return obj
+def getPhase(phase,st_lead,st_db):
+    if phase==1:
+        st_lead_Identification= st_db.to_dict()['phase_1_Identification and formulation of problem statement']
+        st_lead_Analysis= st_db.to_dict()['phase_1_Analysis of problem statement']
+        st_lead_Originality= st_db.to_dict()['phase_1_Originality of problem statement']
+        st_lead_Quality= st_db.to_dict()['phase_1_Quality of presentation']
+        st_lead_Answers= st_db.to_dict()['phase_1_Answers to Queries']
+        st_lead_Total=st_db.to_dict()['phase_1_Total']
+        obj={
+        "Identification":st_lead_Identification,
+        "Analysis":st_lead_Analysis,
+        "Originality":st_lead_Originality,
+        "Quality":st_lead_Quality,
+        "Answers":st_lead_Answers,
+        "Total":st_lead_Total
+        }
+        return obj
+    if phase == 2:
+        obj={
+              "Identification":st_db.to_dict()["phase_2_Design and development of solution"],
+              "Analysis":st_db.to_dict()["phase_2_Effective usage of modern tools"],
+              "Originality":st_db.to_dict()["phase_2_Work effectively as a team member/team leader"],
+              "Quality":st_db.to_dict()["phase_2_Quality of presentation"],
+              "Answers":st_db.to_dict()["phase_2_Answers to Queries"],
+              "Total":st_db.to_dict()["phase_2_Total"]
+        }
+        return obj
+    if phase == 3:
+        obj={
+              "Identification":st_db.to_dict()["phase_3_Demonstration of the complete project"],
+              "Analysis":st_db.to_dict()["phase_3_Work effectively as a team member/team leader"],
+              "Originality":st_db.to_dict()["phase_3_Presentation, report writing and submission"],
+              "Quality":st_db.to_dict()["phase_3_Answers to Queries"],
+              "Answers":st_db.to_dict()["phase_3_Regularity"],
+              "Total":st_db.to_dict()["phase_3_Total"]
+        }    
+        return obj
+
 
 class GetSpecificPhaseMarks(viewsets.ModelViewSet):
     queryset=SpecifcPhaseMarks.objects.all()
@@ -801,20 +803,18 @@ class GetSpecificPhaseMarks(viewsets.ModelViewSet):
             student_1 = serializer.data['student_1']
             student_2 = serializer.data['student_2']
             phase= serializer.data['phase']
-            if phase == 1:
-                st_lead=db.collection('Student_Details').document(student_leader).get()
-                st_1=db.collection('Student_Details').document(student_1).get()
-                st_2=db.collection('Student_Details').document(student_2).get()
-                obj1=getPhase1(1,student_leader,st_lead)
-                obj2=getPhase1(1,student_1,st_1)
-                obj3=getPhase1(1,student_2,st_2)
-                ans.append(obj1)
-                ans.append(obj2)
-                ans.append(obj3)
+            st_lead=db.collection('Student_Details').document(student_leader).get()
+            st_1=db.collection('Student_Details').document(student_1).get()
+            st_2=db.collection('Student_Details').document(student_2).get()
+            obj1=getPhase(phase,student_leader,st_lead)
+            obj2=getPhase(phase,student_1,st_1)
+            obj3=getPhase(phase,student_2,st_2)
+            ans.append(obj1)
+            ans.append(obj2)
+            ans.append(obj3)
                 
-                return Response({"msg":ans}, status=status.HTTP_200_OK)   
+            return Response({"msg":ans}, status=status.HTTP_200_OK)   
 
             
         return Response({'msg':"Bad Request"}, status=status.HTTP_400_BAD_REQUEST)       
 
->>>>>>> bb1dedd4d48f068194ea2938b3b282a10c25c421

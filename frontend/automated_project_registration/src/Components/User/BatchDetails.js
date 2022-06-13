@@ -36,7 +36,7 @@ function BatchDetails({topics1}) {
 
   }, []);
   return (
-    <div id="login-box" className="login-box">
+    <div id="batch-details-student" className="login-box">
     <form >
       <div className="user-box">
         <h4>{topics1.name}</h4>

@@ -47,11 +47,7 @@ main {
   padding-bottom: 40rem;
 }
 section {
-<<<<<<< HEAD
-  margin: 0 0 0 0;
-=======
   margin: 0 0 2rem 0;
->>>>>>> bb1dedd4d48f068194ea2938b3b282a10c25c421
 }
 footer {
   grid-column: 1 / 3;

@@ -26,11 +26,8 @@ router.register('notify/student-post',  StudentShowTopicHandlerPost, basename="u
 router.register('faculty/batch-details', GetBatchListFaculty, basename="a")
 router.register('faculty/getsetphase', GetSetPhaseMarks, basename="get set phase marks")
 router.register('student/upload-abstract', AbstractUploadHandler, basename="upload abstract")
-<<<<<<< HEAD
-router.register('student/download-abstract', AbstractDownloadHandler, basename='download abstact of students')
-=======
+router.register('student/download-abstract', AbstractDownloadHandler, basename="download abstract")
 router.register('faculty/get_phase_marks',GetSpecificPhaseMarks)
->>>>>>> bb1dedd4d48f068194ea2938b3b282a10c25c421
 urlpatterns=[
     path('',include(router.urls)),
 ]
