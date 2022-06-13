@@ -20,7 +20,6 @@ function UserLogin(props) {
       }),
     });
     const json = await response.json();
-
     if (response.status === 200) {
       localStorage.setItem("token", json.jwt);
       history.push({
