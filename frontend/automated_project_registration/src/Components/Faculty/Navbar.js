@@ -17,14 +17,20 @@ function Navbar(props) {
   return (
     <nav
       className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "86vw" }}
+      style={{ background: "#394867", width: "94.96rem" }}
     >
       <div
         className="container-fluid"
+        style={{
+          "margin-left": "1.5rem",
+        }}
         // onMouseOver={MouseOver}
         // onMouseOut={MouseOut}
         // style={{ display: "block", width: "98vw", background: "pink" }}
       >
+        <Link className="navbar-brand" to="#">
+          Welcome : Faculty
+        </Link>
         <button
           className="navbar-toggler"
           type="button"

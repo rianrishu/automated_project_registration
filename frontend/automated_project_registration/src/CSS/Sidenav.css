@@ -20,7 +20,7 @@ header {
 }
 #sidenav {
   white-space: nowrap;
-  background: #090a09;
+  background: #0a163f;
 }
 #sidenav ul {
   list-style: none;
@@ -47,8 +47,6 @@ main {
   padding-bottom: 40rem;
 }
 section {
-  padding: 2rem;
-  margin: 0 0 2rem 0;
 }
 footer {
   grid-column: 1 / 3;
