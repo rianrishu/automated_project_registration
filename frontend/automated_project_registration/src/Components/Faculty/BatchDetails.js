@@ -9,18 +9,18 @@ function BatchDetails(props) {
   const [tablePhase, settablePhase] = useState(1)
   let { name, st1, st2, st_lead, batch, description } = props.topic
   const [stdent_ph1, setstdent_ph1] = useState();
-  const [obj, setobj] = useState({ "Identification": " ", "Analysis": " ", "Originality": " ", "Quality": " ", "Answers": ' ', "Total": " " })
+  const [obj, setobj] = useState({ "USN":" ","Identification": " ", "Analysis": " ", "Originality": " ", "Quality": " ", "Answers": ' ', "Total": " ","Phase":" " })
   const ref = useRef(null)
   const refClose = useRef(null)
   const handleClick = async (e) => {
     refClose.current.click();
     console.log(obj)
-    const response = await fetch("http://localhost:8000/admin1/addnewtopic/", {
+    const response = await fetch("http://localhost:8000/faculty/update-marks/", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ "name": obj.name, "description": obj.description, "selected_by": obj.selected_by, "faculty": obj.faculty, "id_topic": obj.id })
+      body: JSON.stringify({ "USN":obj.USN,"Identification": obj.Identification, "Analysis":obj.Analysis, "Originality":obj.Originality, "Quality": obj.Quality, "Answers": obj.Answers, "Total":obj.Total,"Phase":obj.Phase  })
     })
     const json = await response.json();
     if (response.status == 200)
@@ -56,10 +56,11 @@ function BatchDetails(props) {
     console.log(e.target.value)
     setobj({ ...obj, [e.target.name]: e.target.value })
   }
-  const setmarks = (index) => {
-    console.log(stdent_ph1[index])
+  const setmarks = (index,usn) => {
+    obj.USN=usn
+    obj.Phase=tablePhase
     ref.current.click();
-    setobj({ "Identification": stdent_ph1[index].Identification, "Analysis": stdent_ph1[index].Analysis, "Originality": stdent_ph1[index].Originality, "Quality": stdent_ph1[index].Quality, "Answers": stdent_ph1[index].Answers, "Total": stdent_ph1[index].Total })
+    setobj({ ...obj,"Identification": stdent_ph1[index].Identification, "Analysis": stdent_ph1[index].Analysis, "Originality": stdent_ph1[index].Originality, "Quality": stdent_ph1[index].Quality, "Answers": stdent_ph1[index].Answers, "Total": stdent_ph1[index].Total })
   }
 
   return (

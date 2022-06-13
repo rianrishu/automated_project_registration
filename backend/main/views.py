@@ -8,6 +8,7 @@ from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
 from telnetlib import STATUS
+from numpy import number
 import requests
 from rest_framework_simplejwt.backends import TokenBackend
 import jwt
@@ -818,3 +819,39 @@ class GetSpecificPhaseMarks(viewsets.ModelViewSet):
             
         return Response({'msg':"Bad Request"}, status=status.HTTP_400_BAD_REQUEST)       
 
+class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
+    def create(self, request):
+        usn = request.data['USN']
+        phase = request.data['Phase']
+        if phase == 3:
+            db.collection('Student_Details').document(usn).update({
+              "phase_3_Demonstration of the complete project": request.data["Identification"],
+              "phase_3_Work effectively as a team member/team leader": request.data["Analysis"],
+              "phase_3_Presentation, report writing and submission": request.data["Originality"],
+              "phase_3_Answers to Queries": request.data["Quality"],
+              "phase_3_Regularity": request.data["Answers"],
+              "phase_3_Total": request.data["Total"]
+            })
+            return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
+
+        if phase == 2:
+            db.collection('Student_Details').document(usn).update({
+              "phase_2_Design and development of solution": request.data["Identification"],
+              "phase_2_Effective usage of modern tools": request.data["Analysis"],
+              "phase_2_Work effectively as a team member/team leader": request.data["Originality"],
+              "phase_2_Quality of presentation": request.data["Quality"],
+              "phase_2_Answers to Queries": request.data["Answers"],
+              "phase_2_Total": request.data["Total"],
+            })
+            return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
+        if phase == 1:
+            db.collection('Student_Details').document(usn).update({
+              u'phase_1_Identification and formulation of problem statement': int(request.data['Identification']),
+            #   "phase_1_Analysis of problem statement": request.data['Analysis'],
+            #   "phase_1_Originality of problem statement": request.data['Originality'],
+            #   "phase_1_Quality of presentation": request.data['Quality'],
+            #   "phase_1_Answers to Queries": request.data['Answers'],
+            #   "phase_1_Total": int(request.data['Total'])
+            })
+            return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)

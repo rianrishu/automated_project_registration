@@ -16,8 +16,8 @@ function Navbar(props) {
 
   return (
     <nav
-      className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "86vw" }}
+      className="navbar fixed-top  navbar-expand-lg navbar-dark "
+      style={{ background: "#394867", width: "100%" }}
     >
       <div
         className="container-fluid"

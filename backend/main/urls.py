@@ -28,6 +28,7 @@ router.register('faculty/getsetphase', GetSetPhaseMarks, basename="get set phase
 router.register('student/upload-abstract', AbstractUploadHandler, basename="upload abstract")
 router.register('student/download-abstract', AbstractDownloadHandler, basename="download abstract")
 router.register('faculty/get_phase_marks',GetSpecificPhaseMarks)
+router.register('faculty/update-marks', UpdatePhaseMarksHandler,  basename="updating phase marks")
 urlpatterns=[
     path('',include(router.urls)),
 ]

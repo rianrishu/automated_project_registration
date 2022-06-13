@@ -188,15 +188,15 @@ function Phase_Table(props) {
         {(st_lead_Id != undefined) ?
           <tr>
             <tr>
-              <td><button onClick={() => { props.setmarks(0) }}>Update</button></td>
+              <td><button onClick={() => { props.setmarks(0,st_lead) }}>Update</button></td>
               <br />
             </tr>
             <tr>
-              <td><button onClick={() => { props.setmarks(1) }}>Update</button></td>
+              <td><button onClick={() => { props.setmarks(1,st1) }}>Update</button></td>
               <br />
             </tr>
             <tr>
-              <td><button onClick={() => { props.setmarks(2) }}>Update</button></td>
+              <td><button onClick={() => { props.setmarks(2,st2) }}>Update</button></td>
               <br />
             </tr>
           </tr>
