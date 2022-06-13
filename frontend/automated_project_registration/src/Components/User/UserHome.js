@@ -112,7 +112,7 @@ function UserHome() {
           <main>
             {topics.map((topic, index) => {
               return (
-                <section key={index} id={`section-${index}`}>
+                <section style={{"padding": "2rem"}} key={index} id={`section-${index}`}>
                   <Cards
                     topic={topic}
                     index={index}
