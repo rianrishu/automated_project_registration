@@ -19,7 +19,7 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import SetPhase1 from "./Components/Faculty/SetPhase1";
-
+import GetAllPhases from './Components/Faculty/GetAllPhases'
  function App() {
   let location = useLocation();
   let history=useHistory();
@@ -112,6 +112,9 @@ import SetPhase1 from "./Components/Faculty/SetPhase1";
               </Route>
               <Route path="/faculty/phase1">
                 <SetPhase1 />
+              </Route>
+              <Route path="/faculty/allphases">
+                <GetAllPhases />
               </Route>
             </Switch>
           </div>
