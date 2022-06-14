@@ -64,7 +64,18 @@ function GetAllPhases() {
               <th>Quality of presentation(10 marks)</th>
               <th>Answers to Queries(10 marks)</th>
               <th>Phase1_Total(50 marks)</th>
-              
+              <th>Design and development of solution(10 Marks)</th>
+                  <th>Effective usage of modern tools(10 Marks)</th>
+                  <th>Work effectively as a team member/team leader(10 Marks)</th>
+                  <th>Quality of presentation(10 Marks)</th>
+                  <th>Answers to Queries(10 marks)</th>
+                  <th>Total Phase 2(50 marks)</th>
+                  <th>Demonstration of the complete project(10 Marks)</th>
+                    <th>Work effectively as a team member/team leader(10 Marks)</th>
+                    <th>Presentation, report writing and submission(10 Marks)</th>
+                    <th>Answers to Queries(10 Marks)</th>
+                    <th>Regularity(10 Marks)</th>
+                    <th>Total Phase 3(50 marks)</th>
             </tr>
           </thead>
           <tbody>
