@@ -618,11 +618,11 @@ class StudentShowTopicHandlerPost(viewsets.ModelViewSet):
         return Response({}, status=status.HTTP_400_BAD_REQUEST)             
 def getPhase1(phase,st_lead,st_db):
     if phase==1:
-                st_lead_Identification= st_db.to_dict()['phase_1_Identification and formulation of problem statement']
-                st_lead_Analysis= st_db.to_dict()['phase_1_Analysis of problem statement']
-                st_lead_Originality= st_db.to_dict()['phase_1_Originality of problem statement']
-                st_lead_Quality= st_db.to_dict()['phase_1_Quality of presentation']
-                st_lead_Answers= st_db.to_dict()['phase_1_Answers to Queries']
+                st_lead_Identification= st_db.to_dict()['phase_1_Identification_and_formulation_of_problem_statement']
+                st_lead_Analysis= st_db.to_dict()['phase_1_Analysis_of_problem_statement']
+                st_lead_Originality= st_db.to_dict()['phase_1_Originality_of_problem_statement']
+                st_lead_Quality= st_db.to_dict()['phase_1_Quality_of_presentation']
+                st_lead_Answers= st_db.to_dict()['phase_1_Answers_to_Queries']
                 st_lead_Total=st_db.to_dict()['phase_1_Total']
                 obj={
                 "Identification":st_lead_Identification,
@@ -634,11 +634,11 @@ def getPhase1(phase,st_lead,st_db):
                 }
                 return obj
     if phase==2:
-                st_lead_Answers= st_db.to_dict()['phase_2_Answers to Queries']
-                st_lead_Design= st_db.to_dict()['phase_2_Design and development of solution']
-                st_lead_Effective= st_db.to_dict()['phase_2_Effective usage of modern tools']
-                st_lead_Quality= st_db.to_dict()['phase_2_Quality of presentation']
-                st_lead_Work= st_db.to_dict()['phase_2_Work effectively as a team member/team leader']
+                st_lead_Answers= st_db.to_dict()['phase_2_Answers_to_Queries']
+                st_lead_Design= st_db.to_dict()['phase_2_Design_and_development_of_solution']
+                st_lead_Effective= st_db.to_dict()['phase_2_Effective_usage_of_modern_tools']
+                st_lead_Quality= st_db.to_dict()['phase_2_Quality_of_presentation']
+                st_lead_Work= st_db.to_dict()['phase_2_Work effectively_as_a_team_member/team_leader']
                 st_lead_Total=st_db.to_dict()['phase_2_Total']
                 obj={
                 "Answers":st_lead_Answers,
@@ -650,11 +650,11 @@ def getPhase1(phase,st_lead,st_db):
                 }
                 return obj  
     if phase==3:
-                st_lead_demo= st_db.to_dict()['phase_3_Demonstration of the complete project']
-                st_lead_Design= st_db.to_dict()['phase_3_Answers to Queries']
-                st_lead_Effective= st_db.to_dict()['phase_3_Presentation, report writing and submission']
+                st_lead_demo= st_db.to_dict()['phase_3_Demonstration_of_the_complete_project']
+                st_lead_Design= st_db.to_dict()['phase_3_Answers_to_Queries']
+                st_lead_Effective= st_db.to_dict()['phase_3_Presentation_report_writing_and_submission']
                 st_lead_Quality= st_db.to_dict()['phase_3_Regularity']
-                st_lead_Work= st_db.to_dict()['phase_3_Work effectively as a team member/team leader']
+                st_lead_Work= st_db.to_dict()['phase_3_Work effectively_as_a_team member/team_leader']
                 st_lead_Total=st_db.to_dict()['phase_3_Total']
                 obj={
                 "Demonstration":st_lead_demo,
@@ -664,7 +664,23 @@ def getPhase1(phase,st_lead,st_db):
                 "Work":st_lead_Work,
                 "Total":st_lead_Total
                 }
-                return obj       
+                return obj   
+    if phase==123:
+                st_lead_demo= st_db.to_dict()['phase_3_Demonstration_of_the_complete_project']
+                st_lead_Design= st_db.to_dict()['phase_3_Answers_to_Queries']
+                st_lead_Effective= st_db.to_dict()['phase_3_Presentation_report_writing_and_submission']
+                st_lead_Quality= st_db.to_dict()['phase_3_Regularity']
+                st_lead_Work= st_db.to_dict()['phase_3_Work effectively_as_a_team member/team_leader']
+                st_lead_Total=st_db.to_dict()['phase_3_Total']
+                obj={
+                "Demonstration":st_lead_demo,
+                "Answers":st_lead_Design,
+                "Presentaion":st_lead_Effective,
+                "Regularity":st_lead_Quality,
+                "Work":st_lead_Work,
+                "Total":st_lead_Total
+                }      
+                                 
 class GetBatchListFaculty(viewsets.ModelViewSet):
     serializer_class = FacultyGetBatchListSerializer
     def create(self, request, format=None):
@@ -716,13 +732,12 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
                         st_leader=db.collection('Student_Details').document(st_lead).get()
                         student_1=db.collection('Student_Details').document(st_1).get()
                         student_2=db.collection('Student_Details').document(st_2).get()
-                        for i in range(1, 4):
-                            obj1=getPhase1(i,st_lead,st_leader)
-                            obj2=getPhase1(i,st_1,student_1)
-                            obj3=getPhase1(i,st_2,student_2)
-                            ans.append(obj1)
-                            ans.append(obj2)
-                            ans.append(obj3)
+                        obj1=getPhase1(123,st_lead,st_leader)
+                        obj2=getPhase1(123,st_1,student_1)
+                        obj3=getPhase1(123,st_2,student_2)
+                        ans.append(obj1)
+                        ans.append(obj2)
+                        ans.append(obj3)
                     res.append({
                         "name": name,
                         "description":description,
