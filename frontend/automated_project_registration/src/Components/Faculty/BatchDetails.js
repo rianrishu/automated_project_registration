@@ -9,7 +9,7 @@ function BatchDetails(props) {
   const [tablePhase, settablePhase] = useState(1)
   let { name, st1, st2, st_lead, batch, description } = props.topic
   const [stdent_ph1, setstdent_ph1] = useState();
-  const [obj, setobj] = useState({ "USN":" ","Identification": " ", "Analysis": " ", "Originality": " ", "Quality": " ", "Answers": ' ', "Total": " ","Phase":" " })
+  const [obj, setobj] = useState({ "USN":" ","Identification": "", "Analysis": " ", "Originality": " ", "Quality": " ", "Answers": ' ', "Total": " ","Phase":" " })
   const ref = useRef(null)
   const refClose = useRef(null)
   const handleClick = async (e) => {
@@ -39,7 +39,9 @@ function BatchDetails(props) {
       body: JSON.stringify({ "phase": phase, "student_leader": st_lead, "student_1": st1, "student_2": st2 })
     })
       .then(response => response.json())
-      .then(data => { setstdent_ph1(data.msg) })
+      .then(data => { setstdent_ph1(data.msg) 
+        })
+      
   }
 
   const handleDownloadAbstract = async () => {

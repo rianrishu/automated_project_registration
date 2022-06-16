@@ -29,6 +29,7 @@ router.register('student/upload-abstract', AbstractUploadHandler, basename="uplo
 # router.register('student/download-abstract', Abst, basename="download abstract")
 router.register('faculty/get_phase_marks',GetSpecificPhaseMarks)
 router.register('faculty/update-marks', UpdatePhaseMarksHandler,  basename="updating phase marks")
+router.register('admin1/getphasemarks', AdminGetPhaseMarks,  basename="get phase marks")
 urlpatterns=[
     path('',include(router.urls)),
 ]
