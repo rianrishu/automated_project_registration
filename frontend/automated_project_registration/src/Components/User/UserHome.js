@@ -131,7 +131,21 @@ function UserHome() {
           <h1>NO topic to display</h1>
         ) : (
           <main>
+<<<<<<< HEAD
             <BatchDetails topics1={topics1} />
+=======
+            {topics.map((topic, index) => {
+              return (
+                <section style={{"padding": "2rem"}} key={index} id={`section-${index}`}>
+                  <Cards
+                    topic={topic}
+                    index={index}
+                    select_topic={select_topic}
+                  />
+                </section>
+              );
+            })}
+>>>>>>> 2d873dbaa5ea1841618edd36ea96bfb415576a63
           </main>
         )}
       </section>

@@ -33,6 +33,19 @@
     box-shadow: 0 15px 25px rgba(0,0,0,.6);
     border-radius: 10px;
   }
+
+  #batch-details-student {
+    position: absolute;
+    top: 69%;
+    left: 50%;
+    width: 880px;
+    padding: 40px;
+    transform: translate(-50%, -50%);
+    background: #ffffff;
+    box-sizing: border-box;
+    box-shadow: 0 15px 25px rgba(0,0,0,.6);
+    border-radius: 10px;
+  }
   
   .login-box h2 {
     margin: 0 0 30px;
@@ -157,7 +170,6 @@
     right: 0;
     width: 2px;
     height: 100%;
-    background: linear-gradient(180deg, transparent, #03e9f4);
     animation: btn-anim2 1s linear infinite;
     animation-delay: .25s
   }

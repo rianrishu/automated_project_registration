@@ -8,6 +8,7 @@ from django.shortcuts import render
 from cgitb import reset
 from django.contrib.auth.hashers import make_password,check_password
 from telnetlib import STATUS
+from numpy import number
 import requests
 from rest_framework_simplejwt.backends import TokenBackend
 import jwt
@@ -69,73 +70,73 @@ class StudentViewSet(viewsets.ModelViewSet):
              "student_2":student_2,
              "section":section,
               "password": password,
+              "phase0": 0,
               "phase1": 0,
-              "phase2": 0,
-              "phase1": 0
+              "phase2": 0
               }
             data1={
             "usn":student_leader,
               "batch": batch,
-              "phase_1_Identification and formulation of problem statement": -1,
-              "phase_1_Analysis of problem statement": -1,
-              "phase_1_Originality of problem statement": -1,
-              "phase_1_Quality of presentation": -1,
-              "phase_1_Answers to Queries": -1,
+              "phase_1_Identification_and_formulation_of_problem_statement": -1,
+              "phase_1_Analysis_of_problem_statement": -1,
+              "phase_1_Originality_of_problem_statement": -1,
+              "phase_1_Quality_of_presentation": -1,
+              "phase_1_Answers_to_Queries": -1,
               "phase_1_Total": -1,
-              "phase_2_Design and development of solution": -1,
-              "phase_2_Effective usage of modern tools": -1,
-              "phase_2_Work effectively as a team member/team leader": -1,
-              "phase_2_Quality of presentation": -1,
-              "phase_2_Answers to Queries": -1,
+              "phase_2_Design_and_development_of_solution": -1,
+              "phase_2_Effective_usage_of_modern_tools": -1,
+              "phase_2_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_2_Quality_of_presentation": -1,
+              "phase_2_Answers_to_Queries": -1,
               "phase_2_Total": -1,
-              "phase_3_Demonstration of the complete project": -1,
-              "phase_3_Work effectively as a team member/team leader": -1,
-              "phase_3_Presentation, report writing and submission": -1,
-              "phase_3_Answers to Queries": -1,
+              "phase_3_Demonstration_of_the_complete_project": -1,
+              "phase_3_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_3_Presentation_report_writing_and_submission": -1,
+              "phase_3_Answers_to_Queries": -1,
               "phase_3_Regularity": -1,
               "phase_3_Total": -1
               }
             data2={
             "usn":student_1,
               "batch": batch,
-              "phase_1_Identification and formulation of problem statement": -1,
-              "phase_1_Analysis of problem statement": -1,
-              "phase_1_Originality of problem statement": -1,
-              "phase_1_Quality of presentation": -1,
-              "phase_1_Answers to Queries": -1,
+              "phase_1_Identification_and_formulation_of_problem_statement": -1,
+              "phase_1_Analysis_of_problem_statement": -1,
+              "phase_1_Originality_of_problem_statement": -1,
+              "phase_1_Quality_of_presentation": -1,
+              "phase_1_Answers_to_Queries": -1,
               "phase_1_Total": -1,
-              "phase_2_Design and development of solution": -1,
-              "phase_2_Effective usage of modern tools": -1,
-              "phase_2_Work effectively as a team member/team leader": -1,
-              "phase_2_Quality of presentation": -1,
-              "phase_2_Answers to Queries": -1,
+              "phase_2_Design_and_development_of_solution": -1,
+              "phase_2_Effective_usage_of_modern_tools": -1,
+              "phase_2_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_2_Quality_of_presentation": -1,
+              "phase_2_Answers_to_Queries": -1,
               "phase_2_Total": -1,
-              "phase_3_Demonstration of the complete project": -1,
-              "phase_3_Work effectively as a team member/team leader": -1,
-              "phase_3_Presentation, report writing and submission": -1,
-              "phase_3_Answers to Queries": -1,
+              "phase_3_Demonstration_of_the_complete_project": -1,
+              "phase_3_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_3_Presentation_report_writing_and_submission": -1,
+              "phase_3_Answers_to_Queries": -1,
               "phase_3_Regularity": -1,
               "phase_3_Total": -1
               }
             data3={
               "usn":student_2,
               "batch": batch,
-              "phase_1_Identification and formulation of problem statement": -1,
-              "phase_1_Analysis of problem statement": -1,
-              "phase_1_Originality of problem statement": -1,
-              "phase_1_Quality of presentation": -1,
-              "phase_1_Answers to Queries": -1,
+              "phase_1_Identification_and_formulation_of_problem_statement": -1,
+              "phase_1_Analysis_of_problem_statement": -1,
+              "phase_1_Originality_of_problem_statement": -1,
+              "phase_1_Quality_of_presentation": -1,
+              "phase_1_Answers_to_Queries": -1,
               "phase_1_Total": -1,
-              "phase_2_Design and development of solution": -1,
-              "phase_2_Effective usage of modern tools": -1,
-              "phase_2_Work effectively as a team member/team leader": -1,
-              "phase_2_Quality of presentation": -1,
-              "phase_2_Answers to Queries": -1,
+              "phase_2_Design_and_development_of_solution": -1,
+              "phase_2_Effective_usage_of_modern_tools": -1,
+              "phase_2_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_2_Quality_of_presentation": -1,
+              "phase_2_Answers_to_Queries": -1,
               "phase_2_Total": -1,
-              "phase_3_Demonstration of the complete project": -1,
-              "phase_3_Work effectively as a team member/team leader": -1,
-              "phase_3_Presentation, report writing and submission": -1,
-              "phase_3_Answers to Queries": -1,
+              "phase_3_Demonstration_of_the_complete_project": -1,
+              "phase_3_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_3_Presentation_report_writing_and_submission": -1,
+              "phase_3_Answers_to_Queries": -1,
               "phase_3_Regularity": -1,
               "phase_3_Total": -1
               }  
@@ -232,10 +233,12 @@ class StudentTopics(viewsets.ModelViewSet):
        serilazier_class=StudentSelectedTopicSerializer
        def create(self, request):
         serializer = StudentTopicSerializer(data=request.data)
+        print(request.data)
         if serializer.is_valid():
            data=request.data
            name=serializer.data['name']
            res = not bool(name)
+           
            if res:
              ans=[]
              index=0
@@ -613,7 +616,55 @@ class StudentShowTopicHandlerPost(viewsets.ModelViewSet):
                 return Response({"msg": "true"}, status=status.HTTP_200_OK)
             return Response({"msg": "false"}, status=status.HTTP_200_OK)
         return Response({}, status=status.HTTP_400_BAD_REQUEST)             
-
+def getPhase1(phase,st_lead,st_db):
+    if phase==1:
+                st_lead_Identification= st_db.to_dict()['phase_1_Identification_and_formulation_of_problem_statement']
+                st_lead_Analysis= st_db.to_dict()['phase_1_Analysis_of_problem_statement']
+                st_lead_Originality= st_db.to_dict()['phase_1_Originality_of_problem_statement']
+                st_lead_Quality= st_db.to_dict()['phase_1_Quality_of_presentation']
+                st_lead_Answers= st_db.to_dict()['phase_1_Answers_to_Queries']
+                st_lead_Total=st_db.to_dict()['phase_1_Total']
+                obj={
+                "Identification":st_lead_Identification,
+                "Analysis":st_lead_Analysis,
+                "Originality":st_lead_Originality,
+                "Quality":st_lead_Quality,
+                "Answers":st_lead_Answers,
+                "Total":st_lead_Total
+                }
+                return obj
+    if phase==2:
+                st_lead_Answers= st_db.to_dict()['phase_2_Answers_to_Queries']
+                st_lead_Design= st_db.to_dict()['phase_2_Design_and_development_of_solution']
+                st_lead_Effective= st_db.to_dict()['phase_2_Effective_usage_of_modern_tools']
+                st_lead_Quality= st_db.to_dict()['phase_2_Quality_of_presentation']
+                st_lead_Work= st_db.to_dict()['phase_2_Work_effectively_as_a_team_member/team_leader']
+                st_lead_Total=st_db.to_dict()['phase_2_Total']
+                obj={
+                "Identification":st_lead_Answers,
+                "Analysis":st_lead_Design,
+                "Originality":st_lead_Effective,
+                "Quality":st_lead_Quality,
+                "Answers":st_lead_Work,
+                "Total":st_lead_Total
+                }
+                return obj  
+    if phase==3:
+                st_lead_demo= st_db.to_dict()['phase_3_Demonstration_of_the_complete_project']
+                st_lead_Design= st_db.to_dict()['phase_3_Answers_to_Queries']
+                st_lead_Effective= st_db.to_dict()['phase_3_Presentation_report_writing_and_submission']
+                st_lead_Quality= st_db.to_dict()['phase_3_Regularity']
+                st_lead_Work= st_db.to_dict()['phase_3_Work_effectively_as_a_team_member/team_leader']
+                st_lead_Total=st_db.to_dict()['phase_3_Total']
+                obj={
+                "Identification":st_lead_demo,
+                "Analysis":st_lead_Design,
+                "Originality":st_lead_Effective,
+                 "Quality":st_lead_Quality,
+                "Answers":st_lead_Work,
+                "Total":st_lead_Total
+                }
+                return obj       
 class GetBatchListFaculty(viewsets.ModelViewSet):
     serializer_class = FacultyGetBatchListSerializer
     def create(self, request, format=None):
@@ -628,16 +679,71 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
             for id in temp_ids:
                 topic_details=db.collection('topics').document(id).get()
                 name=topic_details.to_dict()['name']
-                description=topic_details.to_dict()['description']
                 selected_by=topic_details.to_dict()['selected_by']
+                description=topic_details.to_dict()['description']
                 faculty=topic_details.to_dict()['faculty']
+                st_1=""
+                st_2=""
+                st_1_ph1=""
+                st_1_ph2=""
+                st_1_ph3=""
+                st_2_ph1=""
+                st_2_ph2=""
+                st_2_ph3=""
+                st_lead_ph1=""
+                st_lead_ph2=""
+                st_lead_ph3=""
+                st_lead=""  
+                ans=[]
                 if faculty_userid == faculty:
+                    if (len(selected_by)!=0):
+                        stdetails=db.collection('students').document(selected_by).get()
+                        st_1=stdetails.to_dict()['student_1']
+                        st_lead=stdetails.to_dict()['student_leader']
+                        st_2=stdetails.to_dict()['student_2']
+                        st1_phmarks=db.collection('Student_Details').document(st_1).get()
+                        st2_phmarks=db.collection('Student_Details').document(st_2).get()
+                        st3_phmarks=db.collection('Student_Details').document(st_lead).get()
+                        st_1_ph1=st1_phmarks.to_dict()['phase_1_Total']
+                        st_1_ph2=st1_phmarks.to_dict()['phase_2_Total']
+                        st_1_ph3=st1_phmarks.to_dict()['phase_3_Total']
+                        st_2_ph1=st2_phmarks.to_dict()['phase_1_Total']
+                        st_2_ph2=st2_phmarks.to_dict()['phase_2_Total']
+                        st_2_ph3=st2_phmarks.to_dict()['phase_3_Total']
+                        st_lead_ph1=st3_phmarks.to_dict()['phase_1_Total']
+                        st_lead_ph2=st3_phmarks.to_dict()['phase_2_Total']
+                        st_lead_ph3=st3_phmarks.to_dict()['phase_3_Total']
+                        st_leader=db.collection('Student_Details').document(st_lead).get()
+                        student_1=db.collection('Student_Details').document(st_1).get()
+                        student_2=db.collection('Student_Details').document(st_2).get()
+                        for i in range(1, 4):
+                            obj1=getPhase1(i,st_lead,st_leader)
+                            obj2=getPhase1(i,st_1,student_1)
+                            obj3=getPhase1(i,st_2,student_2)
+                            ans.append(obj1)
+                            ans.append(obj2)
+                            ans.append(obj3)
                     res.append({
                         "name": name,
-                        "description": description,
+                        "description":description,
                         "batch": selected_by,
-                        "id":id
+                        "id":id,
+                        "st1":st_1,
+                        "st2":st_2,
+                        "st_lead":st_lead,
+                        "st_1_ph1": st_1_ph1,
+                        "st_1_ph2": st_1_ph2,
+                        "st_1_ph3": st_1_ph3,
+                        "st_2_ph1": st_2_ph1,
+                        "st_2_ph2": st_2_ph2,
+                        "st_2_ph3": st_2_ph3,
+                        "st_lead_ph1": st_lead_ph1,
+                        "st_lead_ph2": st_lead_ph2,
+                        "st_lead_ph3": st_lead_ph3,
+                        "phase_detail":ans
+                        
                     })
+                 
             return Response(res, status=status.HTTP_200_OK)
         return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)            
 
@@ -694,34 +800,133 @@ class AbstractUploadHandler(viewsets.ModelViewSet):
             # blob.download_to_file(f)
             return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
     # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+                 
 
-class AbstractDownloadHandler(viewsets.ModelViewSet):
-    # serializer_class = StudentAbstractUploadSerializer
-    def create(self, request, format=None):
-        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
-        # if serializer.is_valid():
-        if request.method == 'POST':
-            # print(request)
-            # files = request.FILES
-            # file = files['file']
-            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
-            batch = request.data['batch']
-            path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + str(batch) + ".pdf"
-            f = open(path_to_download_folder,'wb')
-            bucket = storage.bucket()
-            blob = bucket.blob(batch)
-            if blob.exists():
-                blob.download_to_file(f)
-                return Response({"msg": "abstract downloaded"}, status=status.HTTP_200_OK)
-            # blob.upload_from_file(file,content_type="application/pdf")
-            return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
-
-# class GetPhaseDetails(viewsets.ModelViewSet):
-#     def create(self, request, format=None):
-#         if request.method == 'POST':
-#             # batch = request.data['usn']
-#             phase = request.data['phase']
-#             if phase == "phase1":
-
+class GetSpecificPhaseMarks(viewsets.ModelViewSet):
+    queryset=SpecifcPhaseMarks.objects.all()
+    serilazier_class=SpecifcPhaseMarksSerializer
+    def create(self, request):
+        serializer=SpecifcPhaseMarksSerializer(data=request.data)
+        if serializer.is_valid():
+            ans=[]
+            student_leader = serializer.data['student_leader']
+            student_1 = serializer.data['student_1']
+            student_2 = serializer.data['student_2']
+            phase= serializer.data['phase']
+            st_lead=db.collection('Student_Details').document(student_leader).get()
+            st_1=db.collection('Student_Details').document(student_1).get()
+            st_2=db.collection('Student_Details').document(student_2).get()
+            if phase==123:
+               for i in range(1, 4):
+                obj1=getPhase1(i,student_leader,st_lead)
+                obj2=getPhase1(i,student_1,st_1)
+                obj3=getPhase1(i,student_2,st_2)
+                ans.append(obj1)
+                ans.append(obj2)
+                ans.append(obj3)
+            else:    
+                obj1=getPhase1(phase,student_leader,st_lead)
+                obj2=getPhase1(phase,student_1,st_1)
+                obj3=getPhase1(phase,student_2,st_2)
+                ans.append(obj1)
+                ans.append(obj2)
+                ans.append(obj3)
                 
+            return Response({"msg":ans}, status=status.HTTP_200_OK)   
+
             
+        return Response({'msg':"Bad Request"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+   
+
+
+class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
+    def create(self, request):
+        usn = request.data['USN']
+        phase = request.data['Phase']
+        if phase == 3:
+            db.collection('Student_Details').document(usn).update({
+              "phase_3_Demonstration_of_the_complete_project": int(request.data["Identification"]),
+              "phase_3_Work_effectively_as_a_team_member/team_leader": int(request.data["Analysis"]),
+              "phase_3_Presentation_report_writing_and_submission": int(request.data["Originality"]),
+              "phase_3_Answers_to_Queries": int(request.data["Quality"]),
+              "phase_3_Regularity": int(request.data["Answers"]),
+              "phase_3_Total": int(request.data["Total"])
+            })
+            return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
+
+        if phase == 2:
+            db.collection('Student_Details').document(usn).update({
+              "phase_2_Design_and_development_of_solution": int(request.data["Identification"]),
+              "phase_2_Effective_usage_of_modern_tools": int(request.data["Analysis"]),
+              "phase_2_Work_effectively_as_a_team_member/team_leader": int(request.data["Originality"]),
+              "phase_2_Quality_of_presentation": int(request.data["Quality"]),
+              "phase_2_Answers_to_Queries": int(request.data["Answers"]),
+              "phase_2_Total": int(request.data["Total"])
+            })
+            return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
+        if phase == 1:
+            db.collection('Student_Details').document(usn).update({
+              "phase_1_Identification_and_formulation_of_problem_statement":int(request.data['Identification']),
+              "phase_1_Analysis_of_problem_statement": int(request.data['Analysis']),
+              "phase_1_Originality_of_problem_statement": int(request.data['Originality']),
+              "phase_1_Quality_of_presentation":int(request.data['Quality']),
+              "phase_1_Answers_to_Queries": int(request.data['Answers']),
+              "phase_1_Total": int(request.data['Total'])
+            })
+            return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AdminGetPhaseMarks(viewsets.ModelViewSet):
+    def create(self, request):
+        phase = int(request.data['Phase'])
+        st_details=db.collection('Student_Details').get()
+        temp_ids=[]
+        ans=[]
+        for topic in st_details:
+            temp_ids.append(topic.id)
+        for id in temp_ids:
+          st1_phmarks=db.collection('Student_Details').document(id).get()
+          if phase == 3:
+            
+                obj={
+                "Demo":st1_phmarks.to_dict()["phase_3_Demonstration_of_the_complete_project"],
+                "Work":st1_phmarks.to_dict()["phase_3_Work_effectively_as_a_team_member/team_leader"],
+                "Prese":st1_phmarks.to_dict()["phase_3_Presentation_report_writing_and_submission"],
+                "Answer":st1_phmarks.to_dict()["phase_3_Answers_to_Queries"],
+                "Regular":st1_phmarks.to_dict()["phase_3_Regularity"],
+                "Total":st1_phmarks.to_dict()["phase_3_Total"],
+                "Usn":st1_phmarks.to_dict()["usn"],
+                "Batch":st1_phmarks.to_dict()["batch"]
+                }
+                ans.append(obj)
+
+          if phase == 2:
+                obj={
+                "Demo":st1_phmarks.to_dict()["phase_2_Design_and_development_of_solution"],
+                "Work":st1_phmarks.to_dict()["phase_2_Effective_usage_of_modern_tools"],
+                "Prese":st1_phmarks.to_dict()["phase_2_Work_effectively_as_a_team_member/team_leader"],
+                "Answer":st1_phmarks.to_dict()["phase_2_Quality_of_presentation"],
+                "Regular":st1_phmarks.to_dict()["phase_2_Answers_to_Queries"],
+                "Total":st1_phmarks.to_dict()["phase_2_Total"],
+                "Usn":st1_phmarks.to_dict()["usn"],
+                "Batch":st1_phmarks.to_dict()["batch"]
+                }
+                ans.append(obj)
+          if phase == 1:
+                obj={
+                "Demo":st1_phmarks.to_dict()["phase_1_Identification_and_formulation_of_problem_statement"],
+                "Work":st1_phmarks.to_dict()["phase_1_Analysis_of_problem_statement"],
+                "Prese":st1_phmarks.to_dict()["phase_1_Originality_of_problem_statement"],
+                "Answer":st1_phmarks.to_dict()["phase_1_Quality_of_presentation"],
+                "Regular":st1_phmarks.to_dict()["phase_1_Answers_to_Queries"],
+                "Total":st1_phmarks.to_dict()["phase_1_Total"],
+                "Usn":st1_phmarks.to_dict()["usn"],
+                "Batch":st1_phmarks.to_dict()["batch"]
+                }
+                ans.append(obj)
+        return Response({"msg": ans}, status=status.HTTP_200_OK)
+       

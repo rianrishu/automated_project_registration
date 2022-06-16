@@ -85,11 +85,16 @@ function Navbar() {
 
   return (
     <nav
+<<<<<<< HEAD
       className="btn-8 nav1 navbar sticky-top  navbar-expand-lg navbar-dark "
       style={{
         background: "#394867",
         width: "99.96rem",
       }}
+=======
+      className="navbar fixed-top  navbar-expand-lg navbar-dark "
+      style={{ background: "#394867", width: "100%" }}
+>>>>>>> 2d873dbaa5ea1841618edd36ea96bfb415576a63
     >
       <div
         className="container-fluid"
@@ -121,6 +126,7 @@ function Navbar() {
         >
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
             <li className="nav-item">
+
               <Link
                 className="nav-link active"
                 to={{ pathname: "/admin/addtopic" }}
@@ -142,6 +148,33 @@ function Navbar() {
                 to={{ pathname: "/admin/addfaculty" }}
               >
                 Add Faculty
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/phase1",
+              state:{phase:1} }}
+              >
+                Get Phase1 Marks
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/phase1",
+              state:{phase:2} }}
+              >
+                Get Phase2 Marks
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/phase1",
+              state:{phase:3} }}
+              >
+                Get Phase3 Marks
               </Link>
             </li>
           </ul>

@@ -18,28 +18,67 @@ import FacultyAddTopic from "./Components/Faculty/FacultyAddTopic"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
+import SetPhase1 from "./Components/Faculty/SetPhase1";
+import GetAllPhases from './Components/Faculty/GetAllPhases'
+import PhaseMarks from "./Components/Admin/PhaseMarks";
+ function App() {
+  let location = useLocation();
+  let history=useHistory();
+  const [batch,setbatch]=useState()
+  useEffect(()=>{
+    // console.log(location.state)
+    // setbatch(location.state)
+  },[])
+  
+  const [room,setroom]=useState(null)
+  function setRoomCode(){
+    setroom(1)
+  }
+  function clearRoomCode(){
+    setroom(null)
+  }
 
-function App() {
+  function goToHome(){
+    <BrowserRouter>
+      <Switch>
+        <Route exact path="/">
+        <Home/>
+        </Route>
+      </Switch>
+    </BrowserRouter>
+  }
+
+  useEffect(async ()=>{
+    fetch('/student/user-in-homepage/')
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data.code)
+      setroom(data.code);
+    })
+  },[])
 
   return (
     <div>
       <MiniState>
-        <BrowserRouter>
-          <div className="container">
-            <Switch>
-              <Route exact path="/">
-                <Home />
-              </Route>
-              <Route exact path="/faculty/login">
-                <FacultyLogin />
-              </Route>
-              <Route exact path="/user/login">
-                <UserLogin />
-              </Route>
-              <Route exact path="/admin/login">
-                <AdminLogin />
-              </Route>
-              {/* <Route exact path="/faculty/signup">
+    <BrowserRouter> 
+     <div className='container'>
+       <Switch> 
+       {/* <Route exact path="/">
+          <Home/>
+          </Route> */}
+          <Route exact path="/" > 
+            {room ? <UserHome/> :<Home/> }
+          </Route>
+          <Route exact path="/faculty/login">
+          <FacultyLogin/>
+          </Route>
+          <Route exact path="/user/login">
+          <UserLogin/>
+          </Route>
+          <Route exact path="/admin/login">
+          <AdminLogin/>
+          </Route>
+          {/* <Route exact path="/faculty/signup">
           <FacultySignup/>
           </Route> */}
               <Route exact path="/user/signup">
@@ -71,6 +110,15 @@ function App() {
               </Route>
               <Route path="/faculty/batchdetails">
                 <BatchDetails />
+              </Route>
+              <Route path="/faculty/phase1">
+                <SetPhase1 />
+              </Route>
+              <Route path="/faculty/allphases">
+                <GetAllPhases />
+              </Route>
+              <Route path="/admin/phase1">
+                <PhaseMarks/>
               </Route>
             </Switch>
           </div>
