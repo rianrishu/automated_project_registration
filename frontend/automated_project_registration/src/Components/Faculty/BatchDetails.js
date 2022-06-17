@@ -52,6 +52,16 @@ function BatchDetails(props) {
     })
   }
 
+  const handleDownloadReport = async () => {
+    await fetch("http://localhost:8000/faculty/phase-report/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ "batch": batch , "phase" : tablePhase, "student_leader": st_lead , "student1": st1, "student2": st2})
+    })
+  }
+
   const handlechg = (e) => {
     console.log(e.target.value)
     setobj({ ...obj, [e.target.name]: e.target.value })
@@ -148,7 +158,8 @@ function BatchDetails(props) {
           <table className="fl-table my-5">
             <thead>
               <tr>
-                <th>Students</th>
+              <th>Usn</th>
+                    <th>Name</th>
                 <th>Identification and formulation of problem statement(10 marks)</th>
                 <th>Analysis of problem statement(10 marks)</th>
                 <th>Originality of problem statement(10 marks)</th>
@@ -169,7 +180,8 @@ function BatchDetails(props) {
             <table className="fl-table my-5">
               <thead>
                 <tr>
-                  <th>Students</th>
+                <th>Usn</th>
+                    <th>Name</th>
                   <th>Design and development of solution(10 Marks)</th>
                   <th>Effective usage of modern tools(10 Marks)</th>
                   <th>Work effectively as a team member/team leader(10 Marks)</th>
@@ -190,7 +202,8 @@ function BatchDetails(props) {
               <table className="fl-table my-5">
                 <thead>
                   <tr>
-                    <th>Students</th>
+                    <th>Usn</th>
+                    <th>Name</th>
                     <th>Demonstration of the complete project(10 Marks)</th>
                     <th>Work effectively as a team member/team leader(10 Marks)</th>
                     <th>Presentation, report writing and submission(10 Marks)</th>
@@ -220,6 +233,9 @@ function BatchDetails(props) {
         <Grid item xs={12} align="center">
           <Button color="primary" variant="contained" onClick={handleDownloadAbstract}>
             Download Abstract
+          </Button>
+          <Button color="primary" variant="contained" onClick={handleDownloadReport}>
+             Generate Report {tablePhase}
           </Button>
         </Grid>
         <br />

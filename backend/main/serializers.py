@@ -12,7 +12,7 @@ class StudentSerializer(serializers.ModelSerializer):
     # )
     class Meta:
         model=Student
-        fields=('student_leader','student_1','student_2','section','password','phase0', 'phase1', 'phase2',)
+        fields=('student_leader_name','student_1_name','student_2_name','student_leader','student_1','student_2','section','password','phase0', 'phase1', 'phase2',)
 
     # def create(self, validated_data):
     #     validated_data['password'] = make_password(validated_data.get('password'))

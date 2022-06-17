@@ -111,7 +111,8 @@ function FacultyHome() {
             <tr>
               <th>S.No</th>
               <th>Batch</th>
-              <th>Students</th>
+              <th>USN</th>
+              <th>Name</th>
               <th>Topic</th>
               <th>Phase1</th>
               <th>Phase2</th>

@@ -1,7 +1,15 @@
 import React,{useState} from 'react'
 import { Link } from 'react-router-dom'
 function UserSignup() {
-  const [credentials, setcred] = useState({ "Leader": "", "Student1": " ", "Student2": "", "section": "a" ,"password":""})
+  const [credentials, setcred] = useState({ 
+  "Leader_name": "",
+  "member1_name" : "",
+  "member2_name": "",
+  "Leader": "", 
+  "Student1": "", 
+  "Student2": "", 
+  "section": "a" ,
+  "password":""})
   const handlesubmit=async ()=>{
     console.log(credentials)
       const response = await fetch("http://localhost:8000/student/signin/", {
@@ -9,9 +17,24 @@ function UserSignup() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ "student_leader":credentials.Leader, "student_1":credentials.Student1, "student_2":credentials.Student2, "section":credentials.section ,"password":credentials.password })
+          body: JSON.stringify({ 
+            "student_leader_name": credentials.Leader_name,
+            "student_1_name": credentials.member1_name,
+            "student_2_name": credentials.member2_name,
+            "student_leader":credentials.Leader, 
+            "student_1":credentials.Student1,
+            "student_2":credentials.Student2, 
+            "section":credentials.section ,
+            "password":credentials.password })
         })
         const json = await response.json();
+        if(response.status===200)
+        {
+          alert(`Your Batch is ${json.batch}`)
+        }
+        else{
+          alert("Internal Server Error")
+        }
   }
   const onchange = (e) => {
       setcred({ ...credentials, [e.target.name]: e.target.value })
@@ -21,16 +44,28 @@ function UserSignup() {
     <h2>SignUp</h2>
     <form >
       <div className="user-box">
+        <input type="text" name="Leader_name"  onChange={onchange} required=""/>
+        <label>Team Leader Name</label>
+      </div>
+      <div className="user-box">
         <input type="text" name="Leader"  onChange={onchange} required=""/>
-        <label>Team Leader</label>
+        <label>Team Leader USN</label>
+      </div>
+      <div className="user-box">
+        <input type="text" name="member1_name"  onChange={onchange} required=""/>
+        <label>Team Member 1 Name</label>
       </div>
       <div className="user-box">
         <input type="text" name="Student1"  onChange={onchange} required=""/>
-        <label>Student 1</label>
+        <label>Team Member 1 USN</label>
+      </div>
+      <div className="user-box">
+        <input type="text" name="member2_name"  onChange={onchange} required=""/>
+        <label>Team Member 2 Name</label>
       </div>
       <div className="user-box">
         <input type="text" name="Student2"  onChange={onchange} required=""/>
-        <label>Student 2</label>
+        <label>Team Member 2 USN</label>
       </div>
       <div className="user-box">
         <select name="section" onChange={onchange}>

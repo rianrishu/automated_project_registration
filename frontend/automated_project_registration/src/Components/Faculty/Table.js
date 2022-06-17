@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 function Table(props) {
-  let { name, st1, st2, st_lead, id, batch, st_1_ph1, st_1_ph2, st_1_ph3, st_2_ph1, st_2_ph2, st_2_ph3, st_lead_ph1, st_lead_ph2, st_lead_ph3 } = props.res
+  let { name, st1, st2,st1_name,st2_name,st_lead_name, st_lead, id, batch, st_1_ph1, st_1_ph2, st_1_ph3, st_2_ph1, st_2_ph2, st_2_ph3, st_lead_ph1, st_lead_ph2, st_lead_ph3 } = props.res
   let index = props.index;
   if (st_1_ph1 != undefined && st_1_ph1 === -1)
     st_1_ph1 = "Not Set"
@@ -25,6 +25,7 @@ function Table(props) {
     <>
       <th scope="row">{index}</th>
       <td>{batch}</td>
+      <td>
       {(st_lead != undefined && st_lead.length != 0) ?
         <tr>
           <tr>
@@ -37,6 +38,21 @@ function Table(props) {
             <td>{st2}</td>
           </tr>
         </tr> : "Not Selected"}
+        </td>
+        <td>
+        {(st_lead != undefined && st_lead.length != 0) ?
+        <tr>
+          <tr>
+            <td>{st_lead_name}(Leader)</td>
+          </tr>
+          <tr>
+            <td>{st1_name}</td>
+          </tr>
+          <tr>
+            <td>{st2_name}</td>
+          </tr>
+        </tr> : "Not Selected"}
+        </td>
       <td>{name}</td>
       <td>
         {(st_lead != undefined && st_lead.length != 0) ?

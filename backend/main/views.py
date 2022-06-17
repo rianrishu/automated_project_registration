@@ -26,6 +26,9 @@ import os
 import json,datetime
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
+import anvil.server
+import anvil.pdf
+import anvil.media
 data = os.path.abspath(os.path.dirname(__file__)) + "/serviceAccountKey.json"
 cred = credentials.Certificate(data)
 firebase_admin.initialize_app(cred,{
@@ -57,6 +60,9 @@ class StudentViewSet(viewsets.ModelViewSet):
         serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             # serializer.save()
+            student_leader_name = serializer.data['student_leader_name']
+            student_1_name = serializer.data['student_1_name']
+            student_2_name = serializer.data['student_2_name']
             student_leader=serializer.data['student_leader']
             student_1=serializer.data['student_1']
             student_2=serializer.data['student_2']
@@ -65,6 +71,9 @@ class StudentViewSet(viewsets.ModelViewSet):
             password=make_password(serializer.data['password'])
             batch=generate_batch(section)
             data={
+                "student_leader_name": student_leader_name,
+                "student_1_name": student_1_name,
+                "student_2_name": student_2_name,
             "student_leader":student_leader,
              "student_1":student_1, 
              "student_2":student_2,
@@ -75,6 +84,7 @@ class StudentViewSet(viewsets.ModelViewSet):
               "phase2": 0
               }
             data1={
+                "name": student_leader_name,
             "usn":student_leader,
               "batch": batch,
               "phase_1_Identification_and_formulation_of_problem_statement": -1,
@@ -97,6 +107,7 @@ class StudentViewSet(viewsets.ModelViewSet):
               "phase_3_Total": -1
               }
             data2={
+                "name": student_1_name,
             "usn":student_1,
               "batch": batch,
               "phase_1_Identification_and_formulation_of_problem_statement": -1,
@@ -119,6 +130,7 @@ class StudentViewSet(viewsets.ModelViewSet):
               "phase_3_Total": -1
               }
             data3={
+                "name": student_2_name,
               "usn":student_2,
               "batch": batch,
               "phase_1_Identification_and_formulation_of_problem_statement": -1,
@@ -154,7 +166,7 @@ class StudentViewSet(viewsets.ModelViewSet):
                         'iat':datetime.datetime.now()
                         }
             token = jwt.encode(payload, '123', algorithm='HS256')
-            return Response({'msg':'Data Uploaded','jwt':token}, status=status.HTTP_201_CREATED)
+            return Response({'msg':'Data Uploaded','jwt':token,"batch":batch}, status=status.HTTP_201_CREATED)
 
 
 class StudentLoginViewSet(viewsets.ModelViewSet):
@@ -214,14 +226,6 @@ class UserInHomepage(viewsets.ModelViewSet):
              return Response({'msg':payload['id']}, status=status.HTTP_200_OK)
           except:
             return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)
-        # print("abc",self.request.session.get('batch_code'))    
-        # if not self.request.session.exists(self.request.session.session_key):
-        #     self.request.session.create()
-        # data={
-        #     'code': self.request.session.get('batch_code')
-        # }
-        # print(self.request.session.get('batch_code'))
-        # if data['code'] == None:
         else:
          return Response({'msg' : 'Failure'}, status=status.HTTP_401_UNAUTHORIZED)    
                 
@@ -625,6 +629,7 @@ def getPhase1(phase,st_lead,st_db):
                 st_lead_Answers= st_db.to_dict()['phase_1_Answers_to_Queries']
                 st_lead_Total=st_db.to_dict()['phase_1_Total']
                 obj={
+                    "usn": st_lead,
                 "Identification":st_lead_Identification,
                 "Analysis":st_lead_Analysis,
                 "Originality":st_lead_Originality,
@@ -634,34 +639,36 @@ def getPhase1(phase,st_lead,st_db):
                 }
                 return obj
     if phase==2:
-                st_lead_Answers= st_db.to_dict()['phase_2_Answers_to_Queries']
                 st_lead_Design= st_db.to_dict()['phase_2_Design_and_development_of_solution']
                 st_lead_Effective= st_db.to_dict()['phase_2_Effective_usage_of_modern_tools']
-                st_lead_Quality= st_db.to_dict()['phase_2_Quality_of_presentation']
                 st_lead_Work= st_db.to_dict()['phase_2_Work_effectively_as_a_team_member/team_leader']
+                st_lead_Quality= st_db.to_dict()['phase_2_Quality_of_presentation']
+                st_lead_Answers= st_db.to_dict()['phase_2_Answers_to_Queries']
                 st_lead_Total=st_db.to_dict()['phase_2_Total']
                 obj={
-                "Answers":st_lead_Answers,
-                "Design":st_lead_Design,
-                "Effective":st_lead_Effective,
+                    "usn": st_lead,
+                "Identification":st_lead_Design,
+                "Analysis":st_lead_Effective,
+                "Originality":st_lead_Work,
                 "Quality":st_lead_Quality,
-                "Work":st_lead_Work,
+                "Answers":st_lead_Answers,
                 "Total":st_lead_Total
                 }
                 return obj  
     if phase==3:
                 st_lead_demo= st_db.to_dict()['phase_3_Demonstration_of_the_complete_project']
-                st_lead_Design= st_db.to_dict()['phase_3_Answers_to_Queries']
-                st_lead_Effective= st_db.to_dict()['phase_3_Presentation_report_writing_and_submission']
-                st_lead_Quality= st_db.to_dict()['phase_3_Regularity']
                 st_lead_Work= st_db.to_dict()['phase_3_Work_effectively_as_a_team_member/team_leader']
+                st_lead_Effective= st_db.to_dict()['phase_3_Presentation_report_writing_and_submission']
+                st_lead_Design= st_db.to_dict()['phase_3_Answers_to_Queries']
+                st_lead_Quality= st_db.to_dict()['phase_3_Regularity']
                 st_lead_Total=st_db.to_dict()['phase_3_Total']
                 obj={
-                "Demonstration":st_lead_demo,
-                "Answers":st_lead_Design,
-                "Presentaion":st_lead_Effective,
-                "Regularity":st_lead_Quality,
-                "Work":st_lead_Work,
+                    "usn": st_lead,
+                "Identification":st_lead_demo,
+                "Analysis":st_lead_Work,
+                "Originality":st_lead_Effective,
+                "Quality":st_lead_Design,
+                "Answers":st_lead_Quality,
                 "Total":st_lead_Total
                 }
                 return obj       
@@ -704,12 +711,15 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
                         st1_phmarks=db.collection('Student_Details').document(st_1).get()
                         st2_phmarks=db.collection('Student_Details').document(st_2).get()
                         st3_phmarks=db.collection('Student_Details').document(st_lead).get()
+                        st1_name=st1_phmarks.to_dict()['name']
                         st_1_ph1=st1_phmarks.to_dict()['phase_1_Total']
                         st_1_ph2=st1_phmarks.to_dict()['phase_2_Total']
                         st_1_ph3=st1_phmarks.to_dict()['phase_3_Total']
+                        st2_name=st2_phmarks.to_dict()['name']
                         st_2_ph1=st2_phmarks.to_dict()['phase_1_Total']
                         st_2_ph2=st2_phmarks.to_dict()['phase_2_Total']
                         st_2_ph3=st2_phmarks.to_dict()['phase_3_Total']
+                        st_lead_name=st3_phmarks.to_dict()['name']
                         st_lead_ph1=st3_phmarks.to_dict()['phase_1_Total']
                         st_lead_ph2=st3_phmarks.to_dict()['phase_2_Total']
                         st_lead_ph3=st3_phmarks.to_dict()['phase_3_Total']
@@ -730,6 +740,9 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
                         "id":id,
                         "st1":st_1,
                         "st2":st_2,
+                        "st1_name":st1_name,
+                        "st2_name":st2_name,
+                        "st_lead_name":st_lead_name,
                         "st_lead":st_lead,
                         "st_1_ph1": st_1_ph1,
                         "st_1_ph2": st_1_ph2,
@@ -800,6 +813,27 @@ class AbstractUploadHandler(viewsets.ModelViewSet):
             # blob.download_to_file(f)
             return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
     # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
+
+
+class AbstractDownloadHandler(viewsets.ModelViewSet):
+    # serializer_class = StudentAbstractUploadSerializer
+    def create(self, request, format=None):
+        # serializer=StudentAbstractUploadSerializer(data=request.data,file = request.FILES['file'])
+        # if serializer.is_valid():
+        if request.method == 'POST':
+            # print(request)
+            # files = request.FILES
+            # file = files['file']
+            batch = request.data['batch']
+            path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) + "/" + str(batch) + ".pdf"
+            # file_path = os.path.abspath(os.path.dirname(__file__)) + "/file1.pdf"
+            f = open(path_to_download_folder,'wb')
+            bucket = storage.bucket()
+            blob = bucket.blob(batch)
+            # blob.upload_from_file(file,content_type="application/pdf")
+            blob.download_to_file(f)
+            return Response({"msg": "abstract downloaded"}, status=status.HTTP_200_OK)
+        return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
                  
 
 class GetSpecificPhaseMarks(viewsets.ModelViewSet):
@@ -837,11 +871,6 @@ class GetSpecificPhaseMarks(viewsets.ModelViewSet):
             
         return Response({'msg':"Bad Request"}, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-   
-
-
 class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
     def create(self, request):
         usn = request.data['USN']
@@ -878,3 +907,65 @@ class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
             })
             return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
         return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PhaseReport(viewsets.ModelViewSet):
+    def create(self, request):
+            if request.method == 'POST':
+                phase = request.data['phase']
+                batch = request.data['batch']
+                student_leader = request.data['student_leader']
+                student1 = request.data['student1']
+                student2 = request.data['student2']
+                st_lead=db.collection('Student_Details').document(student_leader).get()
+                st1=db.collection('Student_Details').document(student1).get()
+                st2=db.collection('Student_Details').document(student2).get()
+                obj1=getPhase1(phase,student_leader,st_lead)
+                obj2=getPhase1(phase,student1,st1)
+                obj3=getPhase1(phase,student2,st2)
+                if obj1['Identification'] == -1:
+                    obj1['Identification'] = "Not Set"
+                if obj1['Analysis'] == -1:
+                    obj1['Analysis'] = "Not Set"
+                if obj1['Originality'] == -1:
+                    obj1['Originality'] = "Not Set"
+                if obj1['Quality'] == -1:
+                    obj1['Analysis'] = "Not Set"
+                if obj1['Answers'] == -1:
+                    obj1['Answers'] = "Not Set"    
+                if obj2['Identification'] == -1:
+                    obj2['Identification'] = "Not Set"
+                if obj2['Analysis'] == -1:
+                    obj2['Analysis'] = "Not Set"
+                if obj2['Originality'] == -1:
+                    obj2['Originality'] = "Not Set"
+                if obj2['Quality'] == -1:
+                    obj2['Analysis'] = "Not Set"
+                if obj2['Answers'] == -1:
+                    obj2['Answers'] = "Not Set"   
+                if obj3['Identification'] == -1:
+                    obj3['Identification'] = "Not Set"
+                if obj3['Analysis'] == -1:
+                    obj3['Analysis'] = "Not Set"
+                if obj3['Originality'] == -1:
+                    obj3['Originality'] = "Not Set"
+                if obj3['Quality'] == -1:
+                    obj3['Analysis'] = "Not Set"
+                if obj3['Answers'] == -1:
+                    obj3['Answers'] = "Not Set"            
+                obj = [obj1, obj2, obj3]
+                anvil.server.connect("OZMKTYA5JC4UHZKF4BH4OLE4-C4B6QI5SE73T5GAO")
+                if phase == 1:
+                    pdf = anvil.pdf.render_form("StudentPhaseMarks1", obj)
+                    path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) +  "/"+str(batch) + "_phase1_report.pdf"
+                    anvil.media.write_to_file(pdf, path_to_download_folder)
+                if phase == 2:
+                    pdf = anvil.pdf.render_form("StudentPhaseMarks2", obj)
+                    path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) +  "/"+str(batch) + "_phase2_report.pdf"
+                    anvil.media.write_to_file(pdf, path_to_download_folder)
+                if phase == 3:
+                    pdf = anvil.pdf.render_form("StudentPhaseMarks3", obj)
+                    path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) +  "/"+str(batch) + "_phase3_report.pdf"
+                    anvil.media.write_to_file(pdf, path_to_download_folder)        
+                return Response({"msg": "pdf generated"}, status=status.HTTP_200_OK)    
+            return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)

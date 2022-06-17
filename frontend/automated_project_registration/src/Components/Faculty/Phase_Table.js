@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from "react-router-dom"
 function Phase_Table(props) {
-  let { st1, st2, st_lead, id, batch, st_1_ph1, st_2_ph1, st_lead_ph1 } = props.res
+  let { st1, st2, st_lead,st1_name,st2_name,st_lead_name, id, batch, st_1_ph1, st_2_ph1, st_lead_ph1 } = props.res
   let st_lead_Id, st_lead_an, st_lead_qu, st_lead_or, st_lead_ans, st_lead_total
   let st1_Id, st1_an, st1_qu, st1_or, st1_ans, st1_total
   let st2_Id, st2_an, st2_qu, st2_or, st2_ans, st2_total
@@ -63,6 +63,20 @@ function Phase_Table(props) {
             </tr>
             <tr>
               <td>{st2}</td>
+            </tr>
+          </tr> : "Not Selected"}
+      </td>
+      <td>
+        {(st_lead != undefined && st_lead.length != 0) ?
+          <tr>
+            <tr>
+              <td>{st_lead_name}(Leader)</td>
+            </tr>
+            <tr>
+              <td>{st1_name}</td>
+            </tr>
+            <tr>
+              <td>{st2_name}</td>
             </tr>
           </tr> : "Not Selected"}
       </td>
