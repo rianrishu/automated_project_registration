@@ -16,15 +16,21 @@ function Navbar(props) {
 
   return (
     <nav
-      className="navbar fixed-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "100%" }}
+      className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
+      style={{ background: "#394867", width: "94.96rem" }}
     >
       <div
         className="container-fluid"
+        style={{
+          "margin-left": "1.5rem",
+        }}
         // onMouseOver={MouseOver}
         // onMouseOut={MouseOut}
         // style={{ display: "block", width: "98vw", background: "pink" }}
       >
+        <Link className="navbar-brand" to="#">
+          Welcome : {props.faculty}
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -49,17 +55,7 @@ function Navbar(props) {
                 Add Topic
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className="nav-link active"
-                to={{
-                  pathname: "/faculty/allphases",
-                  // state: { userid: props.faculty },
-                }}
-              >
-                GetAllPhaseDetails
-              </Link>
-            </li>
+            
           </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>

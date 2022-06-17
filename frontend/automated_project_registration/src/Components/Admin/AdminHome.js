@@ -9,7 +9,7 @@ function AdminHome() {
   const [topics, setopic] = useState([]);
   const [batch, setbatch] = useState(null);
   const [abc, setabc] = useState(1);
-  let history = useHistory()
+  let history = useHistory();
   const select_topic = async (
     name,
     description,
@@ -61,8 +61,7 @@ function AdminHome() {
         setbatch(location.state.batch);
       }
       gettopics();
-    }
-    else {
+    } else {
       alert("Login First");
       history.push("/");
     }
@@ -70,12 +69,12 @@ function AdminHome() {
 
   return (
     <>
-      <section id="sidenavhead">
+      <section id="sidenavhead" style={{ height: "100vh" }}>
         <header>
           {" "}
           <Navbar />
         </header>
-        <nav>
+        <nav id="sidenav" style={{ height: "100vh", "margin-top": "5em" }}>
           <ul>
             {topics.map((topic, index) => {
               return (
@@ -88,16 +87,27 @@ function AdminHome() {
             })}
           </ul>
         </nav>
-        <main>
+        <main style={{ height: "100vh", "margin-top": "3rem" }}>
           {abc == 1 ? (
-            <h1 style={{ color: "grey", align: "center" }}>
+            <h1
+              style={{ color: "grey", textAlign: "center", "margin-top": "3rem" }}
+            >
               No Topics To display
             </h1>
           ) : (
             topics.map((topic, index) => {
               return (
-                <section key={index} id={`section-${index}`}>
+                <section
+                  key={index}
+                  id={`section-${index}`}
+                  style={{
+                    padding: "2rem",
+                    "margin-top": "1em",
+                    width: "82vw",
+                  }}
+                >
                   <Cards
+                    style={{}}
                     topic={topic}
                     index={index}
                     disab={abc}

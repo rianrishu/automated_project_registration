@@ -46,15 +46,6 @@ function BatchDetails({topics1}) {
           {topics1.description}
       </div>
       <br/>
-      <div className="user-box">
-          <span style={{fontWeight:"bold"}}>Phase 0 : </span>{topics1.phase0}
-      </div>
-      <div className="user-box">
-      <span style={{fontWeight:"bold"}}>Phase 1 : </span>{topics1.phase1}
-      </div>
-      <div className="user-box">
-      <span style={{fontWeight:"bold"}}>Phase 2 : </span>{topics1.phase2}
-      </div>
       <form action="http://localhost:8000/student/upload-abstract/" method="post" encType="multipart/form-data">
       <div className="user-box">
       Upload Abstract:<input type="file" name="file" accept="application/msword" />

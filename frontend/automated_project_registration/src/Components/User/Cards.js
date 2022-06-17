@@ -3,9 +3,7 @@
 //import React from "react";
 import { Button } from "react-bootstrap";
 
-// import "bootstrap/dist/css/bootstrap.css";
-// import "./Cards.sass";
-// import "./script.Babel";
+
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Card from "@mui/material/Card";

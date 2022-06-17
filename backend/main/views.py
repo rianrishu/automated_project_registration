@@ -256,18 +256,18 @@ class StudentTopics(viewsets.ModelViewSet):
                  id=doc.id
                  if(selectedby==batch): 
                     #  ans = []
-                     phase_marks = db.collection('students').document(batch).get()
-                     phase0 = phase_marks.to_dict()['phase0']
-                     phase1 = phase_marks.to_dict()['phase1']
-                     phase2 = phase_marks.to_dict()['phase2']
+                    #  phase_marks = db.collection('students').document(batch).get()
+                    #  phase0 = phase_marks.to_dict()['phase0']
+                    #  phase1 = phase_marks.to_dict()['phase1']
+                    #  phase2 = phase_marks.to_dict()['phase2']
                      obj={
                    "name":name,
                    "description":description,
                    "selected_by":selectedby,
-                   "id":id,
-                   "phase0": phase0,
-                   "phase1": phase1,
-                   "phase2": phase2
+                   "id":id
+                #    "phase0": phase0,
+                #    "phase1": phase1,
+                #    "phase2": phase2
                     }
                     #  ans.append(obj) 
                      return Response({'msg':"Already Selected",'msg1':obj}, status=status.HTTP_203_NON_AUTHORITATIVE_INFORMATION) 

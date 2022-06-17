@@ -6,56 +6,55 @@ function Navbar() {
   const [notifyFaculty, setnotifyFaculty] = useState("/");
   const [openTopic, setopenTopic] = useState("/");
   let history = useHistory();
-  let abc="/"
-  let abc1="/"
-  const callnotifyfacutly=async()=>{
-    console.log(notifyFaculty)
+  let abc = "/";
+  let abc1 = "/";
+  const callnotifyfacutly = async () => {
+    console.log(notifyFaculty);
     const response = await fetch("http://localhost:8000/notify/faculty/", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({"status": abc})
-    })
-    const json = await response.json()
-    setnotifyFaculty(json.msg)
-  }
- const callnotifystudent=async()=>{
-  const response1 = await fetch("http://localhost:8000/notify/student-post/", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({"status": abc1})
-  })
-  const json1 = await response1.json()
-  setopenTopic(json1.msg)
- }
+      body: JSON.stringify({ status: abc }),
+    });
+    const json = await response.json();
+    setnotifyFaculty(json.msg);
+  };
+  const callnotifystudent = async () => {
+    const response1 = await fetch(
+      "http://localhost:8000/notify/student-post/",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ status: abc1 }),
+      }
+    );
+    const json1 = await response1.json();
+    setopenTopic(json1.msg);
+  };
 
-  const handleclkfac=()=>{
-    if(notifyFaculty==="true"){
-      abc="false"
-    setnotifyFaculty("false");
+  const handleclkfac = () => {
+    if (notifyFaculty === "true") {
+      abc = "false";
+      setnotifyFaculty("false");
+    } else {
+      abc = "true";
+      setnotifyFaculty("true");
     }
-    else{
-      abc="true"
-    setnotifyFaculty("true");
+    callnotifyfacutly();
+  };
+  const handleclkstu = () => {
+    if (openTopic === "true") {
+      abc1 = "false";
+      setopenTopic("false");
+    } else {
+      abc1 = "true";
+      setopenTopic("true");
     }
-    callnotifyfacutly()
-    
-  }
-  const handleclkstu=()=>{
-    if(openTopic==="true"){
-      abc1="false"
-    setopenTopic("false");
-    }
-    else{
-      abc1="true"
-    setopenTopic("true");
-    }
-    callnotifystudent()
-    
-  }
+    callnotifystudent();
+  };
   const handleclick = async () => {
     history.push("/");
   };
@@ -70,19 +69,19 @@ function Navbar() {
   function onToggle() {
     this.setState({ toggleActive: !this.state.toggleActive });
   }
- 
+
   useEffect(async () => {
-   callnotifyfacutly();
-   const response1 = await fetch("http://localhost:8000/notify/student-get/", {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json"
-    },
-  })
-  const json1 = await response1.json()
-  console.log(json1)
-  setopenTopic(json1.msg)
-  }, [])
+    callnotifyfacutly();
+    const response1 = await fetch("http://localhost:8000/notify/student-get/", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const json1 = await response1.json();
+    console.log(json1);
+    setopenTopic(json1.msg);
+  }, []);
 
   return (
     <nav
@@ -91,10 +90,16 @@ function Navbar() {
     >
       <div
         className="container-fluid"
+        style={{
+          "margin-left": "1rem",
+        }}
         // onMouseOver={MouseOver}
         // onMouseOut={MouseOut}
         // style={{ display: "block", width: "98vw", background: "pink" }}
       >
+        <Link className="navbar-brand" to="#">
+          Welcome : Admin
+        </Link>
         <button
           className="navbar-toggler"
           type="button"
@@ -106,22 +111,19 @@ function Navbar() {
         >
           <span className="navbar-toggler-icon"></span>
         </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
+        <div
+          className="collapse navbar-collapse"
+          id="navbarSupportedContent"
+          style={{ "margin-left": "1.5rem" }}
+        >
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-            <li className="nav-item">
-              <Link
-                className="nav-link active"
-                to={{ pathname: "/admin/addtopic" }}
-              >
-                Add Topic
-              </Link>
-            </li>
+        
             <li className="nav-item">
               <Link
                 className="nav-link active"
                 to={{ pathname: "/admin/gettopics" }}
               >
-                Get All Topic
+                All Topic
               </Link>
             </li>
             <li className="nav-item">
@@ -132,14 +134,61 @@ function Navbar() {
                 Add Faculty
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/phase1", state: { phase: 1 } }}
+              >
+                Phase1 Marks
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/phase1", state: { phase: 2 } }}
+              >
+                Phase2 Marks
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{ pathname: "/admin/phase1", state: { phase: 3 } }}
+              >
+                Phase3 Marks
+              </Link>
+            </li>
           </ul>
-          <li className="nav-item dropdown">
-    <a className="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">Dropdown</a>
-    <ul className="dropdown-menu">
-      <li><button className="dropdown-item" onClick={handleclkfac}>Notify Faculty : {notifyFaculty}</button></li>
-      <li><button className="dropdown-item" onClick={handleclkstu}>Open topic to Student : {openTopic}</button></li>
-    </ul>
-  </li>
+          <ul>
+            {/* <li className="nav-item dropdown"> */}
+            <a
+              className="nav-link dropdown-toggle"
+              data-bs-toggle="dropdown"
+              href="#"
+              role="button"
+              aria-expanded="false"
+              style={{
+                color: "white",
+                "padding-right": "5rem",
+                "padding-top": "16px",
+              }}
+            >
+              Notification
+            </a>
+            <ul className="dropdown-menu">
+              <li>
+                <button className="dropdown-item" onClick={handleclkfac}>
+                  Notify Faculty : {notifyFaculty}
+                </button>
+              </li>
+              <li>
+                <button className="dropdown-item" onClick={handleclkstu}>
+                  Open topic to Student : {openTopic}
+                </button>
+              </li>
+            </ul>
+            {/* </li> */}
+          </ul>
           {/* <ToggleButton 
             id="toggle-check"
             type="checkbox"
@@ -162,7 +211,7 @@ function Navbar() {
           >
             Open Topics to Student
           </ToggleButton>  */}
-       
+
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut
