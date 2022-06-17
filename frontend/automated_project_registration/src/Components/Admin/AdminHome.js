@@ -89,7 +89,9 @@ function AdminHome() {
         </nav>
         <main style={{ height: "100vh", "margin-top": "3rem" }}>
           {abc == 1 ? (
-            <h1 style={{ color: "grey", align: "center" }}>
+            <h1
+              style={{ color: "grey", align: "center", "margin-top": "3rem" }}
+            >
               No Topics To display
             </h1>
           ) : (
