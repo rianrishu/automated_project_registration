@@ -20,10 +20,7 @@ import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import SetPhase1 from "./Components/Faculty/SetPhase1";
 import GetAllPhases from './Components/Faculty/GetAllPhases'
-<<<<<<< HEAD
-=======
-import PhaseMarks from "./Components/Admin/PhaseMarks";
->>>>>>> 3122adf3c8cea7fe663191d7369c6e9bf1018730
+import PhaseMarks from './Components/Admin/PhaseMarks'
  function App() {
   let location = useLocation();
   let history=useHistory();
@@ -120,12 +117,9 @@ import PhaseMarks from "./Components/Admin/PhaseMarks";
               <Route path="/faculty/allphases">
                 <GetAllPhases />
               </Route>
-<<<<<<< HEAD
-=======
               <Route path="/admin/phase1">
                 <PhaseMarks/>
               </Route>
->>>>>>> 3122adf3c8cea7fe663191d7369c6e9bf1018730
             </Switch>
           </div>
         </BrowserRouter>
