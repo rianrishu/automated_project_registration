@@ -7,6 +7,7 @@ import Grid from "@material-ui/core/Grid"
 
 function BatchDetails(props) {
   const [tablePhase, settablePhase] = useState(1)
+  const [total,settotal]=useState(0)
   let { name, st1, st2, st_lead, batch, description } = props.topic
   const [stdent_ph1, setstdent_ph1] = useState();
   const [obj, setobj] = useState({ "USN":" ","Identification": "", "Analysis": " ", "Originality": " ", "Quality": " ", "Answers": ' ', "Total": " ","Phase":" " })
@@ -20,8 +21,10 @@ function BatchDetails(props) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ "USN":obj.USN,"Identification": obj.Identification, "Analysis":obj.Analysis, "Originality":obj.Originality, "Quality": obj.Quality, "Answers": obj.Answers, "Total":obj.Total,"Phase":obj.Phase  })
+      body: JSON.stringify({ "USN":obj.USN,"Identification": obj.Identification, "Analysis":obj.Analysis, "Originality":obj.Originality, "Quality": obj.Quality, "Answers": obj.Answers, "Total":total,"Phase":obj.Phase  })
     })
+    
+    
     const json = await response.json();
     if (response.status == 200)
       alert("Topic Updated Successfully")
@@ -43,6 +46,10 @@ function BatchDetails(props) {
         })
       
   }
+  useEffect(() => {
+    handlePhaseDetails(1)
+    
+  }, [])
 
   const handleDownloadAbstract = async () => {
     await fetch("http://localhost:8000/student/download-abstract/", {
@@ -54,15 +61,50 @@ function BatchDetails(props) {
     })
   }
 
-  const handlechg = (e) => {
-    console.log(e.target.value)
+  const handlechg = (e,marks) => {
+    if(Math.floor(e.target.value)!==Math.ceil(e.target.value))
+    {
+      alert("Please Enter integer Value")
+      return
+    }
+    else if(e.target.value<0||e.target.value>marks)
+    {
+      alert("Please Enter Marks Within Range")
+       return 
+    }
     setobj({ ...obj, [e.target.name]: e.target.value })
+    let a=obj.Identification;let b=obj.Analysis;let c=obj.Answers;let d=obj.Originality;let f=obj.Quality
+    if(e.target.name==="Identification")
+    a=e.target.value
+    if(e.target.name==="Analysis")
+    b=e.target.value
+    if(e.target.name==="Answers")
+    c=e.target.value
+    if(e.target.name==="Originality")
+    d=e.target.value
+    if(e.target.name==="Quality")
+    f=e.target.value
+    if(a===''||a===-1)
+    a=0
+    if(b===''||b===-1)
+    b=0
+    if(c===''||c===-1)
+    c=0
+    if(d===''||d===-1)
+    d=0
+    if(f===''||f===-1)
+    f=0
+    a=parseInt(a);b=parseInt(b);c=parseInt(c);d=parseInt(d);f=parseInt(f);
+    console.log(a,b,c,d,f)
+    settotal(a+b+c+d+f)
   }
   const setmarks = (index,usn) => {
     obj.USN=usn
     obj.Phase=tablePhase
     ref.current.click();
-    setobj({ ...obj,"Identification": stdent_ph1[index].Identification, "Analysis": stdent_ph1[index].Analysis, "Originality": stdent_ph1[index].Originality, "Quality": stdent_ph1[index].Quality, "Answers": stdent_ph1[index].Answers, "Total": stdent_ph1[index].Total })
+    setobj({ ...obj,"Identification": (stdent_ph1[index].Identification), "Analysis": stdent_ph1[index].Analysis, "Originality": stdent_ph1[index].Originality, "Quality": stdent_ph1[index].Quality, "Answers": stdent_ph1[index].Answers, "Total": stdent_ph1[index].Total })
+      
+    settotal(parseInt((stdent_ph1[index].Total)!==-1?stdent_ph1[index].Total:0))
   }
 
   return (
@@ -80,42 +122,43 @@ function BatchDetails(props) {
             <div className="modal-body" style={{ "background": "burlywood" }}>
               <form className="question  p-3 border-bottom" style={{ "background": "burlywood" }}>
                 <div className="ans ml-2  my-3">
-                  <label className="radio">{tablePhase == 1 ? <>Identification and formulation of problem statement : </> : tablePhase == 2 ? <>Design and development of solution : </> : <>Demonstration of the complete project : </>}
-                    <input value={obj.Identification} type="number" className="mx-2" placeholder='Enter No' onChange={handlechg} name="Identification" required></input>
+                  <label className="radio">{tablePhase == 1 ? <>Identification and formulation of problem statement : </> : tablePhase == 2 ? <>Design and development of solution : </> : <>Demonstration of the complete project : </>}(10 Marks)
+                    <input value={(obj.Identification!==-1?obj.Identification:' ')} type="number" className="mx-2" placeholder='Enter No' onChange={(e)=>handlechg(e,10)} name="Identification"  required></input>
                   </label>
                 </div>
                 <div className="ans ml-2  my-3">
-                  <label className="radio">{tablePhase == 1 ? <>Analysis of problem statement : </> : tablePhase == 2 ? <>Effective usage of modern tools : </> : <>Work effectively as a team member/leader : </>}
-                    <input value={obj.Analysis} type="number" className="mx-2" placeholder='Enter No' onChange={handlechg} name="Analysis" required></input>
-                  </label>
-                </div>
-
-                <div className="ans ml-2  my-3">
-                  <label className="radio">{tablePhase == 1 ? <>Originality of problem statement : </> : tablePhase == 2 ? <>Work effectively as a team member/leader : </> : <>Presentation, report writing and submission</>}
-                    <input value={obj.Originality} type="number" onChange={handlechg} name="Originality" className='mx-2' style={{ background: "burlywood" }} required />
-                  </label>
-                </div>
-                <div className="ans ml-2  my-3">
-                  <label className="radio">{tablePhase == 3 ? <>Answer to Queries </> : <>Quality of presentation : </>}
-                    <input value={obj.Quality} type="number" onChange={handlechg} name="Quality" className='mx-2' style={{ background: "burlywood" }} required />
+                  <label className="radio">{tablePhase == 1 ? <>Analysis of problem statement : </> : tablePhase == 2 ? <>Effective usage of modern tools : </> : <>Work effectively as a team member/leader : </>}(10 Marks)
+                    <input value={(obj.Analysis!==-1?obj.Analysis:' ')} type="number" className="mx-2" onChange={(e)=>handlechg(e,10)} placeholder='Enter No' name="Analysis" required></input>
                   </label>
                 </div>
 
                 <div className="ans ml-2  my-3">
-                  <label className="radio">{tablePhase == 3 ? <>Regularity </> : <>Answer to Queries : </>}
-                    <input value={obj.Answers} type="number" onChange={handlechg} name="Answers" className='mx-2' style={{ background: "burlywood" }} required />
+                  <label className="radio">{tablePhase == 1 ? <>Originality of problem statement : </> : tablePhase == 2 ? <>Work effectively as a team member/leader : </> : <>Presentation, report writing and submission</>}(10 Marks)
+                    <input value={(obj.Originality!==-1?obj.Originality:' ')} type="number"  name="Originality" onChange={(e)=>handlechg(e,10)} className='mx-2' style={{ background: "burlywood" }} required />
                   </label>
                 </div>
                 <div className="ans ml-2  my-3">
-                  <label className="radio">Total Phase {tablePhase}
-                    <input value={obj.Total} type="number" onChange={handlechg} name="Total" className='mx-2' style={{ background: "burlywood" }} required />
+                  <label className="radio">{tablePhase == 3 ? <>Answer to Queries </> : <>Quality of presentation : </>}(10 Marks)
+                    <input value={(obj.Quality!==-1?obj.Quality:' ')} type="number" onChange={(e)=>handlechg(e,10)} name="Quality" className='mx-2' style={{ background: "burlywood" }} required />
+                  </label>
+                </div>
+
+                <div className="ans ml-2  my-3">
+                  <label className="radio">{tablePhase == 3 ? <>Regularity </> : <>Answer to Queries : </>}(10 Marks)
+                    <input value={(obj.Answers!==-1?obj.Answers:' ')} type="number" onChange={(e)=>handlechg(e,10)} name="Answers" className='mx-2' style={{ background: "burlywood" }} required  />
+                  </label>
+                </div>
+                <div className="ans ml-2  my-3">
+                  <label className="radio">Total Phase {tablePhase}(50 Marks)
+                  <h5 className="mx-2">{total}</h5>
+                    {/* <input value={obj.Total} type="number" onChange={(e)=>handlechg(e,50)} name="Total" className='mx-2' style={{ background: "burlywood" }} required /> */}
                   </label>
                 </div>
               </form>
             </div>
             <div className="modal-footer" style={{ "background": "antiquewhite" }}>
               <button ref={refClose} type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button disabled={obj.Identification.length < 1 || obj.Analysis.length < 1 || obj.Quality.length < 1 || obj.Originality.length > 2} onClick={handleClick} type="button" className="btn btn-primary">Update Topic</button>
+              <button disabled={obj.Identification.length===0||obj.Analysis.length===0||obj.Originality.length===0||obj.Quality.length===0||obj.Answers.length===0} onClick={handleClick} type="button" className="btn btn-primary">Update Marks</button>
             </div>
           </div>
         </div>

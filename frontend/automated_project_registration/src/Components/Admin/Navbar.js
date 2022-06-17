@@ -173,7 +173,7 @@ function Navbar() {
                 "padding-top": "16px",
               }}
             >
-              Dropdown
+              Notification
             </a>
             <ul className="dropdown-menu">
               <li>
