@@ -8,6 +8,11 @@ function BatchDetails({topics1}) {
   let abc="/"
   let history=useHistory()
   const [batch, setbatch] = useState("null");
+
+  function redirect() {
+    window.location.replace("user/homepage");
+    return false;
+}
   useEffect(async () => {
     if (localStorage.getItem("token")) {
       const response = await fetch(
@@ -46,7 +51,9 @@ function BatchDetails({topics1}) {
           {topics1.description}
       </div>
       <br/>
-      <form action="http://localhost:8000/student/upload-abstract/" method="post" encType="multipart/form-data">
+      {/* <iframe name="dummy" id="dummy" style={{"display" : "none"}}></iframe> */}
+      <form action="http://localhost:8000/student/upload-abstract/" method="post" encType="multipart/form-data" 
+      onsubmit={redirect}>
       <div className="user-box">
       Upload Abstract:<input type="file" name="file" accept="application/msword" />
       <input type="text"  name="batch" value={batch}/>

@@ -30,7 +30,7 @@ router.register('student/download-abstract', AbstractDownloadHandler, basename="
 router.register('faculty/get_phase_marks',GetSpecificPhaseMarks)
 router.register('faculty/update-marks', UpdatePhaseMarksHandler,  basename="updating phase marks")
 router.register('faculty/phase-report', PhaseReport,  basename="updating phase marks")
-
+router.register('admin1/getphasemarks', AdminGetPhaseMarks,  basename="get phase marks")
 urlpatterns=[
     path('',include(router.urls)),
 ]
