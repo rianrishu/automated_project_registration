@@ -20,7 +20,7 @@ import { useLocation, useHistory, Link } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import SetPhase1 from "./Components/Faculty/SetPhase1";
 import GetAllPhases from './Components/Faculty/GetAllPhases'
-import PhaseMarks from "./Components/Admin/PhaseMarks";
+import PhaseMarks from './Components/Admin/PhaseMarks'
  function App() {
   let location = useLocation();
   let history=useHistory();

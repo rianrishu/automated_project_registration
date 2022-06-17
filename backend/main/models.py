@@ -17,6 +17,10 @@ SECTION_CHOICES=(
 
 # Create your models here.
 class Student(models.Model):
+    student_leader_name=models.CharField(max_length=30, null=False)
+    student_1_name=models.CharField(max_length=30, null=False)
+    student_2_name=models.CharField(max_length=30, null=False)
+    student_leader_name=models.CharField(max_length=30, null=False)   
     student_leader=models.CharField(max_length=20, null=False)
     student_1=models.CharField(max_length=20, null=False)
     student_2=models.CharField(max_length=20, null=False)
