@@ -6,7 +6,7 @@ import { Button } from "react-bootstrap";
 // import "./Cards.sass";
 // import "./script.Babel";
 import React, { useState, useContext, useEffect } from "react";
-import { Link, useLocation ,useHistory} from "react-router-dom";
+import { Link, useLocation, useHistory } from "react-router-dom";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
@@ -14,25 +14,25 @@ import Typography from "@mui/material/Typography";
 import { CardActionArea, CardActions } from "@mui/material";
 
 const Cards = (props) => {
-  const { name, description,selected_by } = props.topic;
+  const { name, description, selected_by } = props.topic;
   const { ab } = props.disab;
-  const [selected_fac,set_selected_fac]=useState("Pramod TC")
+  const [selected_fac, set_selected_fac] = useState("Pramod TC");
   const [faculty, setfaculty] = useState([]);
-  let history=useHistory()
-  const onchange=(e)=>{
-      set_selected_fac(e.target.value)
-  }
+  let history = useHistory();
+  const onchange = (e) => {
+    set_selected_fac(e.target.value);
+  };
   useEffect(async () => {
     if (localStorage.getItem("token")) {
-    const response = await fetch("http://localhost:8000/faculty/detail", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await response.json();
-    setfaculty(json.msg);}
-    else {
+      const response = await fetch("http://localhost:8000/faculty/detail", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await response.json();
+      setfaculty(json.msg);
+    } else {
       alert("Login First");
       history.push("/");
     }
@@ -51,7 +51,11 @@ const Cards = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <select name="faculty" onChange={onchange}>
+        <select
+          style={{ "margin-left": "1rem" }}
+          name="faculty"
+          onChange={onchange}
+        >
           {faculty.map((element, index) => {
             return (
               <option key={index} value={element}>
@@ -61,17 +65,33 @@ const Cards = (props) => {
           })}
         </select>
         <button
-          style={{ marginLeft: 100 }}
+          style={{ "margin-left": "5rem" }}
           className="custom-btn btn-15"
-          onClick={() => props.select_topic(name,description,selected_by,selected_fac,"Accepted")}
+          onClick={() =>
+            props.select_topic(
+              name,
+              description,
+              selected_by,
+              selected_fac,
+              "Accepted"
+            )
+          }
           disabled={ab}
         >
           Select
         </button>
         <button
-          style={{ marginLeft: 700 }}
+          style={{ "margin-left": "25rem" }}
           className="custom-btn btn-15"
-          onClick={() => props.select_topic(name,description,selected_by,selected_fac,"Rejected")}
+          onClick={() =>
+            props.select_topic(
+              name,
+              description,
+              selected_by,
+              selected_fac,
+              "Rejected"
+            )
+          }
           disabled={ab}
         >
           Reject

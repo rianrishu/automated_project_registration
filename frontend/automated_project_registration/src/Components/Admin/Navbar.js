@@ -91,7 +91,7 @@ function Navbar() {
       <div
         className="container-fluid"
         style={{
-          "margin-left": "5rem",
+          "margin-left": "1rem",
         }}
         // onMouseOver={MouseOver}
         // onMouseOut={MouseOut}
@@ -130,7 +130,7 @@ function Navbar() {
                 className="nav-link active"
                 to={{ pathname: "/admin/gettopics" }}
               >
-                Get All Topic
+                All Topic
               </Link>
             </li>
             <li className="nav-item">
@@ -146,7 +146,7 @@ function Navbar() {
                 className="nav-link active"
                 to={{ pathname: "/admin/phase1", state: { phase: 1 } }}
               >
-                Get Phase1 Marks
+                Phase1 Marks
               </Link>
             </li>
             <li className="nav-item">
@@ -154,7 +154,7 @@ function Navbar() {
                 className="nav-link active"
                 to={{ pathname: "/admin/phase1", state: { phase: 2 } }}
               >
-                Get Phase2 Marks
+                Phase2 Marks
               </Link>
             </li>
             <li className="nav-item">
@@ -162,7 +162,7 @@ function Navbar() {
                 className="nav-link active"
                 to={{ pathname: "/admin/phase1", state: { phase: 3 } }}
               >
-                Get Phase3 Marks
+                Phase3 Marks
               </Link>
             </li>
           </ul>

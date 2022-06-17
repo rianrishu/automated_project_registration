@@ -69,12 +69,12 @@ function AdminHome() {
 
   return (
     <>
-      <section id="sidenavhead">
+      <section id="sidenavhead" style={{ height: "100vh" }}>
         <header>
           {" "}
           <Navbar />
         </header>
-        <nav id="sidenav">
+        <nav id="sidenav" style={{ height: "100vh", "margin-top": "5em" }}>
           <ul>
             {topics.map((topic, index) => {
               return (
@@ -87,7 +87,7 @@ function AdminHome() {
             })}
           </ul>
         </nav>
-        <main>
+        <main style={{ height: "100vh", "margin-top": "3rem" }}>
           {abc == 1 ? (
             <h1 style={{ color: "grey", align: "center" }}>
               No Topics To display
@@ -98,9 +98,14 @@ function AdminHome() {
                 <section
                   key={index}
                   id={`section-${index}`}
-                  style={{ padding: "2rem" }}
+                  style={{
+                    padding: "2rem",
+                    "margin-top": "1em",
+                    width: "82vw",
+                  }}
                 >
                   <Cards
+                    style={{}}
                     topic={topic}
                     index={index}
                     disab={abc}
