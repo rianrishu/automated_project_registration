@@ -29,7 +29,7 @@ function Navbar(props) {
         // style={{ display: "block", width: "98vw", background: "pink" }}
       >
         <Link className="navbar-brand" to="#">
-          Welcome : Faculty
+          Welcome : {props.faculty}
         </Link>
         <button
           className="navbar-toggler"
@@ -55,17 +55,7 @@ function Navbar(props) {
                 Add Topic
               </Link>
             </li>
-            <li className="nav-item">
-              <Link
-                className="nav-link active"
-                to={{
-                  pathname: "/faculty/allphases",
-                  // state: { userid: props.faculty },
-                }}
-              >
-                GetAllPhaseDetails
-              </Link>
-            </li>
+            
           </ul>
           <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>

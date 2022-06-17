@@ -12,19 +12,18 @@ function UserHome() {
   const [batch, setbatch] = useState("null");
   const [openTopic, setopenTopic] = useState("/");
   const [selected, setselected] = useState("false");
-  let abc = null;
-  const callnotifystudent = async () => {
+  let abc = null
+  const callnotifystudent=async()=>{
     const response1 = await fetch("http://localhost:8000/notify/student-get/", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json1 = await response1.json();
-    setopenTopic(json1.msg);
-  };
+        "Content-Type": "application/json"
+      }})
+    const json1 = await response1.json()
+    setopenTopic(json1.msg)
+   }
   const select_topic = async (id) => {
-    console.log(id, batch);
+    console.log(id,batch)
     const response = await fetch("http://localhost:8000/student/gettopics/", {
       method: "POST",
       headers: {
@@ -48,13 +47,13 @@ function UserHome() {
     const json = await response.json();
 
     if (json.msg === "Already Selected") {
-      setopenTopic("false");
-      setselected("true");
-      console.log(json.msg1);
+      setopenTopic("false")
+      setselected("true")
+      console.log(json.msg1)
       setopic1(json.msg1);
-      return;
+      return
     }
-    setopic(json.msg);
+    setopic(json.msg)
   };
   useEffect(async () => {
     if (localStorage.getItem("token")) {
@@ -71,11 +70,11 @@ function UserHome() {
       );
       const json = await response.json();
       if (response.status === 200) {
-        abc = json.msg;
+        abc = json.msg
         // setInterval(() => {
-        // }, 100000);
-        setbatch(json.msg);
-        gettopics();
+          // }, 100000);
+          setbatch(json.msg);
+          gettopics();  
       } else {
         alert("Please Login using valid token");
         history.push("/");
@@ -84,6 +83,8 @@ function UserHome() {
       alert("Login First");
       history.push("/");
     }
+    
+
   }, []);
 
   return (
@@ -91,53 +92,27 @@ function UserHome() {
       <section id="sidenavhead">
         <header>
           {" "}
-          <Navbar batch={batch} openTopic={openTopic} selected={selected} />
+          <Navbar batch={batch} openTopic={openTopic} selected={selected}/>
         </header>
-        {openTopic === "true" && selected == "false" ? (
-          <>
-            <nav id="sidenav">
-              <ul>
-                {topics.map((topic, index) => {
-                  return (
-                    <li key={index}>
-                      <Link to={`#section-${index}`}>
-                        {topic.name.substring(0, 18)}...
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </nav>
-            <main>
+        {openTopic === "true" && selected=="false"? <>
+        
+          <nav id="sidenav">
+            <ul>
               {topics.map((topic, index) => {
                 return (
-                  <section
-                    style={{ padding: "2rem" }}
-                    key={index}
-                    id={`section-${index}`}
-                  >
-                    <Cards
-                      topic={topic}
-                      index={index}
-                      select_topic={select_topic}
-                    />
-                  </section>
+                  <li key={index}>
+                    <Link to={`#section-${index}`}>
+                      {topic.name.substring(0, 18)}...
+                    </Link>
+                  </li>
                 );
               })}
-            </main>
-          </>
-        ) : (openTopic === "/" || openTopic === "false") &&
-          selected == "false" ? (
-          <h1>NO topic to display</h1>
-        ) : (
+            </ul>
+          </nav>
           <main>
             {topics.map((topic, index) => {
               return (
-                <section
-                  style={{ padding: "2rem" }}
-                  key={index}
-                  id={`section-${index}`}
-                >
+                <section style={{"padding": "2rem"}} key={index} id={`section-${index}`}>
                   <Cards
                     topic={topic}
                     index={index}
@@ -147,7 +122,8 @@ function UserHome() {
               );
             })}
           </main>
-        )}
+        </>: (openTopic==="/"||openTopic==="false") && selected=="false"  ? <h1>NO topic to display</h1> : <main><BatchDetails topics1={topics1}/></main>
+            }
       </section>
     </>
   );
