@@ -21,6 +21,7 @@ import { useEffect, useState, useContext } from "react";
 import SetPhase1 from "./Components/Faculty/SetPhase1";
 import GetAllPhases from './Components/Faculty/GetAllPhases'
 import PhaseMarks from './Components/Admin/PhaseMarks'
+import Update_Password from "./Components/Faculty/Update_Password";
  function App() {
   let location = useLocation();
   let history=useHistory();
@@ -119,6 +120,9 @@ import PhaseMarks from './Components/Admin/PhaseMarks'
               </Route>
               <Route path="/admin/phase1">
                 <PhaseMarks/>
+              </Route>
+              <Route path="/faculty/updatePassword">
+                <Update_Password/>
               </Route>
             </Switch>
           </div>

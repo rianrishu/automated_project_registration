@@ -13,6 +13,20 @@ function BatchDetails(props) {
   const [obj, setobj] = useState({ "USN":" ","Identification": "", "Analysis": " ", "Originality": " ", "Quality": " ", "Answers": ' ', "Total": " ","Phase":" " })
   const ref = useRef(null)
   const refClose = useRef(null)
+  const handlePhaseDetails = async (phase) => {
+    settablePhase(phase)
+    await fetch("http://localhost:8000/faculty/get_phase_marks/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ "phase": phase, "student_leader": st_lead, "student_1": st1, "student_2": st2 })
+    })
+      .then(response => response.json())
+      .then(data => { setstdent_ph1(data.msg) 
+        })
+      
+  }
   const handleClick = async (e) => {
     refClose.current.click();
     console.log(obj)
@@ -30,22 +44,9 @@ function BatchDetails(props) {
       alert("Topic Updated Successfully")
     else
       alert("Already 3 batches are assigned")
-
+handlePhaseDetails(obj.Phase)
   }
-  const handlePhaseDetails = async (phase) => {
-    settablePhase(phase)
-    await fetch("http://localhost:8000/faculty/get_phase_marks/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ "phase": phase, "student_leader": st_lead, "student_1": st1, "student_2": st2 })
-    })
-      .then(response => response.json())
-      .then(data => { setstdent_ph1(data.msg) 
-        })
-      
-  }
+ 
   useEffect(() => {
     handlePhaseDetails(1)
     
@@ -71,7 +72,17 @@ function BatchDetails(props) {
     })
   }
 
-  const handlechg = (e) => {
+  const handlechg = (e,marks) => {
+    if(Math.floor(e.target.value)!==Math.ceil(e.target.value))
+    {
+      alert("Please Enter integer Value")
+      return
+    }
+    else if(e.target.value<0||e.target.value>marks)
+    {
+      alert("Please Enter Marks Within Range")
+       return 
+    }
     console.log(e.target.value)
     setobj({ ...obj, [e.target.name]: e.target.value })
     let a=obj.Identification;let b=obj.Analysis;let c=obj.Answers;let d=obj.Originality;let f=obj.Quality

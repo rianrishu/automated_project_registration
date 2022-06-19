@@ -1,7 +1,7 @@
 from asyncore import read
 from turtle import back
 from urllib import response
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 import json
 from pathlib import Path
 from django.shortcuts import render
@@ -700,10 +700,14 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
                 st_lead_ph1=""
                 st_lead_ph2=""
                 st_lead_ph3=""
-                st_lead=""  
+                st2_name=""
+                st1_name=""
+                st_lead_name=""
+                st_lead=""
                 ans=[]
                 if faculty_userid == faculty:
                     if (len(selected_by)!=0):
+                        console.log(selected_by)
                         stdetails=db.collection('students').document(selected_by).get()
                         st_1=stdetails.to_dict()['student_1']
                         st_lead=stdetails.to_dict()['student_leader']
@@ -811,7 +815,7 @@ class AbstractUploadHandler(viewsets.ModelViewSet):
             blob = bucket.blob(batch)
             blob.upload_from_file(file,content_type="application/pdf")
             # blob.download_to_file(f)
-            return Response({"msg": "abstract uploaded"}, status=status.HTTP_200_OK)
+            return HttpResponseRedirect("http://localhost:3000/user/homepage")
     # return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)    
 
 
@@ -907,6 +911,56 @@ class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
             })
             return Response({"msg": "marks updated successfully"}, status=status.HTTP_200_OK)
         return Response({"msg": "bad request"}, status=status.HTTP_400_BAD_REQUEST)
+
+class AdminGetPhaseMarks(viewsets.ModelViewSet):
+    def create(self, request):
+        phase = int(request.data['Phase'])
+        st_details=db.collection('Student_Details').get()
+        temp_ids=[]
+        ans=[]
+        for topic in st_details:
+            temp_ids.append(topic.id)
+        for id in temp_ids:
+          st1_phmarks=db.collection('Student_Details').document(id).get()
+          if phase == 3:
+            
+                obj={
+                "Demo":st1_phmarks.to_dict()["phase_3_Demonstration_of_the_complete_project"],
+                "Work":st1_phmarks.to_dict()["phase_3_Work_effectively_as_a_team_member/team_leader"],
+                "Prese":st1_phmarks.to_dict()["phase_3_Presentation_report_writing_and_submission"],
+                "Answer":st1_phmarks.to_dict()["phase_3_Answers_to_Queries"],
+                "Regular":st1_phmarks.to_dict()["phase_3_Regularity"],
+                "Total":st1_phmarks.to_dict()["phase_3_Total"],
+                "Usn":st1_phmarks.to_dict()["usn"],
+                "Batch":st1_phmarks.to_dict()["batch"]
+                }
+                ans.append(obj)
+
+          if phase == 2:
+                obj={
+                "Demo":st1_phmarks.to_dict()["phase_2_Design_and_development_of_solution"],
+                "Work":st1_phmarks.to_dict()["phase_2_Effective_usage_of_modern_tools"],
+                "Prese":st1_phmarks.to_dict()["phase_2_Work_effectively_as_a_team_member/team_leader"],
+                "Answer":st1_phmarks.to_dict()["phase_2_Quality_of_presentation"],
+                "Regular":st1_phmarks.to_dict()["phase_2_Answers_to_Queries"],
+                "Total":st1_phmarks.to_dict()["phase_2_Total"],
+                "Usn":st1_phmarks.to_dict()["usn"],
+                "Batch":st1_phmarks.to_dict()["batch"]
+                }
+                ans.append(obj)
+          if phase == 1:
+                obj={
+                "Demo":st1_phmarks.to_dict()["phase_1_Identification_and_formulation_of_problem_statement"],
+                "Work":st1_phmarks.to_dict()["phase_1_Analysis_of_problem_statement"],
+                "Prese":st1_phmarks.to_dict()["phase_1_Originality_of_problem_statement"],
+                "Answer":st1_phmarks.to_dict()["phase_1_Quality_of_presentation"],
+                "Regular":st1_phmarks.to_dict()["phase_1_Answers_to_Queries"],
+                "Total":st1_phmarks.to_dict()["phase_1_Total"],
+                "Usn":st1_phmarks.to_dict()["usn"],
+                "Batch":st1_phmarks.to_dict()["batch"]
+                }
+                ans.append(obj)
+        return Response({"msg": ans}, status=status.HTTP_200_OK)
 
 
 class PhaseReport(viewsets.ModelViewSet):
