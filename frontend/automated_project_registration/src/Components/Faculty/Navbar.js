@@ -17,12 +17,15 @@ function Navbar(props) {
   return (
     <nav
       className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{ background: "#394867", width: "94.96rem" }}
+      style={{
+        background: "#394867",
+        width: "94.96em",
+      }}
     >
       <div
         className="container-fluid"
         style={{
-          "margin-left": "1.5rem",
+          "margin-left": "2rem",
         }}
         // onMouseOver={MouseOver}
         // onMouseOut={MouseOut}
@@ -55,9 +58,8 @@ function Navbar(props) {
                 Add Topic
               </Link>
             </li>
-            
           </ul>
-          <form className="d-flex">
+          <form className="d-flex justify-content-flex-end">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut
             </button>

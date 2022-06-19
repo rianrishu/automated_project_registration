@@ -26,7 +26,7 @@ function AdminLogin() {
   };
   return (
     <div className="login-box">
-      <h2>Login</h2>
+      <h2>Admin Login</h2>
       <form onSubmit={handlesubmit}>
         <div className="user-box">
           <input type="text" name="userid" onChange={onchange} required="" />

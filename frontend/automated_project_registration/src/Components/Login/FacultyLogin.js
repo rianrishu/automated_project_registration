@@ -31,7 +31,7 @@ function FacultyLogin() {
   };
   return (
     <div className="login-box">
-      <h2>Login</h2>
+      <h2>Faculty Login</h2>
 
       <form onSubmit={handlesubmit}>
         <div className="user-box">

@@ -15,9 +15,9 @@ function Navbar({ batch, openTopic, selected }) {
   return (
     <nav
       className="navbar navbar-expand-lg navbar-dark "
-      style={{ background: "#394867" }}
+      style={{ background: "#394867", width: "98.7vw" }}
     >
-      <div className="container-fluid">
+      <div className="container-fluid" style={{ "margin-left": "2rem" }}>
         <Link className="navbar-brand" to="#">
           Welcome : {batch1}
         </Link>
