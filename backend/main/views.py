@@ -280,7 +280,7 @@ class StudentTopics(viewsets.ModelViewSet):
                    "selected_by":selectedby,
                    "id":id
                   }
-                 ans.append(obj)   
+                 ans.append(obj)     
              return Response({'msg':ans}, status=status.HTTP_200_OK) 
         serializer = StudentSelectedTopicSerializer(data=request.data)
         if serializer.is_valid():
@@ -707,7 +707,7 @@ class GetBatchListFaculty(viewsets.ModelViewSet):
                 ans=[]
                 if faculty_userid == faculty:
                     if (len(selected_by)!=0):
-                        console.log(selected_by)
+                        
                         stdetails=db.collection('students').document(selected_by).get()
                         st_1=stdetails.to_dict()['student_1']
                         st_lead=stdetails.to_dict()['student_leader']

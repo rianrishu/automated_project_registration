@@ -14,6 +14,7 @@ import { CardActionArea, CardActions } from "@mui/material";
 
 const Cards = (props) => {
   const { name, description, id } = props.topic;
+  
   return (
     <Card>
       <CardActionArea>

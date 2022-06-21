@@ -8,7 +8,7 @@ function Update_Password() {
     const [credentials, setcred] = useState({"password":" ","conpassword":" "})
   const handlesubmit=async(e)=>{
     // e.preventDefault();
-    ref.clear()
+    // console.log(credentials.conpassword,credentials.password
      if(credentials.conpassword!==credentials.password)
      {
         alert('Password doesn\'t match ')

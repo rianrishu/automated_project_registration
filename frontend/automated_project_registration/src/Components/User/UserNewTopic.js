@@ -3,7 +3,7 @@ import MiniContext from '../../Context/MiniContext';
 import { Link, useLocation ,useHistory} from 'react-router-dom'
 import Button from "@material-ui/core/Button";
 function UserNewTopic() {
-    const [credentials, setcred] = useState({ "name":" ","description":" "})
+    const [credentials, setcred] = useState({ "name":" ","description":" ","domain":" "})
    let history=useHistory()
     const [batch,setbatch]=useState(null)
    useEffect(async ()=>{
@@ -61,6 +61,10 @@ function UserNewTopic() {
       <div className="user-box">
        <textarea name="description" id="description" cols="30" rows="4"  onChange={onchange} />
         <label htmlFor="description">Description</label>
+      </div>
+      <div className="user-box">
+        <input type="text" name="domain"  onChange={onchange} required=""/>
+        <label>Domain Name</label>
       </div>
       <Link to="#" className='custom-btn btn-9' onClick={handlesubmit}>
         <span></span>

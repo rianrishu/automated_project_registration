@@ -11,6 +11,23 @@ function UserSignup() {
   "section": "a" ,
   "password":""})
   const handlesubmit=async ()=>{
+    let reg=/^1SI[0-9]{2}CS([1-9][0-9][0-9]|[0-9][1-9][0-9]|[0-9][0-9][1-9])$/
+    if(!reg.test(credentials.Student1))
+   { 
+      alert(`Invalid usn ${credentials.Student1}`)
+     return 
+   }
+   if(!reg.test(credentials.Student2))
+   { 
+    alert(`Invalid usn ${credentials.Student2}`)
+     return 
+   }
+   if(!reg.test(credentials.Leader))
+   { 
+    alert(`Invalid usn ${credentials.Leader}`)
+     return 
+   }
+  
     console.log(credentials)
       const response = await fetch("http://localhost:8000/student/signin/", {
           method: 'POST',
@@ -79,7 +96,7 @@ function UserSignup() {
         <input type="password" name="password"  onChange={onchange} required=""/>
         <label>Password</label>
       </div>
-      <Link to="/user/login" onClick={handlesubmit}>
+      <Link to='/user/login' onClick={handlesubmit}>
         {/* <span></span>
         <span></span>
         <span></span>
