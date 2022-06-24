@@ -984,7 +984,7 @@ class PhaseReport(viewsets.ModelViewSet):
                 if obj1['Originality'] == -1:
                     obj1['Originality'] = "Not Set"
                 if obj1['Quality'] == -1:
-                    obj1['Analysis'] = "Not Set"
+                    obj1['Quality'] = "Not Set"
                 if obj1['Answers'] == -1:
                     obj1['Answers'] = "Not Set"    
                 if obj2['Identification'] == -1:
@@ -994,7 +994,7 @@ class PhaseReport(viewsets.ModelViewSet):
                 if obj2['Originality'] == -1:
                     obj2['Originality'] = "Not Set"
                 if obj2['Quality'] == -1:
-                    obj2['Analysis'] = "Not Set"
+                    obj2['Quality'] = "Not Set"
                 if obj2['Answers'] == -1:
                     obj2['Answers'] = "Not Set"   
                 if obj3['Identification'] == -1:
@@ -1004,7 +1004,7 @@ class PhaseReport(viewsets.ModelViewSet):
                 if obj3['Originality'] == -1:
                     obj3['Originality'] = "Not Set"
                 if obj3['Quality'] == -1:
-                    obj3['Analysis'] = "Not Set"
+                    obj3['Quality'] = "Not Set"
                 if obj3['Answers'] == -1:
                     obj3['Answers'] = "Not Set"            
                 obj = [obj1, obj2, obj3]

@@ -45,7 +45,7 @@ function UserSignup() {
       }),
     });
     const json = await response.json();
-    if (response.status === 200) {
+    if (response.status === 201) {
       alert(`Your Batch is ${json.batch}`);
       history.push("./user/login");
     } else {
