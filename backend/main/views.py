@@ -986,7 +986,9 @@ class PhaseReport(viewsets.ModelViewSet):
                 if obj1['Quality'] == -1:
                     obj1['Quality'] = "Not Set"
                 if obj1['Answers'] == -1:
-                    obj1['Answers'] = "Not Set"    
+                    obj1['Answers'] = "Not Set" 
+                if obj1['Total'] == -1:
+                    obj1['Total'] = "Not Set"       
                 if obj2['Identification'] == -1:
                     obj2['Identification'] = "Not Set"
                 if obj2['Analysis'] == -1:
@@ -996,7 +998,9 @@ class PhaseReport(viewsets.ModelViewSet):
                 if obj2['Quality'] == -1:
                     obj2['Quality'] = "Not Set"
                 if obj2['Answers'] == -1:
-                    obj2['Answers'] = "Not Set"   
+                    obj2['Answers'] = "Not Set" 
+                if obj2['Total'] == -1:
+                    obj2['Total'] = "Not Set"      
                 if obj3['Identification'] == -1:
                     obj3['Identification'] = "Not Set"
                 if obj3['Analysis'] == -1:
@@ -1006,7 +1010,9 @@ class PhaseReport(viewsets.ModelViewSet):
                 if obj3['Quality'] == -1:
                     obj3['Quality'] = "Not Set"
                 if obj3['Answers'] == -1:
-                    obj3['Answers'] = "Not Set"            
+                    obj3['Answers'] = "Not Set"
+                if obj3['Total'] == -1:
+                    obj3['Total'] = "Not Set"                
                 obj = [obj1, obj2, obj3]
                 anvil.server.connect("OZMKTYA5JC4UHZKF4BH4OLE4-C4B6QI5SE73T5GAO")
                 if phase == 1:
