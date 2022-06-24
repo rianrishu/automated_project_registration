@@ -56,7 +56,7 @@ function UserSignup() {
     setcred({ ...credentials, [e.target.name]: e.target.value });
   };
   return (
-    <div className="login-box">
+    <div style={{ "margin-top": "6em" }} className="login-box">
       <h2>SignUp</h2>
       <form>
         <div className="user-box">
@@ -125,7 +125,10 @@ function UserSignup() {
           />
           <label>Password</label>
         </div>
-        <Link onClick={handlesubmit}>
+        <Link
+          style={{ display: "flex", "justify-content": "center" }}
+          onClick={handlesubmit}
+        >
           {/* <span></span>
         <span></span>
         <span></span>

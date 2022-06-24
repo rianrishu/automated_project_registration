@@ -48,7 +48,9 @@ function BatchDetails({ topics1 }) {
           <h4>{topics1.name}</h4>
         </div>
         <br />
-        <div className="user-box">{topics1.description}</div>
+        <div style={{ textAlign: "justify" }} className="user-box">
+          {topics1.description}
+        </div>
         <br />
         {/* <iframe name="dummy" id="dummy" style={{"display" : "none"}}></iframe> */}
         <form
@@ -57,10 +59,15 @@ function BatchDetails({ topics1 }) {
           encType="multipart/form-data"
           onsubmit={handlesub}
         >
-          <div className="user-box">
+          <div
+            style={{ display: "flex", "justify-content": "center" }}
+            className="user-box"
+          >
             Upload Abstract:
             <input type="file" name="file" accept="application/msword" />
             <input type="hidden" name="batch" value={batch} />
+          </div>
+          <div style={{ display: "flex", "justify-content": "center" }}>
             <button className="custom-btn btn-9">Submit</button>
           </div>
         </form>

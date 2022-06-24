@@ -23,7 +23,7 @@ function UserLogin(props) {
 
     if (response.status === 200) {
       localStorage.setItem("token", json.jwt);
-      alert();
+
       history.push({
         pathname: "/user/homepage",
         state: { batch: credentials.batch },
