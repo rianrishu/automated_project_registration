@@ -1016,15 +1016,15 @@ class PhaseReport(viewsets.ModelViewSet):
                 obj = [obj1, obj2, obj3]
                 anvil.server.connect("OZMKTYA5JC4UHZKF4BH4OLE4-C4B6QI5SE73T5GAO")
                 if phase == 1:
-                    pdf = anvil.pdf.render_form("StudentPhaseMarks1", obj)
+                    pdf = anvil.pdf.PdfRenderer(landscape=True).render_form("StudentPhaseMarks1", obj)
                     path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) +  "/"+str(batch) + "_phase1_report.pdf"
                     anvil.media.write_to_file(pdf, path_to_download_folder)
                 if phase == 2:
-                    pdf = anvil.pdf.render_form("StudentPhaseMarks2", obj)
+                    pdf = anvil.pdf.PdfRenderer(landscape=True).render_form("StudentPhaseMarks2", obj)
                     path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) +  "/"+str(batch) + "_phase2_report.pdf"
                     anvil.media.write_to_file(pdf, path_to_download_folder)
                 if phase == 3:
-                    pdf = anvil.pdf.render_form("StudentPhaseMarks3", obj)
+                    pdf = anvil.pdf.PdfRenderer(landscape=True).render_form("StudentPhaseMarks3", obj)
                     path_to_download_folder = str(os.path.join(Path.home(), "Downloads")) +  "/"+str(batch) + "_phase3_report.pdf"
                     anvil.media.write_to_file(pdf, path_to_download_folder)        
                 return Response({"msg": "pdf generated"}, status=status.HTTP_200_OK)    
