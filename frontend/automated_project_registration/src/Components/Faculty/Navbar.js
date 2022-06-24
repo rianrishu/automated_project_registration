@@ -17,15 +17,12 @@ function Navbar(props) {
   return (
     <nav
       className="btn-8 navbar sticky-top  navbar-expand-lg navbar-dark "
-      style={{
-        background: "#394867",
-        width: "94.96em",
-      }}
+      style={{ background: "#394867", width: "94.96rem" }}
     >
       <div
         className="container-fluid"
         style={{
-          "margin-left": "2rem",
+          "margin-left": "1.5rem",
         }}
         // onMouseOver={MouseOver}
         // onMouseOut={MouseOut}
@@ -47,6 +44,17 @@ function Navbar(props) {
         </button>
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+          <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{
+                  pathname: "/faculty/homepage",
+              
+                }}
+              >
+                Home
+              </Link>
+            </li>
             <li className="nav-item">
               <Link
                 className="nav-link active"
@@ -58,8 +66,20 @@ function Navbar(props) {
                 Add Topic
               </Link>
             </li>
+            <li className="nav-item">
+              <Link
+                className="nav-link active"
+                to={{
+                  pathname: "/faculty/updatePassword",
+                  state: { userid: props.faculty },
+                }}
+              >
+                Update Password
+              </Link>
+            </li>
+            
           </ul>
-          <form className="d-flex justify-content-flex-end">
+          <form className="d-flex">
             <button className="custom-btn btn-5" onClick={handleclick}>
               SignOut
             </button>

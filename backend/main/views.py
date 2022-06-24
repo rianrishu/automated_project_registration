@@ -443,7 +443,6 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
     def create(self, request):
         #fetching topic add by student of batch session
         serializer = StudentTopicAcceptRejectSerializer(data=request.data)
-        print(serializer.data)
         if serializer.is_valid():
             name=serializer.data['name']
             description=serializer.data['description']
