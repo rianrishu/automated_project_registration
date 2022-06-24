@@ -25,7 +25,7 @@ function PhaseMarks() {
       }
     );
     const json = await response.json();
-    json.msg.sort((a, b) => a.Usn.localeCompare(b.Usn));
+    json.msg.sort((a, b) => a.Batch.localeCompare(b.Batch));
     if (response.status == 200) setdetails(json.msg);
     else alert("Some Error Occured");
     setloading(false);

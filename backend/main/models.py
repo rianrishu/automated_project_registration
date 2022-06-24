@@ -56,7 +56,7 @@ class AuthToken(models.Model):
    token=models.CharField(max_length=200, null=False)  
 
 class StudentTopicAcceptReject(models.Model):
-   name=models.CharField(max_length=30, null=False)
+   name=models.CharField(max_length=100, null=False)
    description=models.CharField(max_length=1500, null=False)
    selected_by=models.CharField(max_length=3,null=False,blank=True) 
    faculty=models.CharField(max_length=20,null=True,blank=True) 

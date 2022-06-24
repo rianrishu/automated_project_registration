@@ -95,12 +95,12 @@ class StudentViewSet(viewsets.ModelViewSet):
               "phase_1_Total": -1,
               "phase_2_Design_and_development_of_solution": -1,
               "phase_2_Effective_usage_of_modern_tools": -1,
-              "phase_2_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_2_Work_effectively_as_a_team_member_team_leader": -1,
               "phase_2_Quality_of_presentation": -1,
               "phase_2_Answers_to_Queries": -1,
               "phase_2_Total": -1,
               "phase_3_Demonstration_of_the_complete_project": -1,
-              "phase_3_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_3_Work_effectively_as_a_team_member_team_leader": -1,
               "phase_3_Presentation_report_writing_and_submission": -1,
               "phase_3_Answers_to_Queries": -1,
               "phase_3_Regularity": -1,
@@ -443,7 +443,7 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
     def create(self, request):
         #fetching topic add by student of batch session
         serializer = StudentTopicAcceptRejectSerializer(data=request.data)
-        # print(serializer.data)
+        print(serializer.data)
         if serializer.is_valid():
             name=serializer.data['name']
             description=serializer.data['description']
@@ -489,7 +489,7 @@ class StudentTopicAcceptRejectHandler(viewsets.ModelViewSet):
                             "status": status_
                         })
                         return Response({"msg": "Topic rejected updated successfully"}, status=status.HTTP_200_OK)
-        return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST)  
+        return Response({"msg": "Bad request"}, status=status.HTTP_400_BAD_REQUEST  )  
 
 
 class FacultyLoginViewSet(viewsets.ModelViewSet):
@@ -878,10 +878,11 @@ class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
     def create(self, request):
         usn = request.data['USN']
         phase = request.data['Phase']
+        print(request.data)
         if phase == 3:
             db.collection('Student_Details').document(usn).update({
               "phase_3_Demonstration_of_the_complete_project": int(request.data["Identification"]),
-              "phase_3_Work_effectively_as_a_team_member/team_leader": int(request.data["Analysis"]),
+              "phase_3_Work_effectively_as_a_team_member_team_leader": int(request.data["Analysis"]),
               "phase_3_Presentation_report_writing_and_submission": int(request.data["Originality"]),
               "phase_3_Answers_to_Queries": int(request.data["Quality"]),
               "phase_3_Regularity": int(request.data["Answers"]),
@@ -893,7 +894,7 @@ class UpdatePhaseMarksHandler(viewsets.ModelViewSet):
             db.collection('Student_Details').document(usn).update({
               "phase_2_Design_and_development_of_solution": int(request.data["Identification"]),
               "phase_2_Effective_usage_of_modern_tools": int(request.data["Analysis"]),
-              "phase_2_Work_effectively_as_a_team_member/team_leader": int(request.data["Originality"]),
+              "phase_2_Work_effectively_as_a_team_member_team_leader": int(request.data["Originality"]),
               "phase_2_Quality_of_presentation": int(request.data["Quality"]),
               "phase_2_Answers_to_Queries": int(request.data["Answers"]),
               "phase_2_Total": int(request.data["Total"])

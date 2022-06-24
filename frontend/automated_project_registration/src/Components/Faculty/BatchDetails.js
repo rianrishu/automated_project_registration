@@ -46,8 +46,9 @@ function BatchDetails(props) {
     );
 
     const json = await response.json();
-    if (response.status == 200) alert("Topic Updated Successfully");
+    if (response.status == 200) alert("Marks Updated Successfully");
     else alert("Already 3 batches are assigned");
+    handlePhaseDetails(obj.Phase);
   };
   const handlePhaseDetails = async (phase) => {
     settablePhase(phase);
@@ -98,7 +99,15 @@ function BatchDetails(props) {
     });
   };
 
-  const handlechg = (e) => {
+  const handlechg = (e, marks) => {
+    if (Math.floor(e.target.value) !== Math.ceil(e.target.value)) {
+      alert("Please Enter integer Value");
+      return;
+    } else if (e.target.value < 0 || e.target.value > marks) {
+      alert("Please Enter Marks Within Range");
+      return;
+    }
+
     console.log(e.target.value);
     setobj({ ...obj, [e.target.name]: e.target.value });
     let a = obj.Identification;
