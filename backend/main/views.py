@@ -118,12 +118,12 @@ class StudentViewSet(viewsets.ModelViewSet):
               "phase_1_Total": -1,
               "phase_2_Design_and_development_of_solution": -1,
               "phase_2_Effective_usage_of_modern_tools": -1,
-              "phase_2_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_2_Work_effectively_as_a_team_member_team_leader": -1,
               "phase_2_Quality_of_presentation": -1,
               "phase_2_Answers_to_Queries": -1,
               "phase_2_Total": -1,
               "phase_3_Demonstration_of_the_complete_project": -1,
-              "phase_3_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_3_Work_effectively_as_a_team_member_team_leader": -1,
               "phase_3_Presentation_report_writing_and_submission": -1,
               "phase_3_Answers_to_Queries": -1,
               "phase_3_Regularity": -1,
@@ -141,12 +141,12 @@ class StudentViewSet(viewsets.ModelViewSet):
               "phase_1_Total": -1,
               "phase_2_Design_and_development_of_solution": -1,
               "phase_2_Effective_usage_of_modern_tools": -1,
-              "phase_2_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_2_Work_effectively_as_a_team_member_team_leader": -1,
               "phase_2_Quality_of_presentation": -1,
               "phase_2_Answers_to_Queries": -1,
               "phase_2_Total": -1,
               "phase_3_Demonstration_of_the_complete_project": -1,
-              "phase_3_Work_effectively_as_a_team_member/team_leader": -1,
+              "phase_3_Work_effectively_as_a_team_member_team_leader": -1,
               "phase_3_Presentation_report_writing_and_submission": -1,
               "phase_3_Answers_to_Queries": -1,
               "phase_3_Regularity": -1,
@@ -641,7 +641,7 @@ def getPhase1(phase,st_lead,st_db):
     if phase==2:
                 st_lead_Design= st_db.to_dict()['phase_2_Design_and_development_of_solution']
                 st_lead_Effective= st_db.to_dict()['phase_2_Effective_usage_of_modern_tools']
-                st_lead_Work= st_db.to_dict()['phase_2_Work_effectively_as_a_team_member/team_leader']
+                st_lead_Work= st_db.to_dict()['phase_2_Work_effectively_as_a_team_member_team_leader']
                 st_lead_Quality= st_db.to_dict()['phase_2_Quality_of_presentation']
                 st_lead_Answers= st_db.to_dict()['phase_2_Answers_to_Queries']
                 st_lead_Total=st_db.to_dict()['phase_2_Total']
@@ -657,7 +657,7 @@ def getPhase1(phase,st_lead,st_db):
                 return obj  
     if phase==3:
                 st_lead_demo= st_db.to_dict()['phase_3_Demonstration_of_the_complete_project']
-                st_lead_Work= st_db.to_dict()['phase_3_Work_effectively_as_a_team_member/team_leader']
+                st_lead_Work= st_db.to_dict()['phase_3_Work_effectively_as_a_team_member_team_leader']
                 st_lead_Effective= st_db.to_dict()['phase_3_Presentation_report_writing_and_submission']
                 st_lead_Design= st_db.to_dict()['phase_3_Answers_to_Queries']
                 st_lead_Quality= st_db.to_dict()['phase_3_Regularity']
@@ -926,7 +926,7 @@ class AdminGetPhaseMarks(viewsets.ModelViewSet):
             
                 obj={
                 "Demo":st1_phmarks.to_dict()["phase_3_Demonstration_of_the_complete_project"],
-                "Work":st1_phmarks.to_dict()["phase_3_Work_effectively_as_a_team_member/team_leader"],
+                "Work":st1_phmarks.to_dict()["phase_3_Work_effectively_as_a_team_member_team_leader"],
                 "Prese":st1_phmarks.to_dict()["phase_3_Presentation_report_writing_and_submission"],
                 "Answer":st1_phmarks.to_dict()["phase_3_Answers_to_Queries"],
                 "Regular":st1_phmarks.to_dict()["phase_3_Regularity"],
@@ -940,7 +940,7 @@ class AdminGetPhaseMarks(viewsets.ModelViewSet):
                 obj={
                 "Demo":st1_phmarks.to_dict()["phase_2_Design_and_development_of_solution"],
                 "Work":st1_phmarks.to_dict()["phase_2_Effective_usage_of_modern_tools"],
-                "Prese":st1_phmarks.to_dict()["phase_2_Work_effectively_as_a_team_member/team_leader"],
+                "Prese":st1_phmarks.to_dict()["phase_2_Work_effectively_as_a_team_member_team_leader"],
                 "Answer":st1_phmarks.to_dict()["phase_2_Quality_of_presentation"],
                 "Regular":st1_phmarks.to_dict()["phase_2_Answers_to_Queries"],
                 "Total":st1_phmarks.to_dict()["phase_2_Total"],
